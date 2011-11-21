@@ -1,0 +1,9 @@
+[patterns]
+**.py = native
+**.rst = native
+**.txt = native
+**.html = native
+**.css = native
+**.js = native
+**.as = native
+**.xml = native

@@ -1,0 +1,6 @@
+syntax: glob
+*.pyc
+
+syntax: regexp
+^.metadata/
+^Python-3.2.2/
