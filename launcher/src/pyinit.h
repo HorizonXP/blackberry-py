@@ -14,9 +14,6 @@ int py_initialize(int argc, char ** argv);
 // cleanup when we're done
 void py_finalize();
 
-// test
-const char * py_test();
-
 // launch bbxmain.py
 void py_runmain();
 

@@ -4,3 +4,10 @@ syntax: glob
 syntax: regexp
 ^.metadata/
 ^Python-3.2.2/
+^extras/
+^platform-libs/
+Device-Debug/
+Device-Release/
+Simulator/
+^x86/
+^armle-v7/

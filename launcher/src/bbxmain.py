@@ -24,7 +24,6 @@ def main():
     finally:
         sys.stderr = sys.__stderr__
         sys.stdout = sys.__stdout__
-        print('and finishing up')
 
 
 if __name__ == '__main__':
