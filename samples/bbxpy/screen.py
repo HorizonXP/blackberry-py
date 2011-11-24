@@ -52,8 +52,8 @@ class Screen:
         self.screen_ctx = screen_context_t()
         self.screen_win = screen_window_t()
         self.screen_buf = screen_buffer_t()
-        rect = (c_int * 4)()
-        print('rect', list(rect))
+        self.rect = (c_int * 4)()
+        print('rect', list(self.rect))
         print('ctx', showptr(self.screen_ctx))
         print('win', showptr(self.screen_win))
         print('buf', showptr(self.screen_buf))
@@ -78,23 +78,28 @@ class Screen:
         print('buf', showptr(self.screen_buf))
 
         rc = screen_get_window_property_iv(self.screen_win, SCREEN_PROPERTY_BUFFER_SIZE,
-            cast(byref(rect, 2 * sizeof(c_int)), POINTER(c_int)))
+            cast(byref(self.rect, 2 * sizeof(c_int)), POINTER(c_int)))
         print('screen_get_window_property_iv', rc)
-        print('rect', list(rect))
+        print('rect', list(self.rect))
 
-        # Fill the screen buffer with blue
-        attribs = (c_int * 3)(SCREEN_BLIT_COLOR, 0xff0000ff, SCREEN_BLIT_END)
-        rc = screen_fill(self.screen_ctx, self.screen_buf, attribs)
-        print('screen_fill', rc)
-        rc = screen_post_window(self.screen_win, self.screen_buf, 1, rect, 0)
-        print('screen_post_window', rc)
-
+        self.fill_screen(0xff0000ff)
         #~ # Signal bps library that navigator and screen events will be requested
         #~ bps_initialize()
         #~ screen_request_events(self.screen_ctx)
         #~ navigator_request_events(0)
 
         self._initialized = True
+
+
+    def fill_screen(self, colour):
+        # Fill the screen buffer with blue
+        attribs = (c_int * 3)(SCREEN_BLIT_COLOR, colour, SCREEN_BLIT_END)
+        rc = screen_fill(self.screen_ctx, self.screen_buf, attribs)
+        if rc:
+            raise RuntimeError
+        rc = screen_post_window(self.screen_win, self.screen_buf, 1, self.rect, 0)
+        if rc:
+            raise RuntimeError
 
 
     def poll(self):
