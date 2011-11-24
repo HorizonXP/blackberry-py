@@ -1,3 +1,4 @@
+import sys
 import time
 import qnx.dialog
 import os.path
@@ -40,8 +41,12 @@ def run():
                 results = dialogRun.show_for_response(titleText="Confirm launch", messageText="Press OK to run: " + script)
                 if results['selectedIndex'] == 1:
                     namespace = {}
-                    exec(open(script).read(), namespace)
-                    namespace['run']()
+                    try:
+                        exec(open(script).read(), namespace)
+                        namespace['run']()
+                    finally:
+                        # flush print output buffer
+                        sys.stdout.flush()
             else:
                 dialogFail.show_for_response(titleText="Error", messageText="File not found")
 
