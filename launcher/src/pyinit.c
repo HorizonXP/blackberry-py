@@ -1,7 +1,13 @@
 #include <assert.h>
 #include <stdio.h>
+#include <iconv.h>
 
 #include <Python.h>
+
+
+// storage for argument list converted from multibyte to Unicode
+static wchar_t ** wargv;
+static int wargc;
 
 
 //---------------------------------------------------------
@@ -61,11 +67,6 @@ static void free_wargv(int wargc, wchar_t ** wargv) {
 
     return;
 }
-
-
-// storage for argument list converted from multibyte to Unicode
-static wchar_t ** wargv;
-static int wargc;
 
 
 //---------------------------------------------------------
