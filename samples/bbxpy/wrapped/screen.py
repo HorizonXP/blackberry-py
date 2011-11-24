@@ -2,7 +2,7 @@ import ctypes
 from ctypes import (c_bool, c_float, c_double, c_int, c_char_p, c_void_p, c_uint, c_longlong, c_ulonglong,
     POINTER, Structure, CFUNCTYPE)
 
-from wrapper_util import _func, _register_funcs
+from ._wrap import _func, _register_funcs
 
 
 class _screen_context(Structure):
