@@ -9,5 +9,6 @@ syntax: regexp
 Device-Debug/
 Device-Release/
 Simulator/
+Simulator-Debug/
 ^x86/
 ^armle-v7/
