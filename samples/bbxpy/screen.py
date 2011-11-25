@@ -1,43 +1,11 @@
 
 from ctypes import POINTER, c_int, byref, cast, sizeof
+
+import qnx.notification as qn
+
 from .wrapped.bps import *
 from .wrapped.screen import *
 
-
-def handle_screen_event(event):
-    screen_val = c_int()
-
-    screen_event = screen_event_get_event(event)
-    screen_get_event_property_iv(screen_event, SCREEN_PROPERTY_TYPE, byref(screen_val))
-
-    if screen_val == SCREEN_EVENT_MTOUCH_TOUCH:
-        print("Touch event")
-    elif screen_val == SCREEN_EVENT_MTOUCH_MOVE:
-        print("Move event")
-    elif screen_val == SCREEN_EVENT_MTOUCH_RELEASE:
-        print("Release event")
-
-
-def handle_navigator_event(event):
-    event_code = bps_event_get_code(event)
-    if event_code == NAVIGATOR_SWIPE_DOWN:
-        print("Swipe down event")
-    elif event_code == NAVIGATOR_EXIT:
-        print("Exit event")
-        shutdown = true
-
-
-def handle_event():
-    event = POINTER(bps_event_t)()
-    rc = bps_get_event(byref(event), -1)
-    assert rc == BPS_SUCCESS
-
-    if event:
-        domain = bps_event_get_domain(event)
-        if domain == navigator_get_domain():
-            handle_navigator_event(event)
-        elif domain == screen_get_domain():
-            handle_screen_event(event)
 
 def showptr(p):
     return p.contents if p else 'NULL'
@@ -84,10 +52,21 @@ class Screen:
 
         self.fill_screen(0xff0000ff)
         #~ # Signal bps library that navigator and screen events will be requested
-        #~ bps_initialize()
-        #~ screen_request_events(self.screen_ctx)
-        #~ navigator_request_events(0)
+        bps_initialize()
+        screen_request_events(self.screen_ctx)
+        navigator_request_events(0)
 
+        self.domains = {
+            audiodevice_get_domain(): 'audio',
+            clock_get_domain(): 'clock',
+            locale_get_domain(): 'locale',
+            navigator_get_domain(): 'navigator',
+            orientation_get_domain(): 'orientation',
+            virtualkeyboard_get_domain(): 'virtualkeyboard',
+            sensor_get_domain(): 'sensor',
+            screen_get_domain(): 'screen',
+            }
+        print('domains', ', '.join('%s=%s' % (d,n) for d, n in sorted(self.domains.items())))
         self._initialized = True
 
 
@@ -102,17 +81,11 @@ class Screen:
             raise RuntimeError
 
 
-    def poll(self):
-        if self._initialized:
-            # Handle user input
-            pass
-            #~ handle_event()
-
-
     def cleanup(self):
         # Clean up
-        #~ screen_stop_events(self.screen_ctx)
-        #~ bps_shutdown()
+        screen_stop_events(self.screen_ctx)
+        bps_shutdown()
+
         rc = screen_destroy_window(self.screen_win)
         print('screen_destroy_window', rc)
 
@@ -121,3 +94,61 @@ class Screen:
 
         self._initialized = False
 
+
+    # for now this stuff isn't integrated, but is called by scripts/event_test.py
+    def poll(self):
+        if self._initialized:
+            # Handle user input
+            self.handle_event()
+
+
+    def handle_screen_event(self, event):
+        screen_val = c_int()
+
+        screen_event = screen_event_get_event(event)
+        rc = screen_get_event_property_iv(screen_event, SCREEN_PROPERTY_TYPE, byref(screen_val))
+        #~ print('screen_get_event_property_iv', rc)
+        #~ print('screen event', screen_val.value)
+
+        if screen_val.value == SCREEN_EVENT_MTOUCH_TOUCH:
+            print('Touch event')
+        elif screen_val.value == SCREEN_EVENT_MTOUCH_MOVE:
+            print('Move event')
+        elif screen_val.value == SCREEN_EVENT_MTOUCH_RELEASE:
+            print('Release event')
+        else:
+            print('screen event, unknown', screen_val.value)
+
+
+    def handle_navigator_event(self, event):
+        event_code = bps_event_get_code(event)
+        #~ print('nav event', event_code)
+        if event_code == NAVIGATOR_SWIPE_DOWN:
+            print('Swipe down event')
+            self.notify1 = qn.SimpleNotification('Top-swipe!', timeout=3)
+
+        elif event_code == NAVIGATOR_EXIT:
+            print('Exit event')
+            raise SystemExit('NAVIGATOR_EXIT')
+
+        else:
+            print('navigator event: unknown', event_code)
+
+
+    def handle_event(self):
+        event = POINTER(bps_event_t)()
+        rc = bps_get_event(byref(event), -1)
+        #~ print('bps_get_event', rc)
+        assert rc == BPS_SUCCESS
+
+        if event:
+            domain = bps_event_get_domain(event.contents)
+            if domain == navigator_get_domain():
+                self.handle_navigator_event(event.contents)
+            elif domain == screen_get_domain():
+                self.handle_screen_event(event.contents)
+            else:
+                print('event:', self.domains.get(domain, domain))
+
+
+# EOF
