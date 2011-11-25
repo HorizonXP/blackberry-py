@@ -378,6 +378,6 @@ virtualkeyboard_event_get_height = _func(c_int, POINTER(bps_event_t))
 #----------------------------
 # apply argtypes/restype to all functions
 #
-_register_funcs('libbps.so.2', globals())
+_register_funcs('libbps.so', globals())
 
 # EOF
