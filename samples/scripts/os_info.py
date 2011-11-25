@@ -6,7 +6,7 @@ def run():
     print('os.device_encoding(1)', os.device_encoding(1))
     print('os.device_encoding(2)', os.device_encoding(2))
     print('os.getcwd()', os.getcwd())
-    print('os.getlogin()', os.getlogin())
+    #~ print('os.getlogin()', os.getlogin())
     print('os.getpid()', os.getpid())
     print('os.getppid()', os.getppid())
     print('os.get_exec_path()', os.get_exec_path())
