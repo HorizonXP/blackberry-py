@@ -7,6 +7,7 @@ Geolocation._build_request() to fix things in the one direction,
 or fix the response back to Geolocation._get_update() for the other
 direction. For fairly arbitrary reasons I chose the latter approach.'''
 
+import sys
 import time
 from qnx.geolocation import Geolocation
 import qnx.notification as qn
@@ -61,7 +62,11 @@ class GeoTracer:
             )
 
         self.updating = True
-        print('(%.6f, %.6f) acc=%5.1fm elev=%4.0fm heading=%3.0f speed=%4.1fm/s' % (latitude, longitude, accuracy, altitude, heading, speed))
+        used = len(list(x for x in args[-1] if x['used']))
+        tracked = len(list(x for x in args[-1] if x['tracked']))
+        satlist = ','.join(str(x['id']) for x in args[-1] if x['used'])
+        print('(%.6f, %.6f) acc=%5.1fm elev=%4.0fm heading=%3.0f speed=%4.1fm/s sats=%s/%s (%s)' % (latitude, longitude, accuracy, altitude, heading, speed, used, tracked, satlist))
+        sys.stdout.flush()
 
 
     def on_status(self, status, *args):
