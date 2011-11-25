@@ -4,10 +4,9 @@ from ctypes import (c_bool, c_float, c_double, c_int, c_char_p, c_void_p, c_uint
 
 from ._wrap import _func, _register_funcs
 
+from .screen import screen_context_t, screen_event_t
 
 class bps_event_t(Structure):
-    _fields_ = []
-class screen_event_t(Structure):
     _fields_ = []
 
 
@@ -226,9 +225,6 @@ orientation_event_get_angle = _func(c_int, POINTER(bps_event_t))
 # from bps/screen.h
 #
 BPS_SCREEN_EVENT       = 0x01
-
-class screen_context_t(Structure):
-    _fields_ = []
 
 screen_request_events = _func(screen_context_t)
 screen_get_domain = _func(c_int)
