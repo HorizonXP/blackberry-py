@@ -38,11 +38,16 @@ def _run():
         results = dialogPicker.show_for_response(titleText='Select a script', messageText='Enter a file to run')
         if results['selectedIndex'] == 0:
             break
+        if not results['selectedIndices']:
+            print('no selection made')
+            continue
 
-        script = os.path.join(basedir, files[results['selectedIndices'][0]])
+        fname = files[results['selectedIndices'][0]]
+        script = os.path.join(basedir, fname)
 
         # Check if file exists
         if os.path.isfile(script):
+            print('--------------- running', fname)
             namespace = {}
             try:
                 exec(open(script).read(), namespace)
@@ -59,6 +64,14 @@ def run():
     screen = Screen()
     screen.setup()
     try:
-        _run()
+        # temporarily catch SystemExit and silence it, until a new release
+        # of the launcher is made with similar bbxmain.py changes
+        try:
+            _run()
+        except SystemExit:
+            pass
+        except:
+            raise
     finally:
         screen.cleanup()
+        sys.stdout.flush()
