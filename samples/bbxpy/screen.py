@@ -55,6 +55,7 @@ class Screen:
         bps_initialize()
         screen_request_events(self.screen_ctx)
         navigator_request_events(0)
+        navigator_request_swipe_start()
 
         self.domains = {
             audiodevice_get_domain(): 'audio',
@@ -112,10 +113,21 @@ class Screen:
 
         if screen_val.value == SCREEN_EVENT_MTOUCH_TOUCH:
             print('Touch event')
+
         elif screen_val.value == SCREEN_EVENT_MTOUCH_MOVE:
-            print('Move event')
+            pair = (c_int * 2)()
+            screen_get_event_property_iv(screen_event, SCREEN_PROPERTY_SOURCE_POSITION, pair)
+            print('Move event', pair[0], pair[1])
+
         elif screen_val.value == SCREEN_EVENT_MTOUCH_RELEASE:
             print('Release event')
+
+        elif screen_val.value == SCREEN_EVENT_KEYBOARD:
+            flags = c_int()
+            code = c_int()
+            rc = screen_get_event_property_iv(screen_event, SCREEN_PROPERTY_KEY_FLAGS, byref(flags))
+            rc = screen_get_event_property_iv(screen_event, SCREEN_PROPERTY_KEY_SYM, byref(code))
+            print('keyboard %02x %04x' % (flags.value, code.value))
         else:
             print('screen event, unknown', screen_val.value)
 
@@ -126,6 +138,9 @@ class Screen:
         if event_code == NAVIGATOR_SWIPE_DOWN:
             print('Swipe down event')
             self.notify1 = qn.SimpleNotification('Top-swipe!', timeout=3)
+
+        elif event_code == NAVIGATOR_SWIPE_START:
+            print('Swipe Start')
 
         elif event_code == NAVIGATOR_EXIT:
             print('Exit event')
