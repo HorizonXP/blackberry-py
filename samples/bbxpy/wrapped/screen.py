@@ -457,6 +457,6 @@ screen_unref_window = _func(c_int, screen_window_t)
 #----------------------------
 # apply argtypes/restype to all functions
 #
-_register_funcs('libbps.so.2', globals())
+_register_funcs('libscreen.so', globals())
 
 # EOF
