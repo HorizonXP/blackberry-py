@@ -14,7 +14,10 @@ def main():
                 import bbxrun
                 bbxrun.run()
 
-            except:
+            except SystemExit: # clean exit, let it pass
+                pass
+
+            except: # anything else gets logged
                 import traceback
                 traceback.print_exc()
 
