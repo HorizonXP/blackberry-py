@@ -29,6 +29,7 @@
 
     <!-- Description, displayed in the BlackBerry Tablet OS application installer.
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
+    <description>The BBX-Python launcher</description>
 
     <!-- Copyright information. Optional. -->
     <!-- <copyright></copyright> -->
@@ -36,7 +37,6 @@
     <!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
     <author>Engenuity Corporation</author>
     <authorId>gYAAgFZYnCEu30PZG_fByAnHvPY</authorId>
-    <description>BBX Python launcher</description>
 
     <!--  Unique author ID assigned by signing authority. Required if using debug tokens. -->
     <!-- <authorId>ABC1234YjsnUk235h</authorId> -->
@@ -49,33 +49,33 @@
     <!--  The category where the application appears. Either core.games or core.media. -->
     <asset path="icon.png">icon.png</asset>
     <asset path="src/bbxmain.py">bbxmain.py</asset>
-    <configuration id="com.qnx.qcc.configuration.exe.debug.731303183" name="Device-Debug">
+    <configuration id="com.qnx.qcc.configuration.exe.debug.1197026809" name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="Device-Debug/launch" entry="true" type="Qnx/Elf">launch</asset>
+       <asset path="Device-Debug/launch2" entry="true" type="Qnx/Elf">launch2</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.release.1272197123" name="Device-Release">
+    <configuration id="com.qnx.qcc.configuration.exe.release.381280258" name="Device-Release">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="Device-Release/launch" entry="true" type="Qnx/Elf">launch</asset>
+       <asset path="Device-Release/launch2" entry="true" type="Qnx/Elf">launch2</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.profile.163518478" name="Device-Profile">
+    <configuration id="com.qnx.qcc.configuration.exe.profile.1492135785" name="Device-Profile">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="Device-Profile/launch" entry="true" type="Qnx/Elf">launch</asset>
+       <asset path="Device-Profile/launch2" entry="true" type="Qnx/Elf">launch2</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.2060363677" name="Device-Coverage">
+    <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.1862227157" name="Device-Coverage">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="Device-Coverage/launch" entry="true" type="Qnx/Elf">launch</asset>
+       <asset path="Device-Coverage/launch2" entry="true" type="Qnx/Elf">launch2</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.debug.217600035" name="Simulator-Debug">
+    <configuration id="com.qnx.qcc.configuration.exe.debug.1804508939" name="Simulator-Debug">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="Simulator-Debug/launch" entry="true" type="Qnx/Elf">launch</asset>
+       <asset path="Simulator-Debug/launch2" entry="true" type="Qnx/Elf">launch2</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.profile.205795310" name="Simulator-Profile">
+    <configuration id="com.qnx.qcc.configuration.exe.profile.478686446" name="Simulator-Profile">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="Simulator-Profile/launch" entry="true" type="Qnx/Elf">launch</asset>
+       <asset path="Simulator-Profile/launch2" entry="true" type="Qnx/Elf">launch2</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.622569725" name="Simulator-Coverage">
+    <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.466375392" name="Simulator-Coverage">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="Simulator-Coverage/launch" entry="true" type="Qnx/Elf">launch</asset>
+       <asset path="Simulator-Coverage/launch2" entry="true" type="Qnx/Elf">launch2</asset>
     </configuration>
 
     <!--  The icon for the application, which should be 86x86. -->
