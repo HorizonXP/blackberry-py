@@ -1,4 +1,4 @@
-'''Demonstrate/test event handling.'''
+'''Demonstrate/test loading image file and blitting to screen.'''
 
 import sys
 import os
