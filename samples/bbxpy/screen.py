@@ -48,12 +48,10 @@ class Screen:
 
         rc = screen_get_window_property_pv(self.screen_win, SCREEN_PROPERTY_RENDER_BUFFERS,
             cast(byref(self.screen_buf), POINTER(c_void_p)))
-        print('screen_get_window_property_pv', rc)
         print('buf', showptr(self.screen_buf))
 
         rc = screen_get_window_property_iv(self.screen_win, SCREEN_PROPERTY_BUFFER_SIZE,
             cast(byref(self.rect, 2 * sizeof(c_int)), POINTER(c_int)))
-        print('screen_get_window_property_iv', rc)
         print('rect', list(self.rect))
 
         self.fill_screen(0xff0000ff)
