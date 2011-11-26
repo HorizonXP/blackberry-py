@@ -4,6 +4,21 @@ from ctypes import (c_bool, c_ubyte, c_ushort, c_float, c_double, c_int, c_char_
 
 from ._wrap import _func, _register_funcs
 
+# from img/img_errno.h
+IMG_ERR_OK			= 0
+IMG_ERR_TRUNC		= 1	# premature EOF
+IMG_ERR_CORRUPT		= 2	# unrecoverable error in data stream
+IMG_ERR_FORMAT		= 3	# file format not recognized
+IMG_ERR_NODATA		= 4	# no data present
+IMG_ERR_NOSUPPORT	= 5	# request value/format/conversion not supported
+IMG_ERR_MEM			= 6	# memory allocation error
+IMG_ERR_CFG			= 7	# bad or missing config file
+IMG_ERR_DLL			= 8	# error accessing dll or entrypoint
+IMG_ERR_FILE		= 9	# file access error
+IMG_ERR_INTR		= 10# operation interrupted by application
+IMG_ERR_PARM		= 11# invalid parameter
+IMG_ERR_NOTIMPL		= 12# operation not implemented
+
 
 IMG_FMT_MASK_BPP	= 0x0000007f
 IMG_FMT_PKLE		= 0x00000100
