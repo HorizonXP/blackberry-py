@@ -10,6 +10,8 @@ def _run():
     # Directory which holds additional scripts
     basedir = 'shared/documents/scripts'
 
+    groupId = screen.groupId.decode()
+
     # Setup for file picker dialog
     buttonOkay = make_button('OK')
     buttonCancel = make_button('Cancel')
@@ -19,8 +21,8 @@ def _run():
     buttonExit = make_button('Exit', icon=Dialog.ICON_DELETE)
 
     # Setup additional dialogs
-    dialogRun = Dialog(42, Dialog.TYPE_ALERT, buttons=[buttonCancel, buttonOkay])
-    dialogFail = Dialog(42, Dialog.TYPE_ALERT, buttons=[buttonOkay])
+    dialogRun = Dialog(42, Dialog.TYPE_ALERT, buttons=[buttonCancel, buttonOkay], groupId=groupId)
+    dialogFail = Dialog(42, Dialog.TYPE_ALERT, buttons=[buttonOkay], groupId=groupId)
 
     # Main loop to allow multiple scripts to be run
     run = True
@@ -32,7 +34,7 @@ def _run():
             if fname.endswith('.py') and not fname.startswith('.'):
                 files.append(fname)
         files.sort()
-        dialogPicker = Dialog(42, Dialog.TYPE_POPUP, buttons=[buttonCancel, buttonOkay], items=files)
+        dialogPicker = Dialog(42, Dialog.TYPE_POPUP, buttons=[buttonCancel, buttonOkay], items=files, groupId=groupId)
 
         # Prompt for script to run
         results = dialogPicker.show_for_response(titleText='Select a script', messageText='Enter a file to run')

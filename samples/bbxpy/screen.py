@@ -1,4 +1,6 @@
 
+import os
+
 from ctypes import POINTER, c_int, byref, cast, sizeof
 
 import qnx.notification as qn
@@ -27,7 +29,7 @@ class Screen:
         print('buf', showptr(self.screen_buf))
 
         # Setup the window
-        rc = screen_create_context(byref(self.screen_ctx), 0)
+        rc = screen_create_context(byref(self.screen_ctx), SCREEN_APPLICATION_CONTEXT)
         print('screen_create_context', rc)
         print('ctx', showptr(self.screen_ctx))
 
@@ -39,6 +41,10 @@ class Screen:
 
         rc = screen_create_window_buffers(self.screen_win, 1)
         print('screen_create_window_buffers', rc)
+
+        self.groupId = str(os.getpid()).encode()
+        rc = screen_create_window_group(self.screen_win, self.groupId)
+        print('screen_create_window_group', rc, self.groupId)
 
         rc = screen_get_window_property_pv(self.screen_win, SCREEN_PROPERTY_RENDER_BUFFERS,
             cast(byref(self.screen_buf), POINTER(c_void_p)))
