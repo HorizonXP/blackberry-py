@@ -1,6 +1,8 @@
 '''Demonstrate different types of notification'''
 
+import os
 import time
+
 import qnx.notification as qn
 import qnx.dialog as dlg
 
@@ -22,7 +24,7 @@ def run():
     #   system_master_volume_reference
 
     notify = qn.SimpleNotification('Feel the power!',
-        icon='/accounts/1000/shared/documents/scripts/logo35x35.png',
+        icon=os.path.abspath('shared/documents/scripts/logo35x35.png'),
         soundName='event_video_call_outgoing',
         timeout=20,
         showTimeFlag=True,

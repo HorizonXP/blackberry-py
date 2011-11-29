@@ -1,3 +1,7 @@
+# this script imported by main.py
+# script runs with __name__ == 'bbxrun'
+# script runs with __file__ = '/apps/APPSANDBOXDIR/python/bbxrun.py'
+
 import sys
 import time
 import os
@@ -8,7 +12,7 @@ from bbxpy.screen import Screen
 
 def _run():
     # Directory which holds additional scripts
-    basedir = 'shared/documents/scripts'
+    basedir = os.path.join(os.path.dirname(__file__), 'scripts')
 
     groupId = screen.groupId.decode()
 
@@ -66,14 +70,6 @@ def run():
     screen = Screen()
     screen.setup()
     try:
-        # temporarily catch SystemExit and silence it, until a new release
-        # of the launcher is made with similar bbxmain.py changes
-        try:
-            _run()
-        except SystemExit:
-            pass
-        except:
-            raise
+        _run()
     finally:
         screen.cleanup()
-        sys.stdout.flush()
