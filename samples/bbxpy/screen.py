@@ -55,6 +55,8 @@ class Screen:
         print('rect', list(self.rect))
 
         self.fill_screen(0xff0000ff)
+        self.redraw()
+
         #~ # Signal bps library that navigator and screen events will be requested
         bps_initialize()
         screen_request_events(self.screen_ctx)
@@ -81,6 +83,9 @@ class Screen:
         rc = screen_fill(self.screen_ctx, self.screen_buf, attribs)
         if rc:
             raise RuntimeError
+
+
+    def redraw(self):
         rc = screen_post_window(self.screen_win, self.screen_buf, 1, self.rect, 0)
         if rc:
             raise RuntimeError

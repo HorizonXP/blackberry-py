@@ -31,10 +31,10 @@ def _run():
         files = []
         dirlist = os.listdir(basedir)
         for fname in dirlist:
-            if fname.endswith('.py') and not fname.startswith('.'):
+            if fname.endswith('.py') and not fname.startswith('.') and not fname.startswith('_'):
                 files.append(fname)
         files.sort()
-        dialogPicker = Dialog(42, Dialog.TYPE_POPUP, buttons=[buttonCancel, buttonOkay], items=files, groupId=groupId)
+        dialogPicker = Dialog(42, Dialog.TYPE_POPUP, buttons=[buttonCancel, buttonOkay], items=files, groupId=groupId, bkgAlpha=0.25)
 
         # Prompt for script to run
         results = dialogPicker.show_for_response(titleText='Select a script', messageText='Enter a file to run')
