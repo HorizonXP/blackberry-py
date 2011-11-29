@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>ca.microcode.bbxpython.demo</id>
+    <name>BBXPython Demo</name>
+    <versionNumber>0.0.1</versionNumber>
+    <description>BBX-Python Demonstration App</description>
+    <author>Engenuity Corporation</author>
+    <authorId>gYAAgFZYnCEu30PZG_fByAnHvPY</authorId>
+    <initialWindow>
+    <systemChrome>none</systemChrome>
+    <transparent>false</transparent>
+    </initialWindow>
+    <icon><image>icon.png</image></icon>
+    <asset path="icon.png">icon.png</asset>
+    <asset path="main.py" entry="true" type="Qnx/Python">main.py</asset>
+    <action system="true">run_native</action>
+    <action>access_shared</action>
+    <!--action>record_audio</action-->
+    <action>read_geolocation</action>
+    <!--action>use_camera</action-->
+    <!--action>access_internet</action-->
+    <action>play_audio</action>
+    <action>post_notification</action>
+    <action>set_audio_volume</action>
+    <action>read_device_identifying_information</action>
+</qnx>

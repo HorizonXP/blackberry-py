@@ -13,6 +13,6 @@ def run():
     virtualkeyboard_request_events(0)
 
     start = time.time()
-    while time.time() - start < 10:
+    while time.time() - start < 6:
         screen.poll()
         time.sleep(0.05)
