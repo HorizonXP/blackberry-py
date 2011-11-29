@@ -9,9 +9,6 @@ from ctypes import byref, cast, sizeof, c_int, c_void_p, pointer
 from bbxpy.wrapped.screen import *
 from bbxpy.wrapped.img import *
 
-def showptr(p):
-    return p.contents if p else 'NULL'
-
 
 def run():
     import bbxrun
