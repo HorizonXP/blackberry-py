@@ -9,6 +9,8 @@ from ctypes import byref, cast, sizeof, c_int, c_void_p, pointer
 from bbxpy.wrapped.screen import *
 from bbxpy.wrapped.img import *
 
+IMAGE_FILE = b'app/python/scripts/logo.png'
+
 
 def run():
     import bbxrun
@@ -36,7 +38,7 @@ def run():
     callouts.abort_f = decode_abort
     callouts.data = cast(pixmap, POINTER(c_uint))
 
-    rc = img_load_file(ilib, b'shared/documents/scripts/logo.png', byref(callouts), byref(img))
+    rc = img_load_file(ilib, IMAGE_FILE, byref(callouts), byref(img))
     if rc: raise RuntimeError(rc)
     #~ print('img_load_file', rc)
     #~ print('img is %d x %d x %d' % (img.w, img.h, IMG_FMT_BPP(img.format)))
