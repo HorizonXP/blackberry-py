@@ -57,8 +57,8 @@ class Image:
         hg = [
             SCREEN_BLIT_SOURCE_WIDTH, self.width,
             SCREEN_BLIT_SOURCE_HEIGHT, self.height,
-            SCREEN_BLIT_DESTINATION_X, x,
-            SCREEN_BLIT_DESTINATION_Y, y,
+            SCREEN_BLIT_DESTINATION_X, int(x),
+            SCREEN_BLIT_DESTINATION_Y, int(y),
             SCREEN_BLIT_DESTINATION_WIDTH, int(self.width * scale),
             SCREEN_BLIT_DESTINATION_HEIGHT, int(self.height * scale),
             SCREEN_BLIT_TRANSPARENCY, SCREEN_TRANSPARENCY_SOURCE_OVER,

@@ -1,10 +1,8 @@
 '''Demonstrate/test loading image file and blitting to screen.'''
 
-import sys
-import os
 import time
 import random
-from ctypes import byref, cast, sizeof, c_int, c_void_p, pointer
+from ctypes import byref, cast, sizeof, c_int, POINTER
 
 from bbxpy.wrapped.screen import *
 from bbxpy.wrapped.img import *
