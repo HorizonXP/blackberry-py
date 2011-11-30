@@ -17,8 +17,6 @@ def run():
     import bbxrun
     screen = bbxrun.screen
 
-    time.sleep(1)
-
     intval = c_int()
     rc = screen_get_context_property_iv(screen.screen_ctx, SCREEN_PROPERTY_DISPLAY_COUNT, byref(intval))
     if rc: raise RuntimeError(rc)
@@ -121,8 +119,6 @@ def run():
             print('    mode #%s: %s x %s @%sHz, interlaced? %s, index %s, flags %s, aspect_ratio %s/%s' %
                 (j, mode.width, mode.height, mode.refresh, mode.interlaced, mode.index, mode.flags,
                 mode.aspect_ratio[0], mode.aspect_ratio[1]))
-
-    time.sleep(1)
 
 
 # EOF
