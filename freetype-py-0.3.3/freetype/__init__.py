@@ -7,7 +7,7 @@
 #
 # -----------------------------------------------------------------------------
 '''
-FreeType high-level python API 
+FreeType high-level python API
 
 This the bindings for the high-level API of FreeType (that must be installed
 somewhere on your system).
@@ -17,13 +17,13 @@ Note:
 C Library will be searched using the ctypes.util.find_library. However, this
 search might fail. In such a case (or for other reasons), you can specify the
 FT_library_filename before importing the freetype library and freetype will use
-the specified one. 
+the specified one.
 '''
 from ctypes import *
-from ft_types import *
-from ft_enums import *
-from ft_errors import *
-from ft_structs import *
+from .ft_types import *
+from .ft_enums import *
+from .ft_errors import *
+from .ft_structs import *
 import ctypes.util
 
 
@@ -36,7 +36,7 @@ if not FT_Library_filename:
     except OSError:
         __dll__ = None
 if not FT_Library_filename and not __dll__:
-    raise RuntimeError, 'Freetype library not found'
+    raise RuntimeError('Freetype library not found')
 if not __dll__:
   __dll__ = ctypes.CDLL(FT_Library_filename)
 
@@ -214,8 +214,7 @@ def set_lcd_filter_weights(a,b,c,d,e):
         error = FT_Library_SetLcdFilterWeights(library, weights)
         if error: raise FT_Exception(error)
     else:
-        raise RuntimeError, \
-              'set_lcd_filter_weights require freetype > 2.4.0'
+        raise RuntimeError('set_lcd_filter_weights require freetype > 2.4.0')
 
 
 
@@ -459,7 +458,7 @@ class Bitmap(object):
     pixel_mode = property(lambda self: self._FT_Bitmap.pixel_mode,
            doc = '''The pixel mode, i.e., how pixel bits are stored. See
                     FT_Pixel_Mode for possible values.''')
-  
+
     palette_mode = property(lambda self: self._FT_Bitmap.palette_mode,
              doc ='''This field is intended for paletted pixel modes; it
                      indicates how the palette is stored. Not used currently.''')
@@ -574,7 +573,7 @@ class Outline( object ):
         charmap : a FT_Outline
         '''
         self._FT_Outline = outline
-        
+
     n_contours = property(lambda self: self._FT_Outline.n_contours)
     def _get_contours(self):
         n = self._FT_Outline.n_contours
@@ -613,7 +612,7 @@ class Outline( object ):
               argument to the SCANMODE instruction).
 
               Bits 3 and 4 are reserved for internal purposes.''')
-        
+
     flags = property(lambda self: self._FT_Outline.flags,
       doc = '''A set of bit flags used to characterize the outline and give
                hints to the scan-converter and hinter on how to
@@ -788,18 +787,18 @@ class Glyph( object ):
         can compute the width and height of the glyph image (be it in integer
         or 26.6 pixels) as:
 
-        width  = bbox.xMax - bbox.xMin;                                  
-        height = bbox.yMax - bbox.yMin;                                  
+        width  = bbox.xMax - bbox.xMin;
+        height = bbox.yMax - bbox.yMin;
 
         Note also that for 26.6 coordinates, if 'bbox_mode' is set to
         FT_GLYPH_BBOX_GRIDFIT, the coordinates will also be grid-fitted, which
         corresponds to:
 
         bbox.xMin = FLOOR(bbox.xMin);
-        bbox.yMin = FLOOR(bbox.yMin);                                    
-        bbox.xMax = CEILING(bbox.xMax);                                  
-        bbox.yMax = CEILING(bbox.yMax);                                  
-        
+        bbox.yMin = FLOOR(bbox.yMin);
+        bbox.xMax = CEILING(bbox.xMax);
+        bbox.yMax = CEILING(bbox.yMax);
+
         To get the bbox in pixel coordinates, set 'bbox_mode' to
         FT_GLYPH_BBOX_TRUNCATE.
 
@@ -903,7 +902,7 @@ class GlyphSlot( object ):
                 a few other functions.''')
 
     def _get_next( self ):
-        return GlyphSlot( self._FT_GlyphSlot.contents.next )
+        return GlyphSlot( self._FT_GlyphSlot.contents.__next__ )
     next = property( _get_next,
      doc = '''In some cases (like some font tools), several glyph slots per
               face object can be a good thing. As this is rare, the glyph slots
@@ -990,7 +989,7 @@ class Face( object ):
         self._filename = filename
         self._index = index
         self._FT_Face = face
-    
+
     def __del__( self ):
         '''
         Discard  face object, as well as all of its child slots and sizes.
@@ -1002,7 +1001,7 @@ class Face( object ):
         '''
         This function calls FT_Request_Size to request the nominal size (in
         points).
-        
+
         Parameters:
         -----------
         width: The nominal width, in 26.6 fractional points.
@@ -1087,7 +1086,7 @@ class Face( object ):
         correspond to the internal indices used within the file. This is done
         to ensure that value 0 always corresponds to the 'missing glyph'.
         '''
-        if type( charcode ) in (str,unicode):
+        if isinstance(charcode, str):
             charcode = ord( charcode )
         return FT_Get_Char_Index( self._FT_Face, charcode )
 
@@ -1247,7 +1246,7 @@ class Face( object ):
         Parameters:
         -----------
         left: The index of the left glyph in the kern pair.
-        
+
         right: The index of the right glyph in the kern pair.
 
         mode: See FT_Kerning_Mode for more information. Determines the scale
@@ -1344,7 +1343,7 @@ class Face( object ):
                doc = '''True whenever a face object contains a font face that
                         contains fixed-width (or 'monospace', 'fixed-pitch',
                         etc.) glyphs.''')
-    
+
     def _has_fixed_sizes( self ):
         return bool( self.face_flags & FT_FACE_FLAG_FIXED_SIZES )
     has_fixed_sizes = property( _has_fixed_sizes,
@@ -1695,7 +1694,7 @@ class Stroker( object ):
         error = FT_Stroker_BeginSubPath( self._FT_Stroker, to, open_ )
         if error: raise FT_Exception( error )
 
-    
+
     def end_subpath( self ):
         '''
         Close the current sub-path in the stroker.
@@ -1709,7 +1708,7 @@ class Stroker( object ):
         error = FT_Stroker_EndSubPath( self._FT_Stroker)
         if error: raise FT_Exception( error )
 
-    
+
     def line_to( self, to ):
         '''
         'Draw' a single line segment in the stroker's current sub-path, from
@@ -1727,7 +1726,7 @@ class Stroker( object ):
         error = FT_Stroker_LineTo( self._FT_Stroker, to )
         if error: raise FT_Exception( error )
 
-        
+
     def conic_to( self, control, to ):
         '''
         'Draw' a single quadratic Bezier in the stroker's current sub-path,
@@ -1745,7 +1744,7 @@ class Stroker( object ):
         '''
         error = FT_Stroker_ConicTo( self._FT_Stroker, control, to )
         if error: raise FT_Exception( error )
-        
+
 
     def cubic_to( self, control1, control2, to ):
         '''
@@ -1768,15 +1767,15 @@ class Stroker( object ):
         '''
         error = FT_Stroker_CubicTo( self._FT_Stroker, control1, control2, to )
         if error: raise FT_Exception( error )
-        
-        
+
+
     def get_border_counts( self, border ):
         '''
         Call this function once you have finished parsing your paths with the
         stroker. It returns the number of points and contours necessary to
         export one of the 'border' or 'stroke' outlines generated by the
         stroker.
-        
+
         Parameters:
         -----------
         border: The border index.
@@ -1791,7 +1790,7 @@ class Stroker( object ):
                                     byref(anum_points), byref(anum_contours) )
         if error: raise FT_Exception( error )
         return anum_points.value, anum_contours.value
-                                            
+
 
     def export_border( self , border, outline ):
         '''
@@ -1806,7 +1805,7 @@ class Stroker( object ):
         border:  The border index.
 
         outline: The target outline.
-            
+
         Note:
         -----
         Always call this function after get_border_counts to get sure that

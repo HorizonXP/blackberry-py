@@ -4,8 +4,8 @@
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 # -----------------------------------------------------------------------------
-from __future__ import print_function
-from __future__ import division
+
+
 import sys
 from freetype import *
 
@@ -253,7 +253,7 @@ if __name__ == '__main__':
     
     try:
         opts, args = getopt.getopt(sys.argv[1:], ':nv')
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         usage( execname )
 
     verbose = False

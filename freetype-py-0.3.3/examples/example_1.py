@@ -52,10 +52,10 @@ if __name__ == '__main__':
     slot = face.contents.glyph
 
     # set up matrix
-    matrix.xx = (int)( math.cos( angle ) * 0x10000L )
-    matrix.xy = (int)(-math.sin( angle ) * 0x10000L )
-    matrix.yx = (int)( math.sin( angle ) * 0x10000L )
-    matrix.yy = (int)( math.cos( angle ) * 0x10000L )
+    matrix.xx = (int)( math.cos( angle ) * 0x10000 )
+    matrix.xy = (int)(-math.sin( angle ) * 0x10000 )
+    matrix.yx = (int)( math.sin( angle ) * 0x10000 )
+    matrix.yy = (int)( math.cos( angle ) * 0x10000 )
 
     # the pen position in 26.6 cartesian space coordinates; */
     # start at (300,200) relative to the upper left corner  */
