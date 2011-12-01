@@ -4,8 +4,8 @@
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 # -----------------------------------------------------------------------------
-from __future__ import print_function
-from __future__ import division
+
+
 from freetype import *
 
 def platform_name(platform_id):

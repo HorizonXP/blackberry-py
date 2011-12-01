@@ -13,7 +13,7 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
     face = Face('./Vera.ttf')
-    text = u'Hello World !æΩΦ'
+    text = 'Hello World !æΩΦ'
     face.set_char_size( 48*64 )
     slot = face.glyph
 
