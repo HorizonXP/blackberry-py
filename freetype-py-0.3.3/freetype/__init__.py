@@ -32,7 +32,7 @@ __handle__ = None
 FT_Library_filename = ctypes.util.find_library('freetype')
 if not FT_Library_filename:
     try:
-        __dll__ = ctypes.CDLL('libfreetype.so.6')
+        __dll__ = ctypes.CDLL('libfreetype.so')
     except OSError:
         __dll__ = None
 if not FT_Library_filename and not __dll__:
@@ -981,6 +981,10 @@ class Face( object ):
         index: The index of the face within the font.
                The first face has index 0.
         '''
+        try:
+            filename = filename.encode()
+        except AttributeError:
+            pass
         library = get_handle( )
         face = FT_Face( )
         self._FT_Face = None
