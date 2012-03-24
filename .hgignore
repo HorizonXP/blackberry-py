@@ -12,3 +12,10 @@ Simulator/
 Simulator-Debug/
 ^x86/
 ^armle-v7/
+^NDK-Samples/
+^pb1-200-backup/
+^monitor
+^releases
+^docs
+^samples
+^stuff

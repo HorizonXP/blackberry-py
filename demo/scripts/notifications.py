@@ -24,7 +24,7 @@ def run():
     #   system_master_volume_reference
 
     notify = qn.SimpleNotification('Feel the power!',
-        icon=os.path.abspath('shared/documents/scripts/logo35x35.png'),
+        icon=os.path.abspath('data/scripts/logo35x35.png'),
         soundName='event_video_call_outgoing',
         timeout=20,
         showTimeFlag=True,
