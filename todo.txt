@@ -1,16 +1,19 @@
 Todo List
 ------------
-*   get images working so simple bitmaps can be arranged onscreen
+*   contact freetype-py author re use of his code in BBX-Python, when it's stable enough
+    - push Python 3 changes to him
+    - remove from tree and make installer to download from code.google.com
 *   check size of corner-swipe area
 *   create Event class hierarchy
 *   create App base class with the plumbing
-*   wrap FreeType or use an existing wrapper and get some basic text display
 *   check whether the latest beta OS has the bytes/unicode problem with geolocation
 *   receive keyboard events and test with BT keyboard for repeat and special key support
 *   provide some callback for display of text (scrolling console output?) in OpenGL context
 
 Done
 -----
+*   wrap FreeType or use an existing wrapper and get some basic text display
+*   get images working so simple bitmaps can be arranged onscreen
 *   handle errors from PyRun_SimpleFile() and build a traceback string for display
     (done through bbxmain.py instead)
 *   make dialogs not system modal
