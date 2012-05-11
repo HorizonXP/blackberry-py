@@ -29,11 +29,11 @@ class GeoTracer:
         except AttributeError:
             pass
 
-        #~ print('data', resp)
+        # print('data', resp)
         return resp
 
 
-    def run(self):
+    def run(self, duration=60, period=1.0):
         self.geo.open_connection()
 
         # hotpatch the Geolocation's PpsFile object to fix the data read back
@@ -41,10 +41,10 @@ class GeoTracer:
         self.geo.f.read = self._fix_read
 
         try:
-            self.geo.start_location_updates(1.0)
+            self.geo.start_location_updates(period)
 
             start = time.time()
-            while time.time() - start < 60:
+            while time.time() - start < duration:
                 time.sleep(5)
                 if not self.updating:
                     print('waiting', self.geo.status_of_location_updates())
