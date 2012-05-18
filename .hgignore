@@ -1,21 +1,26 @@
 syntax: glob
 *.pyc
+*.log
+*.gpx
+.ix_tag
+buildnum
+_buildnum
 
 syntax: regexp
 ^.metadata/
+^docs
+^BB10-Samples/
+^NDK-Samples/
+^notes/
 ^Python-3.2.2/
-^extras/
-^platform-libs/
+^Qt/
+^releases/
+^samples/
+^stuff/
+^sandbox/
+
+nonrepo_/
 Device-Debug/
 Device-Release/
 Simulator/
 Simulator-Debug/
-^x86/
-^armle-v7/
-^NDK-Samples/
-^pb1-200-backup/
-^monitor
-^releases
-^docs
-^samples
-^stuff
