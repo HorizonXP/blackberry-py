@@ -16,9 +16,9 @@
    version="1.1"
    inkscape:version="0.48.0 r9654"
    sodipodi:docname="logo.svg"
-   inkscape:export-filename="C:\svn\hg\prj272-bbx-python\logo.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets/icon.png"
+   inkscape:export-xdpi="15.12"
+   inkscape:export-ydpi="15.12">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -29,10 +29,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="296.72941"
-     inkscape:cy="218.35049"
+     inkscape:cx="147.12804"
+     inkscape:cy="206.28937"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer3"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1148"
@@ -61,153 +61,150 @@
        y="548.40381"
        x="21.708664"
        id="image2993"
-       xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
-HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
-MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAB/AHgDASIA
-AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
-AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
-ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
-p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
-AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
-BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
-U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
-uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iii
-gAooooAKKKKACiiigAoopjMqKWYgKBkknGBQA+qt7qFlpluZ7+8t7WEdZJ5VjUfiSBXL+KND8V65
-qcK6V4mGjaP5A87yoA07SZOcEgbRgr34weKyrLwJ4O0q4+16j9o17UAcm41KY3LZ74B+Xr7Z96LC
-bSNpPH+l30hi0K2v9ckDbC1hATEp95XKx/juq9C/iS+QNOllpMZXlVY3Mw59cKinHsw96rya+yRi
-K0t0iRQFUEZwBxwBgAAdqzp725uTmaZ2HpnA/IcVSizN1Utjbnv7HTPKMt3JdTNKqgu245JxkAAK
-MDPQCiuL1WXypdKH/PTUoE+udx/pRRyoj2rPUaKKKk6AooooAKKKKACiiqGq6rZaJp8t/qFwsFtE
-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
-"
+       xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAB/AHgDASIA AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3 ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3 uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iii gAooooAKKKKACiiigAoopjMqKWYgKBkknGBQA+qt7qFlpluZ7+8t7WEdZJ5VjUfiSBXL+KND8V65 qcK6V4mGjaP5A87yoA07SZOcEgbRgr34weKyrLwJ4O0q4+16j9o17UAcm41KY3LZ74B+Xr7Z96LC bSNpPH+l30hi0K2v9ckDbC1hATEp95XKx/juq9C/iS+QNOllpMZXlVY3Mw59cKinHsw96rya+yRi K0t0iRQFUEZwBxwBgAAdqzp725uTmaZ2HpnA/IcVSizN1Utjbnv7HTPKMt3JdTNKqgu245JxkAAK MDPQCiuL1WXypdKH/PTUoE+udx/pRRyoj2rPUaKKKk6AooooAKKKKACiiqGq6rZaJp8t/qFwsFtE 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 "
        height="495.91669"
        width="468.58267" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Background"
+     style="display:inline">
+    <rect
+       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect2998"
+       width="512.14734"
+       height="514.16766"
+       x="1.0101526"
+       y="0.86281055"
+       rx="62.613358"
+       ry="62.613358"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Layer"
      style="display:inline">
+    <rect
+       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffb8b8;stroke-width:10;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect2997"
+       width="568.71588"
+       height="539.42145"
+       x="-599.19287"
+       y="-15.29963"
+       rx="11.095578"
+       ry="11.766773" />
     <path
        style="color:#000000;fill:#adc7c8;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 97.857143,168.42857 260.71429,171.28571 366.42857,67 487.85714,29.857142 489.28571,143.42857 397.85714,249.14286 396.42857,429.85714 297.14286,372.71429 C 225.8996,349.22637 178.6624,346.9919 173.25263,251.5363 z"
+       d="M 100.96864,170.22311 260.52615,173.02236 364.09856,70.849578 483.06688,34.45927 484.4665,145.72963 394.89036,249.30205 393.49073,426.35489 296.21665,370.36981 C 226.41684,347.35778 180.13671,345.16858 174.83655,251.647 z"
        id="path3766"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccc" />
+       sodipodi:nodetypes="cccccccccc"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 28.571429,144.85714 238.57143,145.57143 58.571429,157 129.28571,237 z"
+       d="m 33.086724,147.12926 205.745206,0.69982 -176.353034,11.19701 69.281544,78.37913 z"
        id="path3771"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc" />
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 105,318.42857 12.142857,442 121.42857,339.85714 z"
+       d="M 107.96678,317.18397 16.99101,438.25173 124.06249,338.17838 z"
        id="path3773"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 345,47 347.14286,64.857142 490.71429,7.7142852 z"
+       d="m 343.10415,51.254797 2.09945,17.49534 140.66254,-55.985089 z"
        id="path3775"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 482.85714,19.142857 -5.71428,124.285713 10,5 z"
+       d="m 478.16818,23.962066 -5.5985,121.767564 9.79739,4.8987 z"
        id="path3777"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 143.57143,366.28571 23.571429,504.14286 157.85714,385.57143 z"
+       d="M 145.75672,364.07148 28.188029,499.13551 159.75299,382.96645 z"
        id="path3779"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 203.57143,397.71429 112.85714,506.28571 218.57143,417.71429 z"
+       d="M 204.54106,394.86329 115.66473,501.23495 219.23715,414.45807 z"
        id="path3781"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 271.42857,354.14286 9.28572,15.71428 L 470,140.57143 z"
+       d="m 271.02335,352.17465 9.09758,15.3959 185.45061,-224.64017 z"
        id="path3783"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 397.14286,465.57143 382.85714,269.14286 382.14286,442 299.28571,380.57143 z"
+       d="m 394.19055,461.34558 -13.99628,-192.44875 -0.6998,169.3549 -81.17839,-60.18397 z"
        id="path3785"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 147.85714,253.42857 140.71429,242 340,59.142857 z"
+       d="M 149.95559,253.50093 142.95747,242.30391 338.20546,63.151629 z"
        id="path3787"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <path
        style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 262.85714,377.71429 1.42857,-15 c 0,0 -69.35673,-13.15899 -92.14285,-42.50001 -26.07144,-33.57142 -26.07143,-61.42857 -26.07143,-61.42857 -9.16837,19.25058 -4.64286,28.21429 -1.78571,38.92858 2.85714,10.71428 24.99999,52.85714 71.42857,66.42857 46.42857,13.57143 47.14285,13.57143 47.14285,13.57143 z"
+       d="m 262.62559,375.26851 1.39962,-14.69609 c 0,0 -67.9515,-12.89238 -90.27595,-41.63892 -25.54321,-32.89123 -25.5432,-60.18397 -25.5432,-60.18397 -8.98261,18.86054 -4.54879,27.64264 -1.74953,38.13985 2.79926,10.4972 24.49347,51.7862 69.98136,65.08266 45.48789,13.29647 46.1877,13.29647 46.1877,13.29647 z"
        id="path3789"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccssssc" />
+       sodipodi:nodetypes="ccssssc"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839" />
     <text
        xml:space="preserve"
-       style="font-size:143.71705627px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="-88.220398"
-       y="336.65027"
+       style="font-size:140.8052063px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       x="-60.731339"
+       y="338.56021"
        id="text3802"
        sodipodi:linespacing="125%"
        transform="matrix(0.58082562,-0.60156014,0.89354565,0.79624338,0,0)"
-       inkscape:transform-center-x="45.839932"
-       inkscape:transform-center-y="34.243092"><tspan
+       inkscape:transform-center-x="44.91116"
+       inkscape:transform-center-y="33.549307"
+       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
+       inkscape:export-xdpi="15.112839"
+       inkscape:export-ydpi="15.112839"><tspan
          sodipodi:role="line"
          id="tspan3804"
-         x="-88.220398"
-         y="336.65027"
-         style="font-size:97.3813858px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial">BBX-Py</tspan></text>
+         x="-60.731339"
+         y="338.56021"
+         style="font-size:95.40834808px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial">BB-Py</tspan></text>
   </g>
 </svg>
