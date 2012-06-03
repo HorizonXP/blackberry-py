@@ -96,7 +96,7 @@ def get_qt_specs():
 
 
 def main():
-    pkg = tarfile.open('blackberry-py-{}-1.0.0.tar.bz2'.format(args.mode), 'w:bz2')
+    pkg = tarfile.open('blackberry-py-{}.tar.bz2'.format(args.mode), 'w:bz2')
     try:
         for stage in ['qt', 'pyside']:
             stagedir = getattr(args, stage)
