@@ -3,13 +3,8 @@
     <id>ca.microcode.bbpy.HelloWorld</id>
     <name>BB-Py HelloWorld</name>
     <versionNumber>1.0.0</versionNumber>
+    <icon><image>icon.png</image></icon>
 
     <asset path="main.py" entry="true" type="Qnx/Python">main.py</asset>
     <action system="true">run_native</action>
-
-    <env var="PYTHONPATH" value="app/python/blackberry-py"/>
-    <env var="LD_LIBRARY_PATH" value="app/python/blackberry-py/lib"/>
-    <env var="QT_PLUGIN_PATH" value="app/python/blackberry-py/plugins"/>
-    <env var="QT_QPA_PLATFORM" value="blackberry"/>
-
 </qnx>

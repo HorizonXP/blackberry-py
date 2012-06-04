@@ -5,8 +5,11 @@ goto done
 :package
 call blackberry-pythonpackager -package HelloWorld.bar -devMode ^
     -debugToken %1 ^
+    -env PYTHONPATH=app/python/blackberry-py ^
     bar-descriptor.xml ^
-    -e ../assets/icon.png icon.png^
-    blackberry-py/ ^
-    main.py main.qml
+    main.py main.qml ^
+    -e ../assets/icon.png icon.png ^
+    -e ../blackberry-py/ blackberry-py/ ^
+    -e ../bbpy/ blackberry-py/bbpy
+rem    -env PYTHONPATH=shared/misc/blackberry-py:shared/misc ^
 :done

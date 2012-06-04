@@ -1,12 +1,10 @@
-import sys
+import bbpy
 
-from PySide.QtGui import QApplication
-from PySide.QtDeclarative import QDeclarativeView
+def main():
+    app = bbpy.app.Application('app/python/main.qml')
+    app.run()
 
-app = QApplication(sys.argv)
 
-view = QDeclarativeView()
-view.setSource('app/python/main.qml')
-view.show()
+if __name__ == '__main__':
+    main()
 
-app.exec_()
