@@ -94,11 +94,15 @@ def get_qt_specs():
         Add('plugins/imageformats/libqsvg.so'),
         ]
 
+def get_bbpy_specs():
+    return [
+        Library('bbpy/*'),
+        ]
 
 def main():
     pkg = tarfile.open('blackberry-py-{}.tar.bz2'.format(args.mode), 'w:bz2')
     try:
-        for stage in ['qt', 'pyside']:
+        for stage in ['qt', 'pyside', 'bbpy']:
             stagedir = getattr(args, stage)
             # print 'stage dir', stagedir
             get_specs = globals()['get_{}_specs'.format(stage)]
@@ -118,6 +122,8 @@ if __name__ == '__main__':
         help='location of Qt "stage" folder')
     parser.add_argument('pyside', type=str,
         help='location of PySide "stage" folder')
+    parser.add_argument('bbpy', type=str,
+        help='location of BBPyProject working folder')
     parser.add_argument('-m', '--mode', type=str, default='full', nargs='?')
 
     # note: this is global:
