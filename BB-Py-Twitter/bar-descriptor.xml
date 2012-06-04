@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>org.BB-Py.samples.twitter</id>
+    <name>BB-Py Twitter</name>
+    <versionNumber>0.0.1</versionNumber>
+    <description>Sample Twitter client app using BB-Py</description>
+    <splashscreen>assets/background.png</splashscreen>
+    <icon><image>assets/icon.png</image></icon>
+    <asset path="_main.py" entry="true" type="Qnx/Python">_main.py</asset>
+    <action system="true">run_native</action>
+    <action>access_shared</action>
+</qnx>
