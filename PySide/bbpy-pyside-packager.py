@@ -97,6 +97,7 @@ def get_qt_specs():
 def get_bbpy_specs():
     return [
         Add('bbpy/*'),
+        Add('legal/*', dest=''),
         ]
 
 def main():
