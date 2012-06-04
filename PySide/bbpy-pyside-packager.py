@@ -39,7 +39,7 @@ class Add(object):
     def cleanup(self):
         for f in self.tempfiles:
             os.remove(f)
-        
+
 
     def apply_steps(self):
         for step in self.steps:
@@ -71,10 +71,10 @@ class Library(Add):
         os.system('ntoarm-strip -s -o {} {}'.format(tname, self.srcpath))
         self.srcpath = tname
         self.tempfiles.append(tname)
-        
+
 
     steps = [output_name, maybe_strip]
-        
+
 
 
 def get_pyside_specs():
@@ -118,7 +118,7 @@ if __name__ == '__main__':
         help='location of Qt "stage" folder')
     parser.add_argument('pyside', type=str,
         help='location of PySide "stage" folder')
-    parser.add_argument('-m', '--mode', type=str, default='lite', nargs='?')
+    parser.add_argument('-m', '--mode', type=str, default='full', nargs='?')
 
     # note: this is global:
     args = parser.parse_args()
