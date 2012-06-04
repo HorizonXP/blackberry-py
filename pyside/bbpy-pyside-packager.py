@@ -96,7 +96,7 @@ def get_qt_specs():
 
 def get_bbpy_specs():
     return [
-        Library('bbpy/*'),
+        Add('bbpy/*'),
         ]
 
 def main():
