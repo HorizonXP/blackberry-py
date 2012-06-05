@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>ca.microcode.bbpy.QMLView</id>
+    <name>BB-Py QML Viewer</name>
+    <versionNumber>1.0.0</versionNumber>
+    <buildIdFile>_buildId</buildIdFile>
+    <description>QML Viewer sample for BB-Py</description>
+    <initialWindow>
+        <autoOrients>true</autoOrients>
+    </initialWindow>
+    <icon><image>assets/icon.png</image></icon>
+    <splashscreen>assets/splash_dual.jpg:assets/splash_dual.jpg</splashscreen>
+    <asset path="_main.py" entry="true" type="Qnx/Python">_main.py</asset>
+    <action system="true">run_native</action>
+    <action>access_shared</action>
+</qnx>
