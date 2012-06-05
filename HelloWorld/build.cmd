@@ -5,6 +5,7 @@ echo If signing, also specify -sign -storepass XXX -cskpass XXX -buildId
 goto done
 :package
 call blackberry-pythonpackager -package HelloWorld.bar ^
+    -devMode ^
     -env PYTHONPATH=app/python/blackberry-py ^
     bar-descriptor.xml ^
     main.py main.qml ^
