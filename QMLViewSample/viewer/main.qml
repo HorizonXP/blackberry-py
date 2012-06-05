@@ -4,7 +4,31 @@ Rectangle {
     id: root
     width: 1024
     height: 600
-    color: "pink"
+    color: "lightsteelblue"
+
+    states: State {
+        name: "portrait"
+        when: width < height
+
+        PropertyChanges {
+            target: instructions
+            width: root.width
+            height: 440
+        }
+        PropertyChanges {
+            target: chooser
+            anchors.topMargin: 25
+            anchors.bottomMargin: 25
+            anchors.leftMargin: (parent.width - width) / 2
+        }
+        AnchorChanges {
+            target: chooser
+            anchors.left: instructions.left
+            anchors.top: instructions.bottom
+            anchors.bottom: parent.bottom
+            anchors.verticalCenter: undefined
+        }
+    }
 
     function onFileListChanged(items) {
         chooser.display(items);
@@ -14,24 +38,58 @@ Rectangle {
         chooser.visible = false;
     }
 
-    Rectangle {
-        id: ghoster
-        visible: chooser.visible
+    // uncomment for interactive testing
+    /* Component.onCompleted: {
+        chooser.display(['.. (parent folder)',
+            'test/',
+            'this/',
+            'folder/',
+            'now_whatever/',
+            'SomeClasses/',
+            'fake.qml',
+            'Dummy.qml',
+            'AnotherFolder/',
+            'MyFileList.qml',
+            '_main.qml'
+            ])
+    }*/
 
-        anchors.fill: root
-        anchors.centerIn: root
-        z: 1
-        color: "black"
-        opacity: 0.5
+    Rectangle {
+        id: instructions
+
+        width: 400
+        height: parent.height
+        color: "#000"
+
+        Text {
+            anchors.fill: parent
+            anchors.margins: 12
+            color: "white"
+            font.family: "Zapfino"
+            font.pointSize: 18
+            wrapMode: Text.WordWrap
+
+            text: "<u><h3>BlackBerry-Py QMLView</h3></u>" +
+                "<p>This utility is a sample to demonstrate how to " +
+                "write apps using PySide and QML with the BB-Py package." +
+                "<p>Copy your QML file(s) to the shared/misc folder " +
+                "and select it in the file chooser.  Then edit the file " +
+                "over the WiFi or USB connection using a text editor on your PC." +
+                "<p>The display will update when you save, and errors will be " +
+                "shown in a special page."
+        }
     }
 
     Rectangle {
         id: chooser
+
         border.width: 3
         radius: 10
         width: 400
         height: parent.height - 50
-        anchors.centerIn: parent
+        anchors.left: instructions.right
+        anchors.leftMargin: (parent.width - instructions.width - width) / 2
+        anchors.verticalCenter: parent.verticalCenter
         visible: false
         z: 2
         color: "gray"
@@ -56,7 +114,7 @@ Rectangle {
             Rectangle {
                 width: parent.width
                 height: 55
-                color: ((index % 2 == 0) ? "#222" : "#444")
+                color: ((index % 2 == 0) ? "#222" : "#555")
                 Text {
                     id: filename
                     elide: Text.ElideRight
@@ -81,7 +139,7 @@ Rectangle {
             width: parent.width - 20
 
             anchors.top: parent.top
-            anchors.topMargin: 5
+            anchors.topMargin: 5 + parent.border.width
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
