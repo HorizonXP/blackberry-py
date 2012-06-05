@@ -5,6 +5,7 @@ import sys
 
 # from PySide.QtCore import Slot
 from PySide.QtGui import QApplication
+from PySide.QtDeclarative import QDeclarativeView
 
 
 class Application(QApplication):
@@ -13,8 +14,9 @@ class Application(QApplication):
 
         self._view = None
 
-        desktop = self.desktop()
-        desktop.resized.connect(self._onDesktopResized)
+        if sys.platform == 'qnx6':
+            desktop = self.desktop()
+            desktop.resized.connect(self._onDesktopResized)
 
         if qml:
             v = self.create_view()
@@ -48,17 +50,16 @@ class Application(QApplication):
         # view, root, and scene all seem to get a WindowActivate/Deactivate event
         # when app goes inactive etc; view also gets an ActivationChange event
         # and FocusIn/Out events
-        from PySide.QtDeclarative import QDeclarativeView
-
         self._view = v = QDeclarativeView()
         v.setResizeMode(v.ResizeMode.SizeRootObjectToView)
         return v
 
 
     def run(self):
-        if self._view:
-            scene = self._view.rootObject().scene()
-            scene.sceneRectChanged.connect(self._onSceneRectChanged)
+        if sys.platform == 'qnx6':
+            if self._view:
+                scene = self._view.rootObject().scene()
+                scene.sceneRectChanged.connect(self._onSceneRectChanged)
 
         # Enter Qt application main loop
         sys.exit(self.exec_())
