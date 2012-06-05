@@ -9,6 +9,7 @@ _buildnum
 
 syntax: regexp
 ^.metadata/
+^blackberry-py/
 ^docs
 ^BB10-Samples/
 ^NDK-Samples/
