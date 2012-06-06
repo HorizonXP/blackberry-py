@@ -17,9 +17,9 @@ from .app import Application
 # launch telnet-based command line interface (CLI)
 if '--cli' in sys.argv:
     try:
-        import cli
+        from . import cli
     except ImportError:
-        pass
+        print('unable to import cli, ignoring --cli option', file=sys.stderr)
     else:
         import threading
         t = threading.Thread(target=cli.run)
