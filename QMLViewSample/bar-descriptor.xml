@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
     <id>ca.microcode.bbpy.QMLView</id>
-    <name>BB-Py QML Viewer</name>
+    <name>BB-Py QMLViewer</name>
     <versionNumber>1.0.0</versionNumber>
     <buildIdFile>_buildId</buildIdFile>
     <description>QML Viewer sample for BB-Py</description>
