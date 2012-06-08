@@ -4,12 +4,14 @@ import threading
 import time
 import shutil
 import re
+import pickle
 
 from bbpy.app import Application
 
 from PySide.QtCore import (Qt, QObject, Signal, Slot, Property, qDebug)
 
 APPDIR = os.path.dirname(__file__)
+DATASTORE = 'data/'
 
 
 class FileMonitor(threading.Thread):
@@ -72,12 +74,33 @@ class App(Application):
     def __init__(self):
         super(App, self).__init__()
 
-        self._tempPath = None
         self._rootId = None
         self._errors = ''
 
-        self._folder = '.'
         self.filelist = []
+
+        self.restore_state()
+
+
+    STATE_FILE = 'data/app.state'
+    STATE_VERSION = 1
+
+    def restore_state(self):
+        try:
+            data = pickle.load(open(self.STATE_FILE, 'rb'))
+        except:
+            data = {}
+
+        self._folder = data.get('folder', '.')
+
+
+    def save_state(self):
+        data = {
+            'version': self.STATE_VERSION,
+            'folder': self._folder,
+            }
+
+        pickle.dump(data, open(self.STATE_FILE, 'wb'))
 
 
     def loadQml(self, path, id):
@@ -188,7 +211,10 @@ class App(Application):
         self.filemon = FileMonitor(signal=self.filesChanged)
         self.filemon.start()
 
+        self.aboutToQuit.connect(self.save_state)
+
         super(App, self).run()
+
 
 
 def main():
