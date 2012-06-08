@@ -10,7 +10,6 @@ from bbpy.app import Application
 from PySide.QtCore import (Qt, QObject, Signal, Slot, Property, qDebug)
 
 APPDIR = os.path.dirname(__file__)
-TEMPFILE_PATTERN = re.compile(r'_qv_\d+.qml')
 
 
 class FileMonitor(threading.Thread):
@@ -23,7 +22,7 @@ class FileMonitor(threading.Thread):
         self.signal = signal
 
         self._target = None
-        self._prev_signature = None
+        self._prev_sigs = {}
 
         self.event = threading.Event()
 
@@ -44,13 +43,22 @@ class FileMonitor(threading.Thread):
             self.event.wait(timeout=self.CHECK_PERIOD)
             self.event.clear()
 
-            if self._target is not None:
-                stat = os.stat(self._target)
-                signature = (self._target, stat.st_mtime, stat.st_size)
-                if signature != self._prev_signature:
-                    self._prev_signature = signature
-                    qDebug('file changed: {}'.format(self._target))
-                    self.signal.emit(self._target)
+            if self._target:
+                changed = []
+                for target in os.listdir(self._target):
+                    if not target.endswith('.qml'):
+                        continue
+
+                    tpath = os.path.join(self._target, target)
+                    stat = os.stat(tpath)
+                    signature = (stat.st_mtime, stat.st_size)
+                    if signature != self._prev_sigs.get(target):
+                        self._prev_sigs[target] = signature
+                        changed.append(target)
+
+                if changed:
+                    qDebug('files changed: {}'.format(', '.join(sorted(changed))))
+                    self.signal.emit()
 
 
 
@@ -58,7 +66,7 @@ class App(Application):
     # signals
     fileListChanged = Signal(list)
     fileLoaded = Signal(str)
-    fileChanged = Signal(str)  # file contents changed on-disk
+    filesChanged = Signal()  # on or more qml files in target folder
 
 
     def __init__(self):
@@ -78,21 +86,16 @@ class App(Application):
         #     path = path[2:].replace('\\', '/')
         qDebug('setSource {}: {}'.format(id, path))
         self._view.setSource(path)
+        self._view.setGeometry(self.desktop().geometry())
+        qDebug('source set')
 
 
-    def loadTempQml(self, path):
-        # hack to avoid problems with QML triggering a setSource() etc
-        if self._tempPath:
-            os.remove(self._tempPath)
-
-        # TODO: use QDeclarativeEngine.clearComponentCache() to
-        # remove need to use temporary files?
-        folder = os.path.dirname(path)
-        self._tempPath = os.path.join(folder,
-            '_qv_{}.qml'.format(hash(os.stat(path).st_mtime)))
-        shutil.copyfile(path, self._tempPath)
-
-        self.loadQml(self._tempPath, id='test_page')
+    def reloadQml(self):
+        # clear cache so qml source will get reloaded
+        qDebug('clearing')
+        self._view.engine().clearComponentCache()
+        qDebug('call loadQml')
+        self.loadQml(self.rootqml, id='test_page')
 
 
     @Slot()
@@ -142,7 +145,7 @@ class App(Application):
         items = list(filter_list(self._folder))
         if self._folder != '/':
             items.insert(0, '.. (parent folder)')
-        self.fileListChanged.emit(items)
+        self.fileListChanged.emit(sorted(items))
 
 
     @Slot(str)
@@ -154,23 +157,12 @@ class App(Application):
         path = os.path.normpath(os.path.join(self._folder, name))
         qDebug('select ' + path)
         if os.path.isfile(path):
-            self.filemon.target = path
+            self.rootqml = path
+            self.filemon.target = os.path.dirname(path)
         else:
             qDebug('is dir')
-            self.remove_tempfiles(path)
             self._folder = path
             self.do_get_filelist()
-
-
-    def remove_tempfiles(self, path):
-        '''Clean out any leftover temporary files we created.'''
-        qDebug('remove temp files')
-        for name in os.listdir(path):
-            qDebug('check ' + name)
-            if TEMPFILE_PATTERN.match(name):
-                target = os.path.join(path, name)
-                qDebug('removing ' + target)
-                os.remove(target)
 
 
     def _getErrors(self):
@@ -192,8 +184,8 @@ class App(Application):
 
         self.root = v.rootObject()
 
-        self.fileChanged.connect(self.loadTempQml, Qt.QueuedConnection)
-        self.filemon = FileMonitor(signal=self.fileChanged)
+        self.filesChanged.connect(self.reloadQml, Qt.QueuedConnection)
+        self.filemon = FileMonitor(signal=self.filesChanged)
         self.filemon.start()
 
         super(App, self).run()
