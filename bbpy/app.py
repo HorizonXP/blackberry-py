@@ -35,22 +35,10 @@ class Application(QApplication):
 
         self._view = None
 
-        if sys.platform == 'qnx6':
-            desktop = self.desktop()
-            desktop.resized.connect(self._onDesktopResized)
-
         if qml:
             v = self.create_view()
             v.setSource(qml)
-            v.show()
-
-
-    # @Slot()
-    def _onDesktopResized(self, *args):
-        '''this occurs when we rotate after starting up'''
-        w, h = self.desktop().size().toTuple()
-        if self._view:
-            self._view.setFixedSize(w, h)
+            v.showFullScreen()
 
 
     def create_view(self):
@@ -63,12 +51,10 @@ class Application(QApplication):
 
 
     def run(self):
-        # resize to match current desktop
         if sys.platform == 'qnx6':
             if self._view:
-                self._view.setGeometry(self.desktop().geometry())
-
                 self._view.swipeDown.connect(self.swipeDown)
+
         # Enter Qt application main loop
         sys.exit(self.exec_())
 

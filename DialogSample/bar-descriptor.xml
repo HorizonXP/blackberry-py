@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
-    <id>ca.microcode.bbpy.HelloWorld</id>
-    <name>BB-Py HelloWorld</name>
+    <id>ca.microcode.bbpy.DialogSample</id>
+    <name>BB-Py Dialogs</name>
     <versionNumber>1.0.0</versionNumber>
+    <buildIdFile>_buildId</buildIdFile>
+    <description>Dialog Sample for BB-Py</description>
     <initialWindow>
         <autoOrients>true</autoOrients>
     </initialWindow>
     <icon><image>icon.png</image></icon>
-    <asset path="main.py" entry="true" type="Qnx/Python">main.py</asset>
+    <asset path="_main.py" entry="true" type="Qnx/Python">_main.py</asset>
     <action system="true">run_native</action>
+    <action>access_shared</action>
 </qnx>

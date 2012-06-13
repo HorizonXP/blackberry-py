@@ -2,8 +2,6 @@ import QtQuick 1.1
 
 Rectangle {
     id: root
-    width: 1024
-    height: 600
     color: "lightsteelblue"
 
     states: State {
