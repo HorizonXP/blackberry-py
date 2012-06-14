@@ -2,7 +2,7 @@
 
 import sys
 
-from PySide.QtCore import qDebug, Signal, Qt
+from PySide.QtCore import qDebug, Signal, Slot, Qt
 from PySide.QtGui import QApplication
 from PySide.QtDeclarative import QDeclarativeView
 
@@ -15,14 +15,19 @@ class BBPyView(QDeclarativeView):
         # qDebug(':view]-keyPress {}{}'.format(e.type(), ' spont.' if e.spontaneous() else ''))
         if e.key() == Qt.Key_Menu:
             self.swipeDown.emit()
-            qDebug('emitted swipeDown ')
+            # qDebug('emitted swipeDown ')
         return super(BBPyView, self).keyPressEvent(e)
 
 
 
 class Application(QApplication):
     # signals
-    swipeDown = Signal()    # user performed swipe down from top bezel
+
+    # user performed swipe down from top bezel
+    swipeDown = Signal()
+
+    # keyboard show/hide and availableGeometry (size) change
+    keyboardChange = Signal(bool, 'QVariant')
 
 
     def event(self, e):
@@ -35,10 +40,27 @@ class Application(QApplication):
 
         self._view = None
 
+        # configure to process resizes and update keyboard visibility/height
+        d = self._desktop = self.desktop()
+        d.workAreaResized.connect(self.desktopResized)
+        self._initial_size = d.size().toTuple()
+
         if qml:
             v = self.create_view()
             v.setSource(qml)
             v.showFullScreen()
+
+
+    @Slot(int)
+    def desktopResized(self, index):
+        size = self._desktop.availableGeometry(index).size()
+        # qDebug('screen {} resized: {}'.format(index, size))
+        w, h = size.toTuple()
+        visible = h not in self._initial_size
+        if visible:
+            size.setHeight(h - 8)
+        self.keyboardChange.emit(visible, size)
+        # qDebug('keyboardChange({}, {})'.format(visible, size))
 
 
     def create_view(self):
@@ -47,6 +69,8 @@ class Application(QApplication):
         # and FocusIn/Out events
         self._view = v = BBPyView()
         v.setResizeMode(v.ResizeMode.SizeRootObjectToView)
+        rc = v.rootContext()
+        rc.setContextProperty('bbpy', self)
         return v
 
 

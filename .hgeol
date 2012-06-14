@@ -7,3 +7,4 @@
 **.js = native
 **.as = native
 **.xml = native
+**.qml = native

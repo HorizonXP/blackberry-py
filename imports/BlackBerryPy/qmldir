@@ -1,0 +1,7 @@
+# BlackBerry-Py components for QML
+
+Button          0.9 Button.qml
+CheckBox        0.9 CheckBox.qml
+InputField      0.9 InputField.qml
+KeyboardProxy   0.9 KeyboardProxy.qml
+SwipeDownMenu   0.9 SwipeDownMenu.qml
