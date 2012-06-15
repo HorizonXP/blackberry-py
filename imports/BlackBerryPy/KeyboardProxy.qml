@@ -19,7 +19,6 @@ Item {
         kb.showing = visible;
         kb.y = size.height;
         kb.height = parent.height - size.height;
-
         // console.log('kb ' + visible + ', y ' + kb.y + ', height ' + kb.height);
     }
 
