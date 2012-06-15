@@ -11,6 +11,8 @@ FocusScope {
 
     property bool readOnly: false
 
+    signal accepted()
+
     width: parent.width
     height: rect.height
 
@@ -63,6 +65,8 @@ FocusScope {
                 font.family: 'DejaVu Sans Mono'
                 font.pointSize: fieldTextSize
                 text: ''
+
+                onAccepted: scope.accepted()
             }
 
             Text {

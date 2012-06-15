@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>ca.microcode.bbpy.KeyboardSample</id>
+    <name>BB-Py Keyboard Sample</name>
+    <versionNumber>0.0.1</versionNumber>
+    <description>Keyboard Sample for BB-Py</description>
+    <initialWindow>
+        <autoOrients>true</autoOrients>
+    </initialWindow>
+    <icon><image>icon.png</image></icon>
+
+    <asset path="_main.py" entry="true" type="Qnx/Python">_main.py</asset>
+    <action system="true">run_native</action>
+    <!--action>access_shared</action-->
+</qnx>
