@@ -6,6 +6,10 @@ from PySide.QtCore import qDebug, Signal, Slot, Qt
 from PySide.QtGui import QApplication
 from PySide.QtDeclarative import QDeclarativeView
 
+from .bpsloop import BpsThread
+bpsThread = BpsThread()
+bpsThread.start()
+
 
 class BBPyView(QDeclarativeView):
     # signals
@@ -28,6 +32,13 @@ class Application(QApplication):
 
     # keyboard show/hide and availableGeometry (size) change
     keyboardChange = Signal(bool, 'QVariant')
+
+    # notification from our own bps event handler
+    bpsEvent = Signal(str)
+
+
+    def onBpsEvent(self, msg):
+        qDebug('BPS: ' + msg)
 
 
     def event(self, e):
@@ -57,8 +68,14 @@ class Application(QApplication):
         # qDebug('screen {} resized: {}'.format(index, size))
         w, h = size.toTuple()
         visible = h not in self._initial_size
+
+        # Counter-hack to go with the "huge hack" for Qt blackberry
+        # plugin when it's using the PPS keyboard stuff instead of BPS.
+        # Should be removed as soon as we move to a Qt build that
+        # uses the BPS approach.
         if visible:
             size.setHeight(h - 8)
+
         self.keyboardChange.emit(visible, size)
         # qDebug('keyboardChange({}, {})'.format(visible, size))
 
@@ -79,6 +96,12 @@ class Application(QApplication):
             if self._view:
                 self._view.swipeDown.connect(self.swipeDown)
 
+        bpsThread.signal = self.bpsEvent
+        self.bpsEvent.connect(self.onBpsEvent, Qt.QueuedConnection)
+        qDebug('window group is {}'.format(bpsThread.windowGroup))
+
         # Enter Qt application main loop
         sys.exit(self.exec_())
 
+
+# EOF
