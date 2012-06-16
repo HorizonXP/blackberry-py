@@ -1,5 +1,6 @@
 Todo List
 ------------
+*   detect when trying to run from shared/misc and access_shared not granted
 *   starter/template app
 *   sample app(s)
 *   bbpy Application support to set initial size to avoid hardcoding in QML
