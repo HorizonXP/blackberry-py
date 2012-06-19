@@ -23,7 +23,12 @@ Item {
     }
 
     Component.onCompleted: {
-        bbpy.keyboardChange.connect(keyboardChanged);
-        // console.log('connected bbpy.keyboardChange signal');
+        if (!liveview)
+            bbpy.keyboardChange.connect(keyboardChanged);
+    }
+
+    Component.onDestruction: {
+        if (!liveview)
+            bbpy.keyboardChange.disconnect(keyboardChanged);
     }
 }
