@@ -7,7 +7,7 @@ import pickle
 
 from bbpy.app import Application
 
-from PySide.QtCore import (Qt, QObject, Signal, Slot, Property, qDebug)
+from PySide.QtCore import (Qt, QObject, Signal, Slot, Property, qDebug, QMetaObject, SIGNAL)
 
 APPDIR = os.path.dirname(__file__)
 
@@ -114,7 +114,14 @@ class App(Application):
     def reloadQml(self):
         # clear cache so qml source will get reloaded
         qDebug('clearing')
-        self._view.engine().clearComponentCache()
+
+        # qDebug('receivers {}'.format(self.receivers('2keyboardChange(bool,QVariant)')))
+        # QMetaObject.disconnect(self, 0, None, 0)
+        # qDebug('receivers {}'.format(self.receivers('2keyboardChange(bool,QVariant)')))
+
+        engine = self._view.engine()
+        engine.clearComponentCache()
+        # engine.rootContext().setContextProperty('bbpy', self)
         qDebug('call loadQml')
         self.loadQml(self.rootqml, id='test_page')
 
@@ -186,6 +193,9 @@ class App(Application):
         if os.path.isfile(path):
             self.rootqml = path
             self.filemon.target = os.path.dirname(path)
+            self._view.engine().addImportPath(self.filemon.target)
+            qDebug('added {} to import paths'.format(self.filemon.target))
+            qDebug('list is now {}'.format(self._view.engine().importPathList()))
         else:
             qDebug('is dir')
             self._folder = path
@@ -204,6 +214,7 @@ class App(Application):
 
         rc = v.engine().rootContext()
         rc.setContextProperty('engine', self)
+        rc.setContextProperty('liveview', True)
 
         p = os.path.join(os.path.dirname(__file__), 'main.qml')
         self.loadQml(p, id='main_page')
