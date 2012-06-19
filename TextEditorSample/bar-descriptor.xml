@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>ca.microcode.bbpy.TextEditor</id>
+    <name>BB-Py TextEditor Sample</name>
+    <versionNumber>0.1.0</versionNumber>
+    <description>Sample app using BB-Py</description>
+    <initialWindow>
+        <autoOrients>true</autoOrients>
+    </initialWindow>
+    <splashscreen>assets/background.jpg</splashscreen>
+    <icon><image>assets/icon.png</image></icon>
+    <asset path="_main.py" entry="true" type="Qnx/Python">_main.py</asset>
+    <action system="true">run_native</action>
+    <action>access_shared</action>
+</qnx>
