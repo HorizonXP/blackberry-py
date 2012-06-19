@@ -88,6 +88,7 @@ def get_qt_specs():
     return [
         Library('lib/*.so*'),
         Add('imports/Qt/'),
+        Add('imports/BlackBerryPy/'),
         Add('plugins/sqldrivers'),
         Add('plugins/platforms/libblackberry.so'),
         Add('plugins/imageformats/libqjpeg.so'),
