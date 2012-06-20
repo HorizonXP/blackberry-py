@@ -5,6 +5,8 @@ import QtQuick 1.1
 Rectangle {
     id: topmenu
 
+    property real modalAlpha: 0.7
+
     width: parent.width
     height: 200
 
@@ -30,7 +32,7 @@ Rectangle {
         }
         PropertyChanges {
             target: intercept
-            opacity: 0.7
+            opacity: modalAlpha
             visible: true
         }
     }

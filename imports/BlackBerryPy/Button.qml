@@ -4,6 +4,7 @@ Rectangle {
     id: button
 
     property alias text: textItem.text
+    property alias enabled: mouseArea.enabled
 
     signal buttonClicked(string text)
 
@@ -13,6 +14,7 @@ Rectangle {
     radius: 5
     smooth: true
     color: "#804488aa"
+    opacity: enabled ? 1.0 : 0.3
 
     gradient: Gradient {
         GradientStop { position: 0.0; color: "darkGray" }
