@@ -68,6 +68,13 @@ class App(Application):
     fileLoaded = Signal(str)
     filesChanged = Signal()  # on or more qml files in target folder
 
+    # flag usable in code to detect when running in QML LiveView
+    # so certain things can be enabled/disabled for testing
+    liveviewChanged = Signal()
+    def liveview(self):
+        return True
+    liveview = Property(bool, liveview, notify=liveviewChanged)
+
 
     def __init__(self):
         super(App, self).__init__()
@@ -214,7 +221,6 @@ class App(Application):
 
         rc = v.engine().rootContext()
         rc.setContextProperty('engine', self)
-        rc.setContextProperty('liveview', True)
 
         p = os.path.join(os.path.dirname(__file__), 'main.qml')
         self.loadQml(p, id='main_page')
