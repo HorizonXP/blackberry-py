@@ -23,12 +23,12 @@ Item {
     }
 
     Component.onCompleted: {
-        if (!liveview)
+        if (!bbpy.liveview)
             bbpy.keyboardChange.connect(keyboardChanged);
     }
 
     Component.onDestruction: {
-        if (!liveview)
+        if (!bbpy.liveview)
             bbpy.keyboardChange.disconnect(keyboardChanged);
     }
 }
