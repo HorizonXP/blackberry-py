@@ -1,0 +1,11 @@
+Todo List
+------------
+* support multiple encodings
+* flag when content has changed
+* cursor control pad/navigation pad
+* tabs
+* auto-indent?
+* mark right-hand margin (e.g. column 80)
+* multi-file support
+* line numbering
+* bookmarks
