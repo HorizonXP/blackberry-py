@@ -98,6 +98,7 @@ def get_bbpy_specs():
     return [
         Add('bbpy/*'),
         Add('legal/*', dest=''),
+        Add('imports/BlackBerryPy/'),
         ]
 
 def main():
