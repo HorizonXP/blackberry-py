@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import BlackBerryPy 0.9
 
 Rectangle {
     width: 1024
@@ -13,7 +14,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        FixedImage {
+        Image {
             source: "http://www.engcorp.com/apps/bgsmall.png"
             anchors.verticalCenter: parent.verticalCenter
         }
