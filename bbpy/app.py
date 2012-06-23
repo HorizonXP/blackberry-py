@@ -2,9 +2,11 @@
 
 import sys
 
-from PySide.QtCore import qDebug, Signal, Slot, Qt
+from PySide.QtCore import qDebug, QObject, Signal, Slot, Qt
 from PySide.QtGui import QApplication
 from PySide.QtDeclarative import QDeclarativeView
+
+from .loader import Loader
 
 from .bpsloop import BpsThread
 bpsThread = BpsThread()
@@ -41,11 +43,6 @@ class Application(QApplication):
         qDebug('BPS: ' + msg)
 
 
-    def event(self, e):
-        # qDebug(':app]-event {}{}'.format(e.type(), ' spont.' if e.spontaneous() else ''))
-        return super(Application, self).event(e)
-
-
     def __init__(self, qml=None):
         super(Application, self).__init__(sys.argv)
 
@@ -60,6 +57,29 @@ class Application(QApplication):
             v = self.create_view()
             v.setSource(qml)
             v.showFullScreen()
+
+
+    dataLoaded = Signal(str, str)
+
+    @Slot(str, str)
+    def onDataLoaded(self, url, filename):
+        '''Loader thread has retrieved remote image and stored as temp file'''
+        # print('stored', url, 'as', filename)
+        root = self._view.rootObject()
+        images = root.findChildren(QObject, url)
+        for img in images:
+            img.setProperty('source', filename)
+
+
+    @Slot(str)
+    def loadImageSource(self, url):
+        '''for requests from FixedImage to load remote image data'''
+        # print('load', url)
+        if not hasattr(self, 'loader'):
+            self.dataLoaded.connect(self.onDataLoaded, Qt.QueuedConnection)
+            self.loader = Loader(self.dataLoaded)
+            self.loader.start()
+        self.loader.load_url(url)
 
 
     @Slot(int)

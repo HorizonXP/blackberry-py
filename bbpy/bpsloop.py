@@ -50,7 +50,7 @@ class BpsThread(threading.Thread):
         self.windowGroup = ''
 
         bps_initialize()
-        bps_set_verbosity(2)
+        # bps_set_verbosity(2)
         # print('bps_version', bps_get_version(), file=sys.stderr)
         self.missed.append('bps_version {}'.format(bps_get_version()))
 
