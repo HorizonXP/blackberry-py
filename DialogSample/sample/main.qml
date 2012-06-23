@@ -40,11 +40,77 @@ Rectangle {
 
         Button {
             height: 70
-            text: "Popup"
+            text: "Alert"
 
             onButtonClicked: {
                 engine.do_dialog({
                     type: 'alert',
+                    messageText: 'this is my text'
+                })
+            }
+        }
+
+        // TODO:
+        // type: 'certificate_details'
+        // type: 'certification_verification'
+
+        Button {
+            height: 70
+            text: "ContextMenu"
+
+            onButtonClicked: {
+                engine.do_dialog({
+                    type: 'context_menu',
+                    messageText: 'this is my text'
+                })
+            }
+        }
+
+        Button {
+            height: 70
+            text: "FileBrowse"
+
+            onButtonClicked: {
+                engine.do_dialog({
+                    type: 'file_browse',
+                    messageText: 'this is my text',
+                    filter: ['*.py', '*.qml', '*.txt'],
+                    buttons: [{label: 'CANCEL'}, {label: 'OK'}]
+                })
+            }
+        }
+
+        Button {
+            height: 70
+            text: "FileSave"
+
+            onButtonClicked: {
+                engine.do_dialog({
+                    type: 'file_save',
+                    messageText: 'this is my text'
+                })
+            }
+        }
+
+        Button {
+            height: 70
+            text: "Login"
+
+            onButtonClicked: {
+                engine.do_dialog({
+                    type: 'login',
+                    messageText: 'this is my text'
+                })
+            }
+        }
+
+        Button {
+            height: 70
+            text: "Prompt"
+
+            onButtonClicked: {
+                engine.do_dialog({
+                    type: 'prompt',
                     messageText: 'this is my text'
                 })
             }

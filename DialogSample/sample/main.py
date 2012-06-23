@@ -24,15 +24,6 @@ class App(Application):
     def do_dialog(self, params):
         qDebug('do_dialog {}'.format(params))
 
-            # 'alert'
-            # 'certificate_details'
-            # 'certification_verification'
-            # 'context_menu'
-            # 'file_browse'
-            # 'file_save'
-            # 'login'
-            # 'popup'
-            # 'prompt'
         # :param position: one of "topCenter", "middleCenter", or "bottomCenter"
         #     (default is "middleCenter")
         # :param size: The size of the dialog box. One of "small", "medium",
@@ -42,14 +33,23 @@ class App(Application):
         settings['dtype'] = getattr(Dialog, 'TYPE_{}'.format(params.get('type', 'alert').upper()))
 
         settings['bkgAlpha'] = 0.5
-        # settings['buttons'] = ['Cancel', 'OK']
+        try:
+            settings['buttons'] = params['buttons']
+        except KeyError:
+            pass
 
         if not params.get('modal'):
             # dialogs need to have this in order not to be system-modal
-            settings['groupId'] = str(os.getpid())
+            from bbpy.app import bpsThread
+            qDebug('sweet! windowGroup is {}'.format(bpsThread.windowGroup))
+            settings['groupId'] = bpsThread.windowGroup
 
         settings['position'] = params.get('position', 'middleCenter')
         settings['size'] = params.get('size', 'medium')
+        try:
+            settings['filter'] = params['filter']
+        except KeyError:
+            pass
 
         settings['titleText'] = params.get('title', 'No Title')
         # :param titleHtmlText: title string to display in html (this attribute
@@ -60,17 +60,18 @@ class App(Application):
         except KeyError:
             pass
 
-        groupId = str(os.getpid())
-        files = ['testing', 'this']
-        buttonOkay = make_button('OK')
-        buttonCancel = make_button('Cancel')
-        dialogPicker = Dialog(42, Dialog.TYPE_POPUP, buttons=[buttonCancel, buttonOkay], groupId=groupId, items=files, bkgAlpha=0.25)
-        dialogPicker.show_for_response(titleText='Select a script', messageText='Enter a file to run')
+        # files = ['testing', 'this']
+        # buttonOkay = make_button('OK')
+        # buttonCancel = make_button('Cancel')
+        # dialogPicker = Dialog(42, Dialog.TYPE_POPUP,
+        #     buttons=[buttonCancel, buttonOkay], groupId=groupId, items=files, bkgAlpha=0.25)
+        # dialogPicker.show_for_response(titleText='Select a script',
+        #     messageText='Enter a file to run')
 
-        qDebug('showed the dialog {}'.format(dialogPicker))
+        # qDebug('showed the dialog {}'.format(dialogPicker))
 
-        # self.dlg = self.make_dialog(settings)
-        # self.dlg.show()
+        self.make_dialog(settings)
+        self.show_dialog()
 
 
     def make_dialog(self, settings):
@@ -82,7 +83,10 @@ class App(Application):
         if 'buttons' not in settings:
             settings['buttons'] = [{Dialog.BUTTON_LABEL: Dialog.LABEL_OK}]
         self.dlg = Dialog(self.get_dialog_id(), dtype, **settings)
-        self.dlg.show()
+
+
+    def show_dialog(self):
+        self.dlg.show_for_response()
 
 
     def cancel_dialog(self):
@@ -93,8 +97,6 @@ class App(Application):
     @Slot()
     def onLoaded(self):
         pass
-        # root.returnHome.connect(self.showMainPage, Qt.QueuedConnection)
-        # self.fileListChanged.connect(root.onFileListChanged, Qt.QueuedConnection)
 
 
     def run(self):
@@ -106,7 +108,7 @@ class App(Application):
 
         p = os.path.join(os.path.dirname(__file__), 'main.qml')
         v.setSource(p)
-        v.show()
+        v.showFullScreen()
 
         self.root = v.rootObject()
 
