@@ -14,22 +14,57 @@ The following table shows the current status of support for various
 PlayBook/BB10 features in the BlackBerry-Py package.
 
 .. list-table:: Status of feature support (preliminary)
-    :widths: 25,75
+    :widths: 25,10,65
     :header-rows: 1
 
     * - Feature
-      - Status
+      - Supported?
+      - Notes
     * - Accelerometer
-      - no support yet
-    * - File Storage
-      - all Python, QML, Qt supported
+      - NO
+      - easily added with ctypes wrapper
+    * - App state (active, inactive)
+      - SOON
+      - in progress
+    * - Audio (play .wav files)
+      - YES
+      - via on-device qnx.audio package
+    * - Bezel-swipe/top-swipe event
+      - YES
+      - in bbpy.Application and QML
     * - Camera
-      - no support yet
+      - NO
+      - can be added with ctypes wrapper
+    * - Device Info (e.g. PIN)
+      - YES
+      - via on-device qnx.device package
+    * - File Storage
+      - YES
+      - all Python, QML, Qt supported
     * - Geolocation
-      - qnx.geolocation available on-device
+      - YES
+      - via on-device qnx.geolocation package (with hot-patch)
+    * - Keyboard (virtual)
+      - YES
+      - handles size automatically
+    * - Keyboard (predictive)
+      - NO
+      - may require Qt5 (future)
+    * - Networking
+      - YES
+      - all standard Python support
+    * - NFC
+      - SOON
+      - in progress, via ctypes wrapper
     * - Notifications
-      - qnx.notification available on-device
-    * - Bezel-swipe/top-swipe
-      - supported in BBPy Application and QML
+      - YES
+      - via on-device qnx.notification package
+    * - Orientation
+      - YES
+      - via Qt display resizing
+    * - User Interface
+      - YES
+      - full QtQuick (QML) support
     * - Window state (hidden, thumbnail, fullscreen)
+      - SOON
       - in progress
