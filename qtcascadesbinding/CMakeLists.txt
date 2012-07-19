@@ -1,0 +1,47 @@
+set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
+set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
+
+PROJECT(qtcascadesbinding)
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+FIND_PACKAGE(PythonLibs REQUIRED)
+FIND_PACKAGE(Shiboken REQUIRED)
+FIND_PACKAGE(PySide REQUIRED)
+FIND_PACKAGE(Qt4 4.8.0 REQUIRED)
+
+SET(QNX_TARGET_DIR "$ENV{QNX_TARGET}" CACHE STRING "QNX SDK target directory")
+SET(QNX_HOST_DIR "$ENV{QNX_HOST}" CACHE STRING "QNX SDK host directory")
+#SET(LIBQTCASCADES_DIR
+#	#${CMAKE_SOURCE_DIR}/../libs/bbndk-10.0.4-beta/target/qnx6/usr/include
+#	/home/micke/bbndk-10.0.4-beta/target/qnx6/usr/include
+#)
+
+FIND_PROGRAM(GENERATOR generatorrunner REQUIRED)
+IF (NOT GENERATOR)
+    MESSAGE(FATAL_ERROR "You need to specify GENERATOR variable	(-DGENERATOR=value)")
+ENDIF()
+
+IF(CMAKE_HOST_UNIX)
+	OPTION(ENABLE_GCC_OPTIMIZATION "Enable specific GCC flags to optimization library size and performance. Only available on Release Mode" 0)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fvisibility=hidden -Wno-strict-aliasing")
+	SET(CMAKE_CXX_FLAGS_DEBUG "-g")
+	IF(ENABLE_GCC_OPTIMIZATION)
+		SET(CMAKE_BUILD_TYPE Release)
+		SET(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -Os -Wl,-O1")
+		IF(NOT CMAKE_HOST_APPLE)
+			SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--hash-style=gnu")
+		ENDIF()
+	ENDIF()
+
+	IF(CMAKE_HOST_APPLE)
+		IF (NOT	QT_INCLUDE_DIR)
+			SET(QT_INCLUDE_DIR "/Library/Frameworks")
+		ENDIF()
+	ENDIF()
+ENDIF()
+
+INCLUDE(${QT_USE_FILE})
+
+ADD_SUBDIRECTORY(qtcascades)
+

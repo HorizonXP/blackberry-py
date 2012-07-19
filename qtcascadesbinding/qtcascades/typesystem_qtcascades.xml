@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<typesystem package="PySide.QtCascades">
+	<load-typesystem name="typesystem_core.xml" generate="no" />
+	<load-typesystem name="typesystem_declarative.xml" generate="no" />
+	<namespace-type name="bb" generate="yes">
+		<object-type name="Application">
+			<inject-code class="native" position="beginning">
+				//Hejsan
+			</inject-code>
+			<modify-function signature="Application(int &amp;, char **)" access="private"/>
+		</object-type>
+		<namespace-type name="cascades">
+			<object-type name="AbstractPane" />
+			<object-type name="Application">
+				<add-function signature="Application(PySequence)">
+					<inject-code>
+						Application_constructor(%PYSELF, args, &amp;%0);
+					</inject-code>
+				</add-function>
+				<modify-function signature="Application(int &amp;, char **)" access="private"/>
+				<inject-code class="native" file="glue/bb_cascades_application_init.cpp" position="beginning" />
+				<!--modify-function signature="exec()" rename="exec_" allow-thread="yes"/ -->
+			</object-type>
+			<object-type name="DataModel" />
+			<object-type name="QmlDocument">
+				<add-function signature="createRootNode()">
+					<inject-code>
+					<![CDATA[
+						PyObject* pyResult = 0;
+						PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            					bb::cascades::AbstractPane * cppResult = cppSelf->createRootNode<bb::cascades::AbstractPane>();
+            					PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+            					pyResult = Shiboken::Conversions::pointerToPython((SbkObjectType*)SbkPySide_QtCascadesTypes[SBK_BB_CASCADES_ABSTRACTPANE_IDX], cppResult);
+            					Shiboken::Object::setParent(self, pyResult);
+            					return pyResult;
+					]]>
+					</inject-code>
+				</add-function>
+				<object-type name="Builder" />
+			</object-type>
+			<object-type name="UIObject" />
+		</namespace-type>
+	</namespace-type>
+</typesystem>
