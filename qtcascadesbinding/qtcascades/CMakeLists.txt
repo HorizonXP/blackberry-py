@@ -19,9 +19,9 @@ SET(qtcascades_INCLUDE_DIRECTORIES
 	${PYTHON_INCLUDE_PATH}
 	${PYSIDE_INCLUDE_DIR}
 	${PYSIDE_INCLUDE_DIR}/QtCore
-	/home/micke/dev/stage/include/PySide/QtGui
-	/home/micke/dev/stage/include/PySide/QtNetwork
-	/home/micke/dev/stage/include/PySide/QtDeclarative
+	${PYSIDE_INCLUDE_DIR}/QtGui
+	${PYSIDE_INCLUDE_DIR}/QtNetwork
+	${PYSIDE_INCLUDE_DIR}/QtDeclarative
 	${QT_INCLUDE_DIR}
 	${QT_QTCORE_INCLUDE_DIR}
 	${QT_INCLUDE_DIR}/QtNetwork
@@ -46,8 +46,6 @@ SET(qtcascades_LINK_LIBRARIES
 INCLUDE_DIRECTORIES(
 	QtCascades
 	${qtcascades_INCLUDE_DIRECTORIES}
-	/home/micke/dev/stage/include/PySide
-	/home/micke/dev/stage/include/PySide/QtCore
 )
 ADD_LIBRARY(QtCascades MODULE ${qtcascades_SRC} ${CMAKE_BINARY_DIR}/file_patched)
 SET_PROPERTY(TARGET QtCascades PROPERTY PREFIX "")
