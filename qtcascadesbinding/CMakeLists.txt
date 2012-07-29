@@ -12,10 +12,6 @@ FIND_PACKAGE(Qt4 4.8.0 REQUIRED)
 
 SET(QNX_TARGET_DIR "$ENV{QNX_TARGET}" CACHE STRING "QNX SDK target directory")
 SET(QNX_HOST_DIR "$ENV{QNX_HOST}" CACHE STRING "QNX SDK host directory")
-#SET(LIBQTCASCADES_DIR
-#	#${CMAKE_SOURCE_DIR}/../libs/bbndk-10.0.4-beta/target/qnx6/usr/include
-#	/home/micke/bbndk-10.0.4-beta/target/qnx6/usr/include
-#)
 
 FIND_PROGRAM(GENERATOR generatorrunner REQUIRED)
 IF (NOT GENERATOR)
