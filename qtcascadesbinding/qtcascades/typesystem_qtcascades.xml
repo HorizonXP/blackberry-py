@@ -4,9 +4,6 @@
 	<load-typesystem name="typesystem_declarative.xml" generate="no" />
 	<namespace-type name="bb" generate="yes">
 		<object-type name="Application">
-			<inject-code class="native" position="beginning">
-				//Hejsan
-			</inject-code>
 			<modify-function signature="Application(int &amp;, char **)" access="private"/>
 		</object-type>
 		<namespace-type name="cascades">
@@ -19,7 +16,6 @@
 				</add-function>
 				<modify-function signature="Application(int &amp;, char **)" access="private"/>
 				<inject-code class="native" file="glue/bb_cascades_application_init.cpp" position="beginning" />
-				<!--modify-function signature="exec()" rename="exec_" allow-thread="yes"/ -->
 			</object-type>
 			<object-type name="DataModel" />
 			<object-type name="QmlDocument">

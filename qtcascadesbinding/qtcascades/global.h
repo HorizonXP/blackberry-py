@@ -7,17 +7,9 @@
 
 #define qdoc
 
-#include <QObject>
-#include <QtCore/QObject>
-
-#include "pyside_global.h"
-
-#include <bb/core/application.hpp>
-
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/Application>
 #include <bb/cascades/DataModel>
 #include <bb/cascades/QmlDocument>
 #include <bb/cascades/UIObject>
 
-#include <bb/cascades/QmlDocument/Builder>
