@@ -52,6 +52,8 @@ SET_PROPERTY(TARGET QtCascades PROPERTY PREFIX "")
 TARGET_LINK_LIBRARIES(QtCascades ${qtcascades_LINK_LIBRARIES})
 
 ADD_CUSTOM_COMMAND(OUTPUT ${qtcascades_SRC}
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/typesystem_qtcascades.xml
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/global.h
 	COMMAND shiboken
 	--enable-parent-ctor-heuristic --enable-pyside-extensions --enable-return-value-heuristic
 	${CMAKE_SOURCE_DIR}/qtcascades/global.h
