@@ -1,0 +1,20 @@
+Index: pycascades-build/qtcascades/PySide/QtCascades/bb_application_wrapper.h
+===================================================================
+--- pycascades-build.orig/qtcascades/PySide/QtCascades/bb_application_wrapper.h	2012-07-29 13:40:20.926340376 +0200
++++ pycascades-build/qtcascades/PySide/QtCascades/bb_application_wrapper.h	2012-07-29 14:00:57.059237582 +0200
+@@ -9,6 +9,7 @@
+ 
+ namespace PySide { class DynamicQMetaObject; }
+ 
++namespace bb {
+ class ApplicationWrapper : public bb::Application
+ {
+ public:
+@@ -28,6 +29,7 @@
+     virtual void* qt_metacast(const char* _clname);
+     static void pysideInitQtMetaTypes();
+ };
++}
+ 
+ #endif // SBK_APPLICATIONWRAPPER_H
+ 
