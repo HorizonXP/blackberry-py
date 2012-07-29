@@ -1,6 +1,7 @@
 PROJECT(QtCascades)
 
 SET(qtcascades_SRC
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_application_wrapper.h
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/qtcascades_module_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_application_wrapper.cpp
@@ -49,7 +50,7 @@ INCLUDE_DIRECTORIES(
 	/home/micke/dev/stage/include/PySide
 	/home/micke/dev/stage/include/PySide/QtCore
 )
-ADD_LIBRARY(QtCascades MODULE ${qtcascades_SRC})
+ADD_LIBRARY(QtCascades MODULE ${qtcascades_SRC} ${CMAKE_BINARY_DIR}/file_patched)
 SET_PROPERTY(TARGET QtCascades PROPERTY PREFIX "")
 TARGET_LINK_LIBRARIES(QtCascades ${qtcascades_LINK_LIBRARIES})
 ADD_DEFINITIONS(
@@ -68,5 +69,17 @@ ADD_CUSTOM_COMMAND(OUTPUT ${qtcascades_SRC}
 	${CMAKE_CURRENT_SOURCE_DIR}/typesystem_qtcascades.xml
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 	COMMENT "Running generator for libqtcascades..."
+)
+
+
+# This is a hacky workaround until we have a proper solution to this:
+# http://lists.qt-project.org/pipermail/pyside/2012-July/000583.html
+SET_SOURCE_FILES_PROPERTIES(${CMAKE_BINARY_DIR}/file_patched PROPERTIES SYMBOLIC True)
+ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_BINARY_DIR}/file_patched
+	DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_application_wrapper.h
+	COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/namespace-workaround.patch
+	COMMAND touch file_patched
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+	COMMENT "Patching header files"
 )
 
