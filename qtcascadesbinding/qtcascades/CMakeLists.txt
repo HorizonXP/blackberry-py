@@ -34,7 +34,6 @@ SET(qtcascades_INCLUDE_DIRECTORIES
 	${QNX_TARGET_DIR}/usr/include/bb/cascades/databinding
 	${QNX_TARGET_DIR}/usr/include/bb/cascades/resources
 )
-MESSAGE("${qtcascades_INCLUDE_DIRECTORIES}")
 
 SET(qtcascades_LINK_LIBRARIES
 	${QT_QTCORE_LIBRARY}
@@ -53,10 +52,6 @@ INCLUDE_DIRECTORIES(
 ADD_LIBRARY(QtCascades MODULE ${qtcascades_SRC} ${CMAKE_BINARY_DIR}/file_patched)
 SET_PROPERTY(TARGET QtCascades PROPERTY PREFIX "")
 TARGET_LINK_LIBRARIES(QtCascades ${qtcascades_LINK_LIBRARIES})
-ADD_DEFINITIONS(
-	#-L/home/micke/Documents/dev/libs/bbndk-10.0.4-beta/lib
-	#-L/home/micke/Documents/dev/libs/bbndk-10.0.4-beta/target/qnx6/armle-v7/usr/lib
-)
 
 ADD_CUSTOM_COMMAND(OUTPUT ${qtcascades_SRC}
 	COMMAND shiboken
@@ -65,7 +60,6 @@ ADD_CUSTOM_COMMAND(OUTPUT ${qtcascades_SRC}
 	--include-paths=${QT_INCLUDE_DIR}:${QNX_TARGET_DIR}/usr/include
 	--typesystem-paths=${typesystem_path}:/home/micke/dev/stage/share/PySide/typesystems
 	--output-directory=${CMAKE_CURRENT_BINARY_DIR}
-#	--debug-level=full
 	${CMAKE_CURRENT_SOURCE_DIR}/typesystem_qtcascades.xml
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 	COMMENT "Running generator for libqtcascades..."
