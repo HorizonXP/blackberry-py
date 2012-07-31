@@ -67,7 +67,7 @@ ADD_CUSTOM_COMMAND(OUTPUT ${qtcascades_SRC}
 
 
 # This is a hacky workaround until we have a proper solution to this:
-# http://lists.qt-project.org/pipermail/pyside/2012-July/000583.html
+# https://bugreports.qt-project.org/browse/PYSIDE-101
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_BINARY_DIR}/file_patched PROPERTIES SYMBOLIC True)
 ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_BINARY_DIR}/file_patched
 	DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_application_wrapper.h
