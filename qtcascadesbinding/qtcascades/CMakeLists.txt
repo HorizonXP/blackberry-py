@@ -46,7 +46,7 @@ SET(qtcascades_SRC
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_doubletaphandler_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_dropdown_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_easingcurve_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_event_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_event_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_fadetransition_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_flowlistlayout_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_flowlistlayoutproperties_wrapper.cpp

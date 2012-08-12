@@ -49,7 +49,7 @@
 #include <bb/cascades/DoubleTapHandler>
 #include <bb/cascades/DropDown>
 #include <bb/cascades/EasingCurve>
-//#include <bb/cascades/Event>
+#include <bb/cascades/Event>
 #include <bb/cascades/FadeTransition>
 #include <bb/cascades/FlowListLayout>
 #include <bb/cascades/FlowListLayoutProperties>

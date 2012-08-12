@@ -54,7 +54,10 @@
 			<object-type name="DoubleTapHandler" />
 			<object-type name="DropDown" />
 			<object-type name="EasingCurve" />
-			<!--object-type name="Event" /-->
+			<object-type name="Event">
+				<!-- Template function. Remove it until we know how to implement it -->
+				<modify-function signature="getUniqueEventTypeValue()" access="private" />
+			</object-type>
 			<object-type name="FadeTransition" />
 			<object-type name="FlowListLayout" />
 			<object-type name="FlowListLayoutProperties" />
