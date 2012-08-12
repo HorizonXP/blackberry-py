@@ -40,7 +40,7 @@ SET(qtcascades_LINK_LIBRARIES
 	/home/micke/dev/libpython3.2m.so.1.0
 	/home/micke/dev/libshiboken.cpython-32mu.so.1.1
 	/home/micke/dev/libpyside.cpython-32mu.so.1.1
-	libQtCascades.so
+	libbbcascades.so
 )
 
 INCLUDE_DIRECTORIES(
