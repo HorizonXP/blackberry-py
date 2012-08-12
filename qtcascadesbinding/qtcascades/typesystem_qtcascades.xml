@@ -12,6 +12,7 @@
 			<object-type name="AbstractActionItem" />
 			<object-type name="AbstractAnimation" />
 			<object-type name="AbstractButton" />
+			<object-type name="AbstractGestureEvent" />
 			<object-type name="AbstractPane" />
 			<object-type name="AbstractTextControl" />
 			<object-type name="AbstractToggleButton" />
@@ -36,7 +37,7 @@
 			<!--object-type name="ColorPaint" /-->
 			<object-type name="Container" />
 			<object-type name="ContextMenuHandler" />
-			<!--object-type name="ContextMenuShowingEvent" /-->
+			<object-type name="ContextMenuShowingEvent" />
 			<object-type name="Control" />
 			<object-type name="CustomControl" />
 			<object-type name="CustomDialog" />
@@ -50,7 +51,7 @@
 			<object-type name="Divider" />
 			<object-type name="DockLayout" />
 			<object-type name="DockLayoutProperties" />
-			<!--object-type name="DoubleTapEvent" /-->
+			<object-type name="DoubleTapEvent" />
 			<object-type name="DoubleTapHandler" />
 			<object-type name="DropDown" />
 			<object-type name="EasingCurve" />
@@ -93,7 +94,7 @@
 			<object-type name="ListItemTypeMapper" />
 			<object-type name="ListLayout" />
 			<object-type name="ListView" />
-			<!--object-type name="LongPressEvent" /-->
+			<object-type name="LongPressEvent" />
 			<object-type name="LongPressHandler" />
 			<object-type name="Menu" />
 			<object-type name="MultiSelectActionItem" />
@@ -108,7 +109,7 @@
 			<object-type name="Paint" />
 			<object-type name="PaneProperties" />
 			<object-type name="ParallelAnimation" />
-			<!--object-type name="PinchEvent" /-->
+			<object-type name="PinchEvent" />
 			<object-type name="PinchHandler" />
 			<!--object-type name="PixelBufferData" /-->
 			<object-type name="ProgressIndicator" />
@@ -156,7 +157,7 @@
 			<object-type name="SystemDefaults" />
 			<object-type name="Tab" />
 			<object-type name="TabbedPane" />
-			<!--object-type name="TapEvent" /-->
+			<object-type name="TapEvent" />
 			<object-type name="TapHandler" />
 			<object-type name="TextAlignment" />
 			<!--object-type name="TextArea" /-->
@@ -170,9 +171,9 @@
 			<object-type name="TitleBarKind" />
 			<object-type name="ToggleButton" />
 			<object-type name="TouchBehavior" />
-			<!--object-type name="TouchEnterEvent" /-->
-			<!--object-type name="TouchEvent" /-->
-			<!--object-type name="TouchExitEvent" /-->
+			<object-type name="TouchEnterEvent" />
+			<object-type name="TouchEvent" />
+			<object-type name="TouchExitEvent" />
 			<object-type name="TouchPropagationMode" />
 			<object-type name="TouchReaction" />
 			<object-type name="TouchResponse" />

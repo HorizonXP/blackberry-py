@@ -12,6 +12,7 @@ SET(qtcascades_SRC
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_abstractactionitem_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_abstractanimation_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_abstractbutton_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_abstractgestureevent_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_abstractpane_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_abstracttextcontrol_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_abstracttogglebutton_wrapper.cpp
@@ -28,7 +29,7 @@ SET(qtcascades_SRC
 	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_colorpaint_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_container_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_contextmenuhandler_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_contextmenushowingevent_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_contextmenushowingevent_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_control_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_customcontrol_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_customdialog_wrapper.cpp
@@ -42,7 +43,7 @@ SET(qtcascades_SRC
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_divider_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_docklayout_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_docklayoutproperties_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_doubletapevent_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_doubletapevent_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_doubletaphandler_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_dropdown_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_easingcurve_wrapper.cpp
@@ -82,7 +83,7 @@ SET(qtcascades_SRC
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_listitemtypemapper_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_listlayout_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_listview_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_longpressevent_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_longpressevent_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_longpresshandler_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_menu_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_multiselectactionitem_wrapper.cpp
@@ -97,7 +98,7 @@ SET(qtcascades_SRC
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_paint_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_paneproperties_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_parallelanimation_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_pinchevent_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_pinchevent_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_pinchhandler_wrapper.cpp
 	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_pixelbufferdata_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_progressindicator_wrapper.cpp
@@ -131,7 +132,7 @@ SET(qtcascades_SRC
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_systemdefaults_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_tab_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_tabbedpane_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_tapevent_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_tapevent_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_taphandler_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_textalignment_wrapper.cpp
 	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_textarea_wrapper.cpp
@@ -145,9 +146,9 @@ SET(qtcascades_SRC
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_titlebarkind_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_togglebutton_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchbehavior_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchenterevent_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchevent_wrapper.cpp
-	#${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchexitevent_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchenterevent_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchevent_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchexitevent_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchpropagationmode_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchreaction_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_touchresponse_wrapper.cpp

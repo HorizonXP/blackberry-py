@@ -15,6 +15,7 @@
 #include <bb/cascades/AbstractActionItem>
 #include <bb/cascades/AbstractAnimation>
 #include <bb/cascades/AbstractButton>
+#include <bb/cascades/AbstractGestureEvent>
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/AbstractTextControl>
 #include <bb/cascades/AbstractToggleButton>
@@ -31,7 +32,7 @@
 //#include <bb/cascades/ColorPaint>
 #include <bb/cascades/Container>
 #include <bb/cascades/ContextMenuHandler>
-//#include <bb/cascades/ContextMenuShowingEvent>
+#include <bb/cascades/ContextMenuShowingEvent>
 #include <bb/cascades/Control>
 #include <bb/cascades/CustomControl>
 #include <bb/cascades/CustomDialog>
@@ -45,7 +46,7 @@
 #include <bb/cascades/Divider>
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/DockLayoutProperties>
-//#include <bb/cascades/DoubleTapEvent>
+#include <bb/cascades/DoubleTapEvent>
 #include <bb/cascades/DoubleTapHandler>
 #include <bb/cascades/DropDown>
 #include <bb/cascades/EasingCurve>
@@ -85,7 +86,7 @@
 #include <bb/cascades/ListItemTypeMapper>
 #include <bb/cascades/ListLayout>
 #include <bb/cascades/ListView>
-//#include <bb/cascades/LongPressEvent>
+#include <bb/cascades/LongPressEvent>
 #include <bb/cascades/LongPressHandler>
 #include <bb/cascades/Menu>
 #include <bb/cascades/MultiSelectActionItem>
@@ -100,7 +101,7 @@
 #include <bb/cascades/Paint>
 #include <bb/cascades/PaneProperties>
 #include <bb/cascades/ParallelAnimation>
-//#include <bb/cascades/PinchEvent>
+#include <bb/cascades/PinchEvent>
 #include <bb/cascades/PinchHandler>
 //#include <bb/cascades/PixelBufferData>
 #include <bb/cascades/ProgressIndicator>
@@ -133,7 +134,7 @@
 #include <bb/cascades/SystemDefaults>
 #include <bb/cascades/Tab>
 #include <bb/cascades/TabbedPane>
-//#include <bb/cascades/TapEvent>
+#include <bb/cascades/TapEvent>
 #include <bb/cascades/TapHandler>
 #include <bb/cascades/TextAlignment>
 //#include <bb/cascades/TextArea>
@@ -147,9 +148,9 @@
 #include <bb/cascades/TitleBarKind>
 #include <bb/cascades/ToggleButton>
 #include <bb/cascades/TouchBehavior>
-//#include <bb/cascades/TouchEnterEvent>
-//#include <bb/cascades/TouchEvent>
-//#include <bb/cascades/TouchExitEvent>
+#include <bb/cascades/TouchEnterEvent>
+#include <bb/cascades/TouchEvent>
+#include <bb/cascades/TouchExitEvent>
 #include <bb/cascades/TouchPropagationMode>
 #include <bb/cascades/TouchReaction>
 #include <bb/cascades/TouchResponse>
