@@ -134,6 +134,7 @@
 			</object-type>
 			<object-type name="RadioGroup" />
 			<object-type name="RepeatPattern" />
+			<object-type name="Resource" />
 			<object-type name="RotateTransition" />
 			<object-type name="ScaleTransition" />
 			<object-type name="ScalingMethod" />

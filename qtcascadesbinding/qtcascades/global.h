@@ -7,8 +7,7 @@
 
 #define qdoc
 
-#include <QtCore/QVariant>
-#include <QVariant>
+#include <bb/cascades/resources/resource.h>
 
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/AbsoluteLayoutProperties>

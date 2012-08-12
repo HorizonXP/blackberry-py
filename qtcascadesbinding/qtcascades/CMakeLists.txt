@@ -109,6 +109,7 @@ SET(qtcascades_SRC
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_qmldocument_builder_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_radiogroup_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_repeatpattern_wrapper.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_resource_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_rotatetransition_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_scaletransition_wrapper.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/PySide/QtCascades/bb_cascades_scalingmethod_wrapper.cpp
