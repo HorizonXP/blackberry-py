@@ -194,9 +194,9 @@ SET(qtcascades_INCLUDE_DIRECTORIES
 
 SET(qtcascades_LINK_LIBRARIES
 	${QT_QTCORE_LIBRARY}
-	/home/micke/dev/libpython3.2m.so.1.0
-	/home/micke/dev/libshiboken.cpython-32mu.so.1.1
-	/home/micke/dev/libpyside.cpython-32mu.so.1.1
+	/home/devuser/dev/libpython3.2m.so.1.0
+	/home/devuser/dev/stage/lib/libshiboken.cpython-32mu.so.1.1
+	/home/devuser/dev/stage/lib/libpyside.cpython-32mu.so.1.1
 	libbbcascades.so
 )
 
@@ -215,7 +215,7 @@ ADD_CUSTOM_COMMAND(OUTPUT ${qtcascades_SRC}
 	--enable-parent-ctor-heuristic --enable-pyside-extensions --enable-return-value-heuristic
 	${CMAKE_SOURCE_DIR}/qtcascades/global.h
 	--include-paths=${QT_INCLUDE_DIR}:${QNX_TARGET_DIR}/usr/include
-	--typesystem-paths=${typesystem_path}:/home/micke/dev/stage/share/PySide/typesystems
+	--typesystem-paths=${typesystem_path}:/home/devuser/dev/stage/share/PySide/typesystems
 	--output-directory=${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/typesystem_qtcascades.xml
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

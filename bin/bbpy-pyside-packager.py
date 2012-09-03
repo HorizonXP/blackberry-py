@@ -77,6 +77,11 @@ class Library(Add):
 
 
 
+def get_cascades_specs():
+    return [
+        Library('qtcascades/*.so', dest='PySide/', strip=True),
+        ]
+
 def get_pyside_specs():
     return [
         Add('lib/python3.2/site-packages/PySide/__init__.py', dest='PySide/'),
@@ -104,7 +109,7 @@ def get_bbpy_specs():
 def main():
     pkg = tarfile.open('blackberry-py-{}.tar.bz2'.format(args.mode), 'w:bz2')
     try:
-        for stage in ['qt', 'pyside', 'bbpy']:
+        for stage in ['qt', 'pyside', 'bbpy', 'cascades']:
             stagedir = getattr(args, stage)
             # print 'stage dir', stagedir
             get_specs = globals()['get_{}_specs'.format(stage)]
@@ -126,6 +131,8 @@ if __name__ == '__main__':
         help='location of PySide "stage" folder')
     parser.add_argument('bbpy', type=str,
         help='location of BBPyProject working folder')
+    parser.add_argument('cascades', type=str,
+        help='location of PyCascades working folder')
     parser.add_argument('-m', '--mode', type=str, default='full', nargs='?')
 
     # note: this is global:
