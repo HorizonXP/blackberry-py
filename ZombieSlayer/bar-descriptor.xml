@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>ca.engenuity.ZombieSlayer</id>
+    <name>Zombie Slayer Utility</name>
+    <versionNumber>1.0.0</versionNumber>
+    <buildIdFile>_buildId</buildIdFile>
+    <description>Slay zombie devmode apps in BB10 beta 4</description>
+    <initialWindow>
+        <autoOrients>true</autoOrients>
+        <systemChrome>none</systemChrome>
+        <transparent>false</transparent>
+    </initialWindow>
+
+    <icon>
+        <image>icon.png</image>
+    </icon>
+
+    <cascadesTheme>dark</cascadesTheme>
+
+    <configuration name="Device-Release">
+       <entryPointType>Qnx/Cascades</entryPointType>
+       <platformArchitecture>armle-v7</platformArchitecture>
+       <asset path="app/native/TartStart.so" entry="true" type="Qnx/Elf">TartStart.so</asset>
+    </configuration>
+    <configuration name="Device-Debug">
+       <platformArchitecture>armle-v7</platformArchitecture>
+       <asset path="app/native/TartStart" entry="true" type="Qnx/Elf">TartStart</asset>
+    </configuration>
+
+    <asset path="icon.png" public="true">icon.png</asset>
+
+    <!-- Request permission to execute native code.  Required for native applications. -->
+    <permission system="true">run_native</permission>
+    <!--permission>access_shared</permission-->
+
+    <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
+
+</qnx>
