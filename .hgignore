@@ -6,6 +6,9 @@ syntax: glob
 buildnum
 _buildnum
 *.sublime-*
+config.pri
+*.launch
+Makefile
 
 syntax: regexp
 ^.metadata/
@@ -26,3 +29,6 @@ Device-Debug/
 Device-Release/
 Simulator/
 Simulator-Debug/
+^third-party/
+^blackberry-py-old/
+/arm/(Makefile|o.le-v7).*
