@@ -4,6 +4,14 @@ Courtesy of the BB-Py Project team (see CREDITS), and one or more unnamed
 individuals at RIM who had the good sense, motivation, and ability to add
 a Python 3.2 runtime into the PlayBook 2.0 OS and not hide it from developers.
 
+.. note: The original project focus was around the use of PySide,
+    to build native Qt apps. With the release of Cascades and BB10,
+    the focus has shifted to the BB-Tart subproject, which skips
+    PySide entirely and implements a lighter-weight approach using a
+    thin layer of C++.  The PySide portion of the project is now
+    moved to the "pyside" branch in the Mercurial repo, preserved for
+    reference and in case there are active users of it.
+
 More to come here... for now, please note that this is copyrighted software
 that can be used only under certain legal terms as described in the file
 legal/LICENSE.
