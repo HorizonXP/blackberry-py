@@ -14,11 +14,10 @@
    height="512"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
+   inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="logo.svg"
-   inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets/icon.png"
-   inkscape:export-xdpi="15.12"
-   inkscape:export-ydpi="15.12">
+   inkscape:export-xdpi="22.5"
+   inkscape:export-ydpi="22.5">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -35,9 +34,9 @@
      inkscape:current-layer="layer3"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1148"
-     inkscape:window-x="1272"
-     inkscape:window-y="-8"
+     inkscape:window-height="1140"
+     inkscape:window-x="-6"
+     inkscape:window-y="-6"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -69,20 +68,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Background"
-     style="display:inline">
-    <rect
-       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect2998"
-       width="512.14734"
-       height="514.16766"
-       x="1.0101526"
-       y="0.86281055"
-       rx="62.613358"
-       ry="62.613358"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-  </g>
+     style="display:inline" />
   <g
      inkscape:groupmode="layer"
      id="layer2"
@@ -97,114 +83,106 @@
        y="-15.29963"
        rx="11.095578"
        ry="11.766773" />
-    <path
-       style="color:#000000;fill:#adc7c8;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 100.96864,170.22311 260.52615,173.02236 364.09856,70.849578 483.06688,34.45927 484.4665,145.72963 394.89036,249.30205 393.49073,426.35489 296.21665,370.36981 C 226.41684,347.35778 180.13671,345.16858 174.83655,251.647 z"
-       id="path3766"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccc"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 33.086724,147.12926 205.745206,0.69982 -176.353034,11.19701 69.281544,78.37913 z"
-       id="path3771"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 107.96678,317.18397 16.99101,438.25173 124.06249,338.17838 z"
-       id="path3773"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 343.10415,51.254797 2.09945,17.49534 140.66254,-55.985089 z"
-       id="path3775"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 478.16818,23.962066 -5.5985,121.767564 9.79739,4.8987 z"
-       id="path3777"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 145.75672,364.07148 28.188029,499.13551 159.75299,382.96645 z"
-       id="path3779"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 204.54106,394.86329 115.66473,501.23495 219.23715,414.45807 z"
-       id="path3781"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 271.02335,352.17465 9.09758,15.3959 185.45061,-224.64017 z"
-       id="path3783"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 394.19055,461.34558 -13.99628,-192.44875 -0.6998,169.3549 -81.17839,-60.18397 z"
-       id="path3785"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="M 149.95559,253.50093 142.95747,242.30391 338.20546,63.151629 z"
-       id="path3787"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <path
-       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 262.62559,375.26851 1.39962,-14.69609 c 0,0 -67.9515,-12.89238 -90.27595,-41.63892 -25.54321,-32.89123 -25.5432,-60.18397 -25.5432,-60.18397 -8.98261,18.86054 -4.54879,27.64264 -1.74953,38.13985 2.79926,10.4972 24.49347,51.7862 69.98136,65.08266 45.48789,13.29647 46.1877,13.29647 46.1877,13.29647 z"
-       id="path3789"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccssssc"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839" />
-    <text
-       xml:space="preserve"
-       style="font-size:140.8052063px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="-60.731339"
-       y="338.56021"
-       id="text3802"
-       sodipodi:linespacing="125%"
-       transform="matrix(0.58082562,-0.60156014,0.89354565,0.79624338,0,0)"
-       inkscape:transform-center-x="44.91116"
-       inkscape:transform-center-y="33.549307"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\assets\icon.png"
-       inkscape:export-xdpi="15.112839"
-       inkscape:export-ydpi="15.112839"><tspan
-         sodipodi:role="line"
-         id="tspan3804"
-         x="-60.731339"
-         y="338.56021"
-         style="font-size:95.40834808px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial">BB-Py</tspan></text>
+    <g
+       id="g3003"
+       transform="matrix(0.91968442,0,0,0.91968442,20.647837,20.717135)">
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         sodipodi:nodetypes="cccccccccc"
+         inkscape:connector-curvature="0"
+         id="path3766"
+         d="m 126.73224,184.70008 133.22582,2.33729 86.47992,-85.31126 99.33504,-30.384839 1.16864,92.907469 -74.79344,86.47992 -1.16865,147.83391 -81.22099,-46.7459 C 231.4778,332.60231 192.83525,330.77439 188.40977,252.68663 z"
+         style="color:#000000;fill:#adc7c8;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path3771"
+         d="m 70.052845,165.41739 171.791185,0.58433 -147.249587,9.34918 57.848047,65.44426 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:connector-curvature="0"
+         id="path3773"
+         d="M 132.57549,307.40807 56.613398,408.49608 146.01493,324.93778 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:connector-curvature="0"
+         id="path3775"
+         d="m 328.90826,85.365042 1.75298,14.608093 117.44908,-46.7459 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:connector-curvature="0"
+         id="path3777"
+         d="m 441.68275,62.576415 -4.67459,101.672325 8.18054,4.09027 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:connector-curvature="0"
+         id="path3779"
+         d="M 164.12897,346.55775 65.962579,459.33224 175.81545,362.3345 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:connector-curvature="0"
+         id="path3781"
+         d="m 213.21216,372.26801 -74.20911,88.8172 86.47992,-72.45614 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:connector-curvature="0"
+         id="path3783"
+         d="m 268.72292,336.62425 7.59621,12.85513 154.84579,-187.56793 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:connector-curvature="0"
+         id="path3785"
+         d="M 371.5639,427.77876 359.87742,267.08973 359.29311,408.49608 291.51154,358.24424 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:connector-curvature="0"
+         id="path3787"
+         d="M 167.6349,254.2346 161.79168,244.88542 324.818,95.298546 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         sodipodi:nodetypes="ccssssc"
+         inkscape:connector-curvature="0"
+         id="path3789"
+         d="m 261.71103,355.90695 1.16865,-12.27081 c 0,0 -56.7375,-10.76475 -75.37776,-34.76727 -21.32783,-27.46321 -21.32782,-50.25184 -21.32782,-50.25184 -7.50022,15.748 -3.79811,23.08079 -1.46081,31.84565 2.3373,8.76485 20.45133,43.23995 58.43238,54.3421 37.98104,11.10217 38.56536,11.10217 38.56536,11.10217 z"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <text
+         inkscape:export-ydpi="15.112839"
+         inkscape:export-xdpi="15.112839"
+         inkscape:transform-center-y="28.012674"
+         inkscape:transform-center-x="37.4995"
+         transform="matrix(0.58082562,-0.60156014,0.89354565,0.79624338,0,0)"
+         sodipodi:linespacing="125%"
+         id="text3802"
+         y="332.93488"
+         x="-54.964298"
+         style="font-size:117.56819916px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         xml:space="preserve"><tspan
+           style="font-size:79.66316223px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial"
+           y="332.93488"
+           x="-54.964298"
+           id="tspan3804"
+           sodipodi:role="line">BB-Py</tspan></text>
+    </g>
   </g>
 </svg>
