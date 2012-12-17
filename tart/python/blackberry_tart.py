@@ -4,18 +4,18 @@ import os
 import sys
 from threading import current_thread
 
-def _setup():
-    parent = os.path.dirname(__file__)
-    try:
-        with open(os.path.join(parent, 'tart.cfg')) as f:
-            for line in f:
-                key, _, value = line.strip().partition(':')
-                key = key.strip()
-                value = value.strip()
-                if key == 'sys.path' and value not in sys.path:
-                    sys.path.append(value)
-    except IOError:
-        pass
+# def _setup():
+#     parent = os.path.dirname(__file__)
+#     try:
+#         with open(os.path.join(parent, 'tart.cfg')) as f:
+#             for line in f:
+#                 key, _, value = line.strip().partition(':')
+#                 key = key.strip()
+#                 value = value.strip()
+#                 if key == 'sys.path' and value not in sys.path:
+#                     sys.path.append(value)
+#     except IOError:
+#         pass
 
 
 def _install_slogger2():
@@ -67,7 +67,7 @@ def _install_slogger2():
 #
 if __name__ == '__main__':
     _install_slogger2()
-    _setup()
+    # _setup()
 
     try:
         import app
