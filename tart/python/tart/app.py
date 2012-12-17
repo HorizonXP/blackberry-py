@@ -3,6 +3,8 @@
 import sys
 import pickle
 
+import tart
+
 
 class Application:
     '''Tart Application object for the Python backend.'''
@@ -10,14 +12,14 @@ class Application:
     def __init__(self, debug=False):
         self.debug = debug
         if self.debug:
-            log('tart: app starting')
+            tart.log('tart: app starting')
 
         super(Application, self).__init__()
 
 
     def start(self):
         '''entry point to main loop'''
-        send('backendReady')
+        tart.send('backendReady')
 
         self.loop()
 
@@ -27,10 +29,10 @@ class Application:
         while True:
             # block indefinitely, or until SystemExit is raised as the
             # Cascades Application is shutting down
-            msg = wait()
+            msg = tart.wait()
 
             if self.debug:
-                log('tart: msg', msg)
+                tart.log('tart: msg', msg)
 
             # extract message type and build handler name based on convention
             # shared with and adopted from QML
@@ -39,7 +41,7 @@ class Application:
                 # apply Qt-style case normalization
                 name = 'on' + msg_type[0].upper() + msg_type[1:]
             except IndexError:
-                log('tart: ERROR, no type found in message')
+                tart.log('tart: ERROR, no type found in message')
                 continue
 
             else:
@@ -48,13 +50,13 @@ class Application:
                     handler = getattr(self, name)
                 except AttributeError:
                     if msg_type.startswith('on'):
-                        log('tart: WARNING, message starts with "on", maybe remove?')
+                        tart.log('tart: WARNING, message starts with "on", maybe remove?')
 
                     self.missing_handler(msg)
                     continue
 
             try:
-                # log('calling', handler)
+                # tart.log('calling', handler)
                 try:
                     kwargs = msg[1] or {}
                 except KeyError:
@@ -73,7 +75,7 @@ class Application:
 
 
     def missing_handler(self, msg):
-        log('tart: ERROR, missing handler for', msg[0])
+        tart.log('tart: ERROR, missing handler for', msg[0])
 
 
     def restore_data(self, data, path):
@@ -92,7 +94,7 @@ class Application:
         for key in data:
             try:
                 data[key] = saved[key]
-                # log('{}: restored {} = {!r}'.format(
+                # tart.log('{}: restored {} = {!r}'.format(
                 #     path,
                 #     key,
                 #     data[key],
@@ -106,7 +108,7 @@ class Application:
         # we can get fancier later when we need
         data['version'] = 1
 
-        # log('{}: persisting {!r}'.format(path, data))
+        # tart.log('{}: persisting {!r}'.format(path, data))
         pickle.dump(data, open(path, 'wb'))
 
 
@@ -119,7 +121,7 @@ class Application:
     def onManualExit(self):
         '''Sent when the app is exiting, so we can save state etc.
         Override in subclasses as required.'''
-        send('continueExit')
+        tart.send('continueExit')
 
 
     #---------------------------------------------
@@ -130,7 +132,7 @@ class Application:
 
     def js(self, text):
         '''send to JavaScript for evaluation'''
-        send('evalJavascript', text=text)
+        tart.send('evalJavascript', text=text)
 
 
     def onEvalResult(self, value=None):
