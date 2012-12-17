@@ -7,7 +7,8 @@ import traceback
 import threading
 from code import InteractiveConsole
 
-PORT = 1234
+
+DEFAULT_PORT = 1234
 BUFSIZE = 1024
 
 
@@ -116,9 +117,10 @@ class Client(threading.Thread):
 
 
 class Server(object):
-    def __init__(self):
+    def __init__(self, port=DEFAULT_PORT):
         self.done = False
         self.client = None  # only one client active at a time since only one stdout
+        self.port = port
 
 
     def quit(self):
@@ -132,11 +134,11 @@ class Server(object):
 
     def run(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(('', PORT))
+        s.bind(('', self.port))
         s.listen(1)
 
         client_id = 0
-        print('listening on port {}'.format(PORT))
+        print('listening on port {}'.format(self.port))
 
         try:
             while not self.done:
@@ -156,8 +158,8 @@ class Server(object):
             s.close()
 
 
-def run():
-    Server().run()
+def run(port=DEFAULT_PORT):
+    Server(port).run()
 
 
 # for testing on PC
