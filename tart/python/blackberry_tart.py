@@ -19,7 +19,7 @@ def _setup():
 
 
 def _install_slogger2():
-    import slog2
+    from bb import slog2
     import ctypes
 
     appid = os.path.basename(os.getcwd())
@@ -68,23 +68,6 @@ def _install_slogger2():
 if __name__ == '__main__':
     _install_slogger2()
     _setup()
-
-    # Uncomment to enable the command line interface via telnet...
-    # this should be pulled out to a separate place where an
-    # app can call it programmatically rather than enabling it
-    # only from the command line, perhaps.  In fact, you could
-    # simply add the following code into your own app and it
-    # would work.  I'll leave this here for now as reference.
-
-    # try:
-    #     import cli
-    # except ImportError:
-    #     print('unable to import cli', file=sys.stderr)
-    # else:
-    #     import threading
-    #     t = threading.Thread(target=cli.run)
-    #     t.daemon = True
-    #     t.start()
 
     try:
         import app

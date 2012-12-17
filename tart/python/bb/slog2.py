@@ -4,27 +4,10 @@
 # improve the Tart packaging/deployment support it's easier to
 # just clone the code here rather than rely on wrap.py to be present.
 
-#~ from _wrap import _func, _register_funcs
-import ctypes
-class _func:
-    '''Function definition, replaced by reference to function in library
-    when register_functions() is called.'''
-    def __init__(self, *args):
-        self.args = args
+from ._wrap import _func, _register_funcs
 
-
-def _register_funcs(libname, namespace):
-    lib = ctypes.CDLL(libname)
-
-    for name, fdef in namespace.items():
-        if isinstance(fdef, _func):
-            func = getattr(lib, name)
-            func.restype = fdef.args[0]
-            func.argtypes = fdef.args[1:]
-            namespace[name] = func
-
-
-from ctypes import POINTER, c_int, c_uint8, c_uint16, c_uint32, c_char_p, Structure
+from ctypes import (POINTER, c_int, c_uint8, c_uint16, c_uint32, c_char_p,
+    Structure)
 
 
 SLOG2_MAX_BUFFERS = 4
