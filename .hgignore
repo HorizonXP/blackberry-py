@@ -31,4 +31,4 @@ Simulator/
 Simulator-Debug/
 ^third-party/
 ^blackberry-py-old/
-/arm/(Makefile|o.le-v7).*
+/(arm|x86)/(Makefile|o.le-v7).*
