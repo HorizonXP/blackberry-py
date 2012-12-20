@@ -3,28 +3,12 @@ Todo List
 *   build tool supporting various profiles for debug builds running from
     shared/misc, release builds, trial release builds (devmode but not
     in shared/misc), etc, eliminating the need for a per-app build.sh
-*   port LitePOC code to use bb::cascades::Application from libQtCascades.so
 *   detect when trying to run from shared/misc and access_shared not granted
 *   starter/template app
 *   sample app(s)
-*   clean out old stuff or push to subfolder as history
 *   improve the CLI code with better editing and command history
-*   integrate something like maybe a web-based debug capability ala
-    Pylons/Flask, to allow interactive browsing of tracebacks/stack frames
-*   improved infrastructure in utility module for things like copying
-    the log to shared/documents, catching exceptions etc
-*   put a PySide library package on a web site and provide a utility module
-    or app which installs it all when loaded/launched
 
 Done
 -----
 *   bbpy Application support to set initial size to avoid hardcoding in QML
 *   standardize on the shared/misc structure for apps for quick development
-*   clean up licensing: add our own, document PySide/Qt LGPL stuff
-*   wrap FreeType or use an existing wrapper and get some basic text display
-*   get images working so simple bitmaps can be arranged onscreen
-*   handle errors from PyRun_SimpleFile() and build a traceback string for display
-    (done through bbxmain.py instead)
-*   make dialogs not system modal
-*   check whether the latest beta OS has the bytes/unicode problem with geolocation
-*   create App base class with the plumbing
