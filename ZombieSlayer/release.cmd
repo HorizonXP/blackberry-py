@@ -12,10 +12,9 @@ call blackberry-nativepackager -package ZombieSlayer.bar ^
     -arg app/native/blackberry_tart.py ^
     bar-descriptor.xml ^
     icon.png ^
-    tart.cfg ^
     *.py ^
     assets/ ^
     -C ../tart/entry ../tart/entry/TartStart.so ^
-    -C ../tart/python ../tart/python/*.py ^
+    -C ../tart/python ../tart/python/* ^
     -C ../tart/js ../tart/js/*.js ^
-    -debugToken ..\debugtoken.bar
+    -debugToken ../debugtoken.bar

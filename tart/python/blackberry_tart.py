@@ -2,7 +2,7 @@
 
 import os
 import sys
-from threading import current_thread
+from threading import current_thread, Lock
 
 # def _setup():
 #     parent = os.path.dirname(__file__)
@@ -32,7 +32,7 @@ def _install_slogger2():
     cfg.verbosity_level = slog2.SLOG2_INFO
 
     cfg.buffer_config[0].buffer_name = b"python"
-    cfg.buffer_config[0].num_pages = 1
+    cfg.buffer_config[0].num_pages = 2
 
     rc = slog2.slog2_register(cfg, buffers, 0)
     sys.stdout.flush()
@@ -40,17 +40,20 @@ def _install_slogger2():
     buffer = buffers[0]
 
     class Redirector:
+        lock = Lock()
+
         def __init__(self):
             self.pending = b''
         def write(self, text):
             ascii = text.encode('ascii', 'ignore')
-            while b'\n' in ascii:
-                now, ascii = ascii.split(b'\n', 1)
-                if self.pending:
-                    now = self.pending + now
-                    self.pending = b''
-                slog2.slog2c(buffer, current_thread().ident, slog2.SLOG2_INFO, now)
-            self.pending += ascii
+            with self.lock:
+                while b'\n' in ascii:
+                    now, ascii = ascii.split(b'\n', 1)
+                    if self.pending:
+                        now = self.pending + now
+                        self.pending = b''
+                    slog2.slog2c(buffer, current_thread().ident, slog2.SLOG2_INFO, now)
+                self.pending += ascii
         def flush(self):
             pass
 

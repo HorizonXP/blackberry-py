@@ -9,8 +9,10 @@ class _func:
         self.args = args
 
 
-def _register_funcs(libname, namespace, use_errno=False):
-    lib = ctypes.CDLL(libname, use_errno=use_errno)
+def _register_funcs(lib, namespace, use_errno=False):
+    # if path is given, load library, else treat lib as existing CDLL
+    if isinstance(lib, (str, bytes)):
+        lib = ctypes.CDLL(lib, use_errno=use_errno)
 
     for name, fdef in namespace.items():
         if isinstance(fdef, _func):
