@@ -2,6 +2,7 @@
 
 import sys
 import pickle
+import traceback
 
 import tart
 
@@ -14,7 +15,7 @@ class Application:
         if self.debug:
             tart.log('tart: app starting')
 
-        super(Application, self).__init__()
+        super().__init__()
 
 
     def start(self):
@@ -70,7 +71,6 @@ class Application:
                 raise
 
             except:
-                import traceback
                 traceback.print_exception(*sys.exc_info())
 
 

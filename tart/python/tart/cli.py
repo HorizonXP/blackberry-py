@@ -15,12 +15,12 @@ BUFSIZE = 1024
 class MyConsole(InteractiveConsole):
     def __init__(self, client):
         self.client = client
-        super(MyConsole, self).__init__()
+        super().__init__()
 
 
     def push(self, line):
         line = line.rstrip()
-        return super(MyConsole, self).push(line)
+        return super().push(line)
 
 
     def write(self, data):
@@ -37,14 +37,14 @@ class MyConsole(InteractiveConsole):
 
 
     def resetbuffer(self):
-        super(MyConsole, self).resetbuffer()
+        super().resetbuffer()
         #~ self.client.resetbuffer()
 
 
 
 class Client(threading.Thread):
     def __init__(self, sock, id=0, on_disconnect=None):
-        super(Client, self).__init__()
+        super().__init__()
         self.id = id
         self.sock = sock
         self.daemon = True
