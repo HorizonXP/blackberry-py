@@ -4,7 +4,6 @@ from ctypes import (byref, cast, c_void_p, c_int, POINTER)
 
 from bb import screen as s
 
-from .rect import Rect
 from .util import ascii_bytes
 
 
@@ -12,8 +11,11 @@ class WindowError(Exception):
     '''Problem occurred during libscreen call.'''
 
 
+DEFAULT_WIDTH = 500
+DEFAULT_HEIGHT = 200
 
-class Window:
+
+class NativeWindow:
     def __init__(self, group, id, size):
         self._ctx = s.screen_context_t()
         if s.screen_create_context(byref(self._ctx),
@@ -23,21 +25,14 @@ class Window:
 
         self.group = ascii_bytes(group)
         self.id = ascii_bytes(id)
-        self.rect = Rect(0, 0, *size)
-
-        # temporary? hack to avoid possible issues with zero-size windows
-        if not self.rect.width:
-            self.rect.width = 500
-        if not self.rect.height:
-            self.rect.height = 200
 
         self._create_child_window()
 
         # The window size is specified in QML so we need to set up the buffer size to
         # correspond to that, the default size would be the full screen.
-        self.buffer_size = self.rect.size
+        self.buffer_size = (size[0] or DEFAULT_WIDTH, size[1] or DEFAULT_HEIGHT)
 
-        self.position = self.rect.pos
+        self.position = (0, 0)
 
         # Use negative Z order so that the window appears under the main window.
         # (required by the ForeignWindow functionality)
@@ -119,15 +114,12 @@ class Window:
     @property
     def size(self):
         size = self._get_property_iv(s.SCREEN_PROPERTY_SIZE, 2)
-        # sz = self.rect.size = size[0], size[1]
-        # return sz
         return size
 
     @size.setter
     def size(self, value):
         print('window: set size', size)
         self._set_property_iv(s.SCREEN_PROPERTY_SIZE, 2, *value)
-        # self.rect.size = value
 
 
     def _get_source_size(self):
@@ -145,7 +137,7 @@ class Window:
         # http://developer.blackberry.com/native/reference/bb10/screen_libref/topic/manual/cscreen_windows.html
         # suggests it would be redundant.
         # self._set_property_iv(s.SCREEN_PROPERTY_SOURCE_SIZE, 2, *size)
-        self.rect.size = size
+        self.width, self.height = size
 
     buffer_size = property(_get_buffer_size, _set_buffer_size)
 
