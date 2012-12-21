@@ -3,7 +3,8 @@ from ctypes import (byref, sizeof, c_int, c_float, c_char_p, cast,
     create_string_buffer)
 
 from bb.gles import *
-from .util import ascii_bytes
+# TODO: remove this coupling between tart and pyggles
+from tart.util import ascii_bytes
 
 
 class OglError(Exception):

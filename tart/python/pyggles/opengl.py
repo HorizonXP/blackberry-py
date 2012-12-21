@@ -8,10 +8,11 @@ from ctypes import (byref, c_int, cast, c_void_p, c_float, CDLL)
 
 from bb import gles
 from bb.egl import EGLint, EGL_BAD_NATIVE_WINDOW
-from tart import window, egl
+from tart import window, dynload
+from . import egl
 
 # support library
-_ogl = CDLL(os.path.join(os.path.dirname(__file__), '_opengl.so'))
+_ogl = dynload('_opengl')
 
 
 
@@ -213,7 +214,7 @@ class OglWindow:
     #-----------------------------------------------
     #
     def __init__(self, group, id, size):
-        self._window = window.Window(group, id, size)
+        self._window = window.NativeWindow(group, id, size)
         print('window', self._window)
 
         disp = self._window.display
