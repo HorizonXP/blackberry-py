@@ -88,7 +88,7 @@ class Drawing:
         self.size = self.window.buffer_size
         self.sync_surface_size(*self.size)
 
-        self.timing = timing.TimingService(debug=True)
+        self.timing = timing.TimingService(debug=False)
 
         print('DWG: set up')
 
@@ -167,12 +167,12 @@ class Drawing:
         count = 0
         while True:
             try:
-                timeout = self.timing.get_next_expiry()
+                timeout = self.timing.get_timeout()
             except:
                 timeout = 0 if (self.resize or self.redraw) else None
 
             try:
-                print('===== get msg, timeout', timeout)
+                # print('===== get msg, timeout', timeout)
                 msg = self.queue.get(timeout=timeout)
             except queue.Empty:
                 # self._window.redraw = True
@@ -188,7 +188,7 @@ class Drawing:
                     pargs = ()
                     handler, = msg
 
-            print('DWG: call {} {} {}'.format(handler.__name__, pargs, kwargs))
+            # print('DWG: call {} {} {}'.format(handler.__name__, pargs, kwargs))
             handler(*pargs, **kwargs)
             count += 1
 
@@ -277,6 +277,8 @@ class Drawing:
                 self.resize = True
             else:
                 raise
+
+        # print('do_redraw done')
 
 
     def paint_background(self):

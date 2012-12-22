@@ -42,7 +42,7 @@ class TimingService:
     def get_timeout(self):
         '''return time delta between now and when next timer should be expired,
         clipping negative values to 0'''
-        now = self.time() - self._basetime
+        now = self.time()
         return max(0, self.get_next_expiry() - now)
 
 
@@ -70,7 +70,7 @@ class TimingService:
         # start at current time, or last expiry time for timer if it's set,
         # so that we don't get cumulative errors if there are delays in restarting
         # a periodic timer
-        reftime = expiry or (self.time() - self._basetime)
+        reftime = expiry or self.time()
 
         # FIXME: if we were late enough for the last expiry time, we shouldn't
         # schedule the timer for an expiry in the past
@@ -87,7 +87,7 @@ class TimingService:
             self.timers.append(timer)
 
         if self.debug:
-            print('inserted', timer)
+            print('inserted {}, expiry {:.3f}s'.format(timer, expiry - self._basetime))
 
 
     def remove_timer(self, timer):
@@ -100,7 +100,7 @@ class TimingService:
 
     def check_timers(self):
         '''check for and expire all expired timers, popping as required'''
-        now = self.time() - self._basetime
+        now = self.time()
         while self.timers:
             # calculate how late we are: negative values mean we're early
             past_expiry = now - self.get_next_expiry()
@@ -111,7 +111,7 @@ class TimingService:
             timer = self.timers[0]
 
             if self.debug:
-                print('trigger', timer)
+                print('trigger {} at {}'.format(timer, now - self._basetime))
 
             # Note: this may reschedule it, even as the first timer,
             # but with an updated expiry time.  We should probably
