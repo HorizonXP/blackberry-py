@@ -35,7 +35,7 @@ class TimingService:
         self._basetime = self.time()
 
         # register as the timing service for this thread
-        from pyggles.context import context
+        from pyggles.drawing import context
         context.timing_service = self
 
 
@@ -110,14 +110,14 @@ class TimingService:
 
             timer = self.timers[0]
 
+            if self.debug:
+                print('trigger', timer)
+
             # Note: this may reschedule it, even as the first timer,
             # but with an updated expiry time.  We should probably
             # check that we don't keep rescheduling a very short timer
             # in the past, or we could effectively busy-wait here.
             timer.trigger()
-
-            if self.debug:
-                print('trigger', timer)
 
 
 # EOF

@@ -8,7 +8,7 @@
 
 // the commented out one would let you disable debug stuff globally
 // #undef DEBUG
-#define DEBUG 1
+#define DEBUG 0
 
 // unless it's off above or defined (maybe off) per-module, do this
 #ifndef DEBUG

@@ -1,7 +1,5 @@
 '''Timing support for animations, one-shot or periodic events, or delays.'''
 
-from .context import context
-
 
 class Timer:
     '''Timers can be one-shot or periodic.  The same period value is used for
@@ -25,6 +23,7 @@ class Timer:
         # the various methods that use this will work faster, but with
         # the side-effect that Timers must be created in the thread in which
         # they will be used. (Or you could update the _service property.)
+        from .drawing import context
         self._service = context.timing_service
 
         self.expiry = 0
@@ -33,9 +32,9 @@ class Timer:
     def __repr__(self):
         r = ['<' + self.__class__.__name__]
         if self.name:
-            r.append(' ' + self.name)
+            r.append(':' + self.name)
         else:
-            r.append(' 0x{:08X}'.format(id(self)))
+            r.append(':0x{:08X}'.format(id(self)))
 
         r.append(' {:.3f}s'.format(self.period))
 

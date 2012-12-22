@@ -123,7 +123,7 @@ class EglContext:
             raise EglError('eglCreateContext')
         print('eglCreateContext', self.ctx)
 
-        self.create_surface(native_win)
+        self.create_surface(native_win.handle)
 
 
     def create_surface(self, native_win):
