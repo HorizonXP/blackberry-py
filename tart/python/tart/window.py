@@ -18,6 +18,7 @@ DEFAULT_HEIGHT = 200
 class NativeWindow:
     def __init__(self, group, id, width, height):
         self._ctx = s.screen_context_t()
+
         if s.screen_create_context(byref(self._ctx),
             s.SCREEN_APPLICATION_CONTEXT) < 0:
             raise WindowError('window context creation failed')
