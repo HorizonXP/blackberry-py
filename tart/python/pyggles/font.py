@@ -4,7 +4,7 @@ from ctypes import (byref, c_int, cast, c_void_p, c_float, c_char_p,
     Structure, POINTER)
 
 from bb._wrap import _func, _register_funcs
-from .opengl import _ogl
+from .drawing import _dll
 
 
 SYS_FONTS = '/usr/fonts/font_repository/monotype'
@@ -18,6 +18,7 @@ class Font:
     __cache = {}
 
     def __init__(self, path, point_size=DEFAULT_SIZE):
+        _orig_path = path
         if not self.dpi:
             raise Exception('Font.dpi must be set before creating fonts')
 
@@ -30,10 +31,7 @@ class Font:
                 path = trypath
 
         self.font = bbutil_load_font(path.encode('ascii', 'ignore'), point_size, self.dpi)
-        print('font', self.font, cast(self.font, c_void_p).value)
-
-        # cache for easier reuse
-        self.__cache[path, point_size] = self
+        print('font', _orig_path, point_size)
 
 
     def __del__(self):
@@ -44,9 +42,14 @@ class Font:
     @classmethod
     def get_font(cls, path, point_size=DEFAULT_SIZE):
         try:
-            return cls.__cache[path, point_size]
+            font = cls.__cache[path, point_size]
         except KeyError:
-            return Font(path, point_size)
+            font = Font(path, point_size)
+
+            # cache for easier reuse
+            cls.__cache[path, point_size] = font
+
+        return font
 
 
     def measure(self, text):
@@ -78,7 +81,7 @@ bbutil_render_text = _func(None, POINTER(font_t), c_char_p, c_float, c_float,
 #----------------------------
 # apply argtypes/restype to all functions
 #
-_register_funcs(_ogl, globals())
+_register_funcs(_dll, globals())
 
 
 # EOF

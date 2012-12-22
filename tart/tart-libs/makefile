@@ -71,7 +71,7 @@ clean:
 $(TARGET): $(OBJECTS)
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 	$(STRIP) $(TARGET)
-	$(COPY_FILE) $(TARGET) ../python/tart
+	$(COPY_FILE) $(TARGET) ../python/lib-dynload/_opengl-arm.so
 
 $(OBJECTS): $(SOURCES) fonts.h debug.h
 

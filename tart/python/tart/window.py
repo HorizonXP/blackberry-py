@@ -16,7 +16,7 @@ DEFAULT_HEIGHT = 200
 
 
 class NativeWindow:
-    def __init__(self, group, id, size):
+    def __init__(self, group, id, width, height):
         self._ctx = s.screen_context_t()
         if s.screen_create_context(byref(self._ctx),
             s.SCREEN_APPLICATION_CONTEXT) < 0:
@@ -30,7 +30,7 @@ class NativeWindow:
 
         # The window size is specified in QML so we need to set up the buffer size to
         # correspond to that, the default size would be the full screen.
-        self.buffer_size = (size[0] or DEFAULT_WIDTH, size[1] or DEFAULT_HEIGHT)
+        self.buffer_size = (width or DEFAULT_WIDTH, height or DEFAULT_HEIGHT)
 
         self.position = (0, 0)
 
@@ -46,9 +46,9 @@ class NativeWindow:
 
 
     def __del__(self):
-        if self._win:
-            s.screen_destroy_window(self._win)
-            self._win = 0
+        if self.handle:
+            s.screen_destroy_window(self.handle)
+            self.handle = 0
 
         # clean up screen context
         s.screen_destroy_context(self._ctx)
@@ -61,7 +61,7 @@ class NativeWindow:
             return self._display
         except AttributeError:
             disp = s.screen_display_t()
-            rc = s.screen_get_window_property_pv(self._win, s.SCREEN_PROPERTY_DISPLAY,
+            rc = s.screen_get_window_property_pv(self.handle, s.SCREEN_PROPERTY_DISPLAY,
                 cast(byref(disp), POINTER(c_void_p)))
             if rc < 0:
                 raise WindowError('get property failed')
@@ -73,21 +73,21 @@ class NativeWindow:
 
 
     def _create_child_window(self):
-        self._win = s.screen_window_t()
+        self.handle = s.screen_window_t()
 
         # Create a child window of the current window group, join the window group and set
         # a window ID.
-        rc = s.screen_create_window_type(byref(self._win), self._ctx,
+        rc = s.screen_create_window_type(byref(self.handle), self._ctx,
             s.SCREEN_CHILD_WINDOW)
         if rc < 0:
             raise WindowError('child window creation failed')
-        print('window', self._win)
+        print('window', self.handle)
 
-        rc = s.screen_join_window_group(self._win, self.group)
+        rc = s.screen_join_window_group(self.handle, self.group)
         if rc < 0:
             raise WindowError('window group join failed')
 
-        rc = s.screen_set_window_property_cv(self._win, s.SCREEN_PROPERTY_ID_STRING,
+        rc = s.screen_set_window_property_cv(self.handle, s.SCREEN_PROPERTY_ID_STRING,
             len(self.id), self.id)
         if rc < 0:
             raise WindowError('set property failed')
@@ -95,7 +95,7 @@ class NativeWindow:
 
     def _get_property_iv(self, pnum, count):
         cints = (c_int * count)()
-        rc = s.screen_get_window_property_iv(self._win, pnum,
+        rc = s.screen_get_window_property_iv(self.handle, pnum,
             cast(cints, POINTER(c_int)))
         if rc < 0:
             raise WindowError('get property failed')
@@ -105,7 +105,7 @@ class NativeWindow:
     def _set_property_iv(self, pnum, count, *values):
         print('set prop_iv', pnum, count, *values)
         cints = (c_int * count)(*[int(x) for x in values])
-        rc = s.screen_set_window_property_iv(self._win, pnum,
+        rc = s.screen_set_window_property_iv(self.handle, pnum,
             cast(cints, POINTER(c_int)))
         if rc < 0:
             raise WindowError('set property failed')
@@ -166,7 +166,7 @@ class NativeWindow:
 
 
     def _create_buffers(self, count):
-        rc = s.screen_create_window_buffers(self._win, count)
+        rc = s.screen_create_window_buffers(self.handle, count)
         if rc < 0:
             raise WindowError('buffer creation failed')
         self._buffer_count = count
@@ -174,7 +174,7 @@ class NativeWindow:
 
     def _get_buffers(self):
         bufs = (c_void_p * self._buffer_count)()
-        rc = s.screen_get_window_property_pv(self._win,
+        rc = s.screen_get_window_property_pv(self.handle,
             s.SCREEN_PROPERTY_RENDER_BUFFERS, cast(bufs, POINTER(c_void_p)))
         if rc < 0:
             raise WindowError('get buffers failed')
