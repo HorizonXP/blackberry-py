@@ -5,10 +5,12 @@ syntax: glob
 .ix_tag
 buildnum
 _buildnum
+_buildId
 *.sublime-*
 config.pri
 *.launch
 Makefile
+*.bar
 
 syntax: regexp
 ^.metadata/
