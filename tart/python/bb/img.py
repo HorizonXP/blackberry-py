@@ -83,7 +83,7 @@ img_format_t = c_int
 #define IMG_FMT_PKOE_XRGB8888	IMG_FMT_PKBE_XRGB8888
 
 #define IMG_FMT_BGRA8888		IMG_FMT_PKLE_ARGB8888
-#define IMG_FMT_RGBA8888		IMG_FMT_PKLE_ABGR8888
+IMG_FMT_RGBA8888		= IMG_FMT_PKLE_ABGR8888
 
 # img_color_t encoding is IMG_FMT_PKHE_ARGB8888 unless otherwise noted
 img_color_t = c_uint
