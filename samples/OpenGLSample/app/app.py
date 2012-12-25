@@ -39,10 +39,5 @@ class App(tart.Application):
         self.drawing.send((self.demo.onTouch, (action, x, y)))
 
 
-    def onGetHelp(self):
-        folder = os.path.dirname(os.path.dirname(__file__))
-        with open(os.path.join(folder, 'help.html')) as f:
-            tart.send('gotHelp', text=f.read().strip().replace('\n', ' '))
-
 
 # EOF

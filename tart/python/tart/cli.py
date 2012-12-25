@@ -162,6 +162,12 @@ def run(port=DEFAULT_PORT):
     Server(port).run()
 
 
+def threaded_run(**kwargs):
+    t = threading.Thread(target=run, kwargs=kwargs)
+    t.daemon = True
+    t.start()
+
+
 # for testing on PC
 if __name__ == '__main__':
     run()
