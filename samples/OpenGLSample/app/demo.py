@@ -63,8 +63,6 @@ class OglDemo(drawable.Drawable):
         cw, ch = self.drawing.size
         glViewport(0, 0, cw, ch)
 
-        print('resize()')
-
         #    Install the program as part of the current rendering state
         self.prog.use()
 
@@ -83,36 +81,11 @@ class OglDemo(drawable.Drawable):
         #    More info about depth buffers: http://en.wikipedia.org/wiki/Depth_buffer
         glClearDepthf(1.0)
 
-        #    Enable depth testing. This is a technique used for hidden surface removal.
-        #    It assigns a value (z) to each pixel that represents the distance from this
-        #    pixel to the viewer. When another pixel is drawn at the same location the z
-        #    values are compared in order to determine which pixel should be drawn.
-        # gl.enable(gl.DEPTH_TEST);
-
         glEnable(GL_BLEND)
         glDisable(GL_DEPTH_TEST)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE)
 
-        #    Specify which function to use for depth buffer comparisons. It compares the
-        #    value of the incoming pixel against the one stored in the depth buffer.
-        #    Possible values are (from the OpenGL documentation):
-        #    GL_NEVER - Never passes.
-        #    GL_LESS - Passes if the incoming depth value is less than the stored depth value.
-        #    GL_EQUAL - Passes if the incoming depth value is equal to the stored depth value.
-        #    GL_LEQUAL - Passes if the incoming depth value is less than or equal to the stored depth value.
-        #    GL_GREATER - Passes if the incoming depth value is greater than the stored depth value.
-        #    GL_NOTEQUAL - Passes if the incoming depth value is not equal to the stored depth value.
-        #    GL_GEQUAL - Passes if the incoming depth value is greater than or equal to the stored depth value.
-        #    GL_ALWAYS - Always passes.
-        # gl.depthFunc(gl.LEQUAL);
-
         #    Now create a shape.
-        #    First create a vertex buffer in which we can store our data.
-        self.vertexBuffer = GLuint()
-        glGenBuffers(1, byref(self.vertexBuffer))
-
-        #    Bind the buffer object to the ARRAY_BUFFER target.
-        glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer)
 
         #    Specify the vertex positions (x, y, z)
         self.vertices = array.array('f')
@@ -124,8 +97,6 @@ class OglDemo(drawable.Drawable):
             self.velocities.extend([(random() * 2 - 1)*.05,
                 (random() * 2 - 1)*.05,
                 .93 + random()*.02])
-
-        # self.vertices = self.make_vector(self.vertices)
 
         #    Creates a new data store for the vertices array which is bound to the ARRAY_BUFFER.
         #    The third paramater indicates the usage pattern of the data store. Possible values are
@@ -142,8 +113,7 @@ class OglDemo(drawable.Drawable):
         #    COPY - The data store contents are modified by reading data from the GL, and used as the source
         #           for GL drawing and image specification commands.
         addr, size = self.vertices.buffer_info()
-        # glBufferData(GL_ARRAY_BUFFER, sizeof(self.vertices), self.vertices, GL_DYNAMIC_DRAW)
-        glBufferData(GL_ARRAY_BUFFER, size * self.vertices.itemsize, addr, GL_DYNAMIC_DRAW)
+        # glBufferData(GL_ARRAY_BUFFER, size * self.vertices.itemsize, addr, GL_DYNAMIC_DRAW)
 
         #    Clear the color buffer and the depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -188,11 +158,8 @@ class OglDemo(drawable.Drawable):
 
         #     Get the vertex position attribute location from the shader program
         vertexPosAttribLocation = self.prog.attribute('vertexPosition')
-        #     colorLoc = gl.getVaryingLocation(gl.program, "vColor");
-        #     alert("color loc : " + colorLoc );
         #     Specify the location and format of the vertex position attribute
-        glVertexAttribPointer(vertexPosAttribLocation, 3, GL_FLOAT, GL_FALSE, 0, 0)
-        # gl.vertexAttribPointer(colorLoc, 4.0, gl.FLOAT, false, 0, 0);
+        glVertexAttribPointer(vertexPosAttribLocation, 3, GL_FLOAT, GL_FALSE, 0, addr)
         #     Get the location of the "modelViewMatrix" uniform variable from the
         #     shader program
         uModelViewMatrix = self.prog.uniform('modelViewMatrix')
@@ -203,39 +170,12 @@ class OglDemo(drawable.Drawable):
         glUniformMatrix4fv(uModelViewMatrix, 1, GL_FALSE, perspectiveMatrix)
         glUniformMatrix4fv(uPerspectiveMatrix, 1, False, modelViewMatrix)
 
-        #  gl.varyingVector4fv(
-        #     Draw the triangles in the vertex buffer. The first parameter specifies what
-        #     drawing mode to use. This can be GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP,
-        #     GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_TRIANGLES, GL_QUAD_STRIP,
-        #     GL_QUADS, and GL_POLYGON
-        # gl.drawArrays( gl.LINES, 0, numLines );
-        # gl.flush();
-
-        # setInterval( drawScene, 1000 / 40 );
-
-    #     animate();
-
-        print('vertices', len(self.vertices), self.vertices.itemsize, self.vertices.buffer_info())
-        print('vels', len(self.velocities), self.velocities.itemsize, self.velocities.buffer_info())
-
-
-    # function animate() {
-    #     requestAnimationFrame( animate );
-    #     drawScene();
-    # }
-
 
     def draw(self):
         vertices = self.vertices
         velocities = self.velocities
 
-        # print('draw()')
-
         n = len(vertices)
-
-        # count = 0
-        # if self.touched:
-        #     print('touch', self.touchX, self.touchY)
 
         ratio = self.ratio
         sqrt = math.sqrt
@@ -299,14 +239,12 @@ class OglDemo(drawable.Drawable):
                         velocities[bp+1] += dy * d * .01
 
         glLineWidth(5)
-        addr, size = vertices.buffer_info()
-        glBufferData(GL_ARRAY_BUFFER, size * vertices.itemsize, addr, GL_DYNAMIC_DRAW)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        # gl.drawArrays( gl.LINES_STRIP, 0, numLines )
         glDrawArrays(GL_LINES, 0, self.NUM_LINES)
-        # gl.drawArrays( gl.QUAD_STRIP, 0, numLines )
+        # glDrawArrays(GL_TRIANGLES, 0, self.NUM_LINES)
+        # glDrawArrays(GL_TRIANGLE_STRIP, 0, self.NUM_LINES)
 
         glFlush()
 

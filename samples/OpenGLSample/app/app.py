@@ -16,11 +16,6 @@ class App(tart.Application):
         pass
 
 
-    # def onWindowStateChanged(self, state):
-    #     if self.chart:
-    #         self.chart.window_state = state
-
-
     def onChartResized(self, width, height, group='', id=''):
         if not self.demo:
             print('onChartResized: create', width, height, group, id)
@@ -30,9 +25,6 @@ class App(tart.Application):
 
             from .demo import OglDemo
             self.demo = OglDemo(self.drawing)
-
-        # elif self.drawing and width and height:
-        #     self.drawing.set_size(width, height)
 
 
     def onTouch(self, action, x, y):
