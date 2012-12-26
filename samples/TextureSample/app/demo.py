@@ -25,7 +25,7 @@ FOLDER = os.path.dirname(__file__)
 
 
 class OglDemo(drawable.Drawable):
-    NUM_SPRITES = 100
+    NUM_SPRITES = 25
 
     def init(self):
         '''Prepare for eventual drawing.
@@ -46,12 +46,15 @@ class OglDemo(drawable.Drawable):
 
         glActiveTexture(GL_TEXTURE0)
 
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        # need these with non-power-of-two (NPOT) images
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+
         # print('image', img.width, 'x', img.height, img.data[:16])
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height,
             0, GL_RGBA, GL_UNSIGNED_BYTE, img.data)
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
         # get texture name
         self.s_texture = self.prog.uniform('s_texture')
@@ -61,15 +64,13 @@ class OglDemo(drawable.Drawable):
 
 
     def onTouch(self, action, x, y):
-        # if action in {0, 1}:
-        #     self.touchX = (x / self.tw - 1) * self.tratio
-        #     self.touchY = -(y / self.th - 1)
-        #     self.touched = True
-        # else:
-        #     self.touched = False
+        if action in {0, 1}:
+            self.angle = x * 360 / self.drawing.size[0]
+            self.touched = True
+        else:
+            self.touched = False
 
-        # self.drawing.redraw = True
-        pass
+        self.drawing.redraw = True
 
 
     def resize(self):
@@ -94,9 +95,10 @@ class OglDemo(drawable.Drawable):
         #     Create the modelview matrix
         #     More info about the modelview matrix: http://3dengine.org/Modelview_matrix
         #     More info about the identity matrix: http://en.wikipedia.org/wiki/Identity_matrix
+        angle = 0 / 180 * math.pi
         modelViewMatrix = self.make_vector([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
+            cos(angle), -sin(angle), 0, 0,
+            sin(angle), cos(angle), 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1,
             ])
@@ -120,7 +122,19 @@ class OglDemo(drawable.Drawable):
 
 
     def draw(self):
-        glClearColor(0.0, 0.5, 0.0, 0.5)
+        if self.touched:
+            self.touched = False
+            angle = self.angle / 180 * math.pi
+            modelViewMatrix = self.make_vector([
+                cos(angle), -sin(angle), 0, 0,
+                sin(angle), cos(angle), 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1,
+                ])
+            u_mvpMatrix = self.prog.uniform('u_mvpMatrix')
+            glUniformMatrix4fv(u_mvpMatrix, 1, GL_FALSE, modelViewMatrix)
+
+        glClearColor(1.0, 1.0, 1.0, 1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         glEnable(GL_TEXTURE_2D)
