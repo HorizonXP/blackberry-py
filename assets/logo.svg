@@ -17,19 +17,20 @@
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="logo.svg"
    inkscape:export-xdpi="22.5"
-   inkscape:export-ydpi="22.5">
+   inkscape:export-ydpi="22.5"
+   >
   <defs
      id="defs4" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="147.12804"
-     inkscape:cy="206.28937"
+     inkscape:cx="-54.014869"
+     inkscape:cy="248.21908"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
      showgrid="false"
@@ -68,7 +69,17 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Background"
-     style="display:inline" />
+     style="display:none">
+    <rect
+       style="display:inline;fill:#05a4f3;fill-opacity:1;stroke:none"
+       id="rect3000"
+       width="479.82248"
+       height="478.81232"
+       x="15.152288"
+       y="16.0151"
+       inkscape:export-xdpi="22.5"
+       inkscape:export-ydpi="22.5" />
+  </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"
@@ -85,7 +96,9 @@
        ry="11.766773" />
     <g
        id="g3003"
-       transform="matrix(0.91968442,0,0,0.91968442,20.647837,20.717135)">
+       transform="matrix(0.91968442,0,0,0.88253353,20.647837,22.694574)"
+       inkscape:export-xdpi="21.5"
+       inkscape:export-ydpi="21.5">
       <path
          inkscape:export-ydpi="15.112839"
          inkscape:export-xdpi="15.112839"
