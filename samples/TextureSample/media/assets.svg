@@ -20,7 +20,7 @@
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
-   inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\TextureSample\icon.png">
+   >
   <defs
      id="defs4">
     <linearGradient
@@ -215,7 +215,7 @@
        y="-105.87282"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\TextureSample\icon.png" />
+        />
     <g
        id="g3970"
        transform="translate(158.82232,46.127181)">
@@ -351,7 +351,7 @@
        style="color:#000000;fill:#ffe4e4;fill-opacity:1;stroke:#a500f7;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\TextureSample\icon.png" />
+        />
   </g>
   <g
      inkscape:label="Base"
@@ -445,7 +445,7 @@
        id="text3954"
        sodipodi:linespacing="125%"
        transform="scale(1.0556872,0.94725031)"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\TextureSample\icon.png"
+
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
