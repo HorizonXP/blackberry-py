@@ -111,6 +111,7 @@ class Drawing:
     def add(self, dw):
         self.items.append(dw)
         dw.init()
+        dw.valid = True
         self.redraw = True
 
 
@@ -222,7 +223,8 @@ class Drawing:
         print('do_resize')
 
         for dw in self.items:
-            dw.resize()
+            if dw.valid:
+                dw.resize()
 
         self.resize = False
         self.redraw = True
@@ -255,7 +257,8 @@ class Drawing:
         self.paint_background()
 
         for dw in self.items:
-            dw.draw()
+            if dw.valid:
+                dw.draw()
 
         self.redraw = False
 

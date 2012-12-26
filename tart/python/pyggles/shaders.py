@@ -8,16 +8,15 @@ from tart.util import ascii_bytes
 
 
 class OglError(Exception):
-    def init__(self, msg, log=''):
-        self.msg = msg
-        self.log = log
+    def __init__(self, msg, log=''):
         self.error = glGetError()
-
-    def __str__(self):
+        self.log = log
         if self.log:
-            return '{} ({}):\n{}'.format(self.msg, self.error, self.log)
+            msg = '{} ({}):\n{}'.format(msg, self.error, self.log)
         else:
-            return '{} ({})'.format(self.msg, self.error)
+            msg = '{} ({})'.format(msg, self.error)
+
+        super().__init__(msg)
 
 
 
@@ -71,7 +70,7 @@ class Shader:
                 print("Failed to compile shader:", )
 
                 glDeleteShader(h)
-                raise OglError('Failed to compile shader', log=log.value.decode('ascii'))
+                raise OglError('Failed to compile shader', log.value.decode('ascii'))
 
         return h
 
@@ -105,7 +104,7 @@ class Program:
             glGetProgramInfoLog(fs, sizeof(log), None, log)
 
             glDeleteProgram(h)
-            raise OglError('unable to link program', log=log.value.decode('ascii'))
+            raise OglError('unable to link program', log.value.decode('ascii'))
 
         # import ogl_dump
         # ogl_dump.program_dump(h)

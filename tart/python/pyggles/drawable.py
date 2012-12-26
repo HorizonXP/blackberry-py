@@ -11,6 +11,7 @@ class Drawable:
     def __init__(self, drawing=None):
         self.drawing = drawing
 
+        self.valid = False
         self.redraw = False
         self.rerender = False
 
@@ -46,7 +47,7 @@ class Drawable:
     # To be overridden in subclass.
     #
     def init(self):
-        pass
+        self.valid = True
 
 
     #-----------------------------------------------
