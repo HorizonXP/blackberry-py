@@ -4,6 +4,7 @@ from ctypes import (byref, cast, sizeof, c_int, c_void_p, POINTER,
     addressof, c_char, CDLL)
 
 from bb.img import *
+from tart.util import ascii_bytes
 
 
 class Image:
@@ -24,7 +25,7 @@ class Image:
             img.format = IMG_FMT_RGBA8888
             img.flags |= IMG_FORMAT
 
-            rc = img_load_file(ilib, filepath, None, byref(img))
+            rc = img_load_file(ilib, ascii_bytes(filepath), None, byref(img))
             if rc: raise RuntimeError(rc)
             #~ print('img is %d x %d x %d' % (img.w, img.h, IMG_FMT_BPP(img.format)))
 
