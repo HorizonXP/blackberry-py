@@ -98,23 +98,6 @@ class OglDemo(drawable.Drawable):
                 (random() * 2 - 1)*.05,
                 .93 + random()*.02])
 
-        #    Creates a new data store for the vertices array which is bound to the ARRAY_BUFFER.
-        #    The third paramater indicates the usage pattern of the data store. Possible values are
-        #    (from the OpenGL documentation):
-        #    The frequency of access may be one of these:
-        #    STREAM - The data store contents will be modified once and used at most a few times.
-        #    STATIC - The data store contents will be modified once and used many times.
-        #    DYNAMIC - The data store contents will be modified repeatedly and used many times.
-        #    The nature of access may be one of these:
-        #    DRAW - The data store contents are modified by the application, and used as the source for
-        #           GL drawing and image specification commands.
-        #    READ - The data store contents are modified by reading data from the GL, and used to return
-        #           that data when queried by the application.
-        #    COPY - The data store contents are modified by reading data from the GL, and used as the source
-        #           for GL drawing and image specification commands.
-        addr, size = self.vertices.buffer_info()
-        # glBufferData(GL_ARRAY_BUFFER, size * self.vertices.itemsize, addr, GL_DYNAMIC_DRAW)
-
         #    Clear the color buffer and the depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -159,6 +142,7 @@ class OglDemo(drawable.Drawable):
         #     Get the vertex position attribute location from the shader program
         vertexPosAttribLocation = self.prog.attribute('vertexPosition')
         #     Specify the location and format of the vertex position attribute
+        addr, size = self.vertices.buffer_info()
         glVertexAttribPointer(vertexPosAttribLocation, 3, GL_FLOAT, GL_FALSE, 0, addr)
         #     Get the location of the "modelViewMatrix" uniform variable from the
         #     shader program
