@@ -224,7 +224,11 @@ class Drawing:
 
         for dw in self.items:
             if dw.valid:
-                dw.resize()
+                try:
+                    dw.resize()
+                except Exception:
+                    dw.valid = False
+                    raise
 
         self.resize = False
         self.redraw = True
@@ -258,7 +262,11 @@ class Drawing:
 
         for dw in self.items:
             if dw.valid:
-                dw.draw()
+                try:
+                    dw.draw()
+                except Exception:
+                    dw.valid = False
+                    raise
 
         self.redraw = False
 

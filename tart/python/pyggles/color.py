@@ -180,7 +180,7 @@ class Color:
     @classmethod
     def from_hex(cls, rgbhex):
         ints = binascii.unhexlify(bytes(rgbhex, 'ascii'))
-        cls(*tuple(n / 255 for n in ints))
+        return cls(*tuple(n / 255 for n in ints))
 
 
     @classmethod
