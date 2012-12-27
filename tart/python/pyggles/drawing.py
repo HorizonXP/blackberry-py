@@ -10,7 +10,7 @@ from ctypes import (byref, c_int, cast, c_void_p, c_float, CDLL)
 from bb import gles
 from bb.egl import EGLint, EGL_BAD_NATIVE_WINDOW
 from tart import dynload
-from . import egl, timing, timer
+from . import egl, timing, timer, color
 
 # support library
 _dll = dynload('_opengl')
@@ -43,8 +43,8 @@ def external(func):
 
 
 class Drawing:
-    def __init__(self, bgcolor=(0, 0, 0, 1)):
-        self.bgcolor = bgcolor
+    def __init__(self, bgcolor='black'):
+        self.bgcolor = color.Color(bgcolor)
 
         self.queue = queue.Queue()
         self.visible = True
@@ -285,7 +285,7 @@ class Drawing:
 
 
     def paint_background(self):
-        gles.glClearColor(*self.bgcolor)
+        gles.glClearColor(*self.bgcolor.tuple())
         gles.glClear(gles.GL_COLOR_BUFFER_BIT | gles.GL_DEPTH_BUFFER_BIT)
 
 
