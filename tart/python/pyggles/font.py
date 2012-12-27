@@ -5,6 +5,7 @@ from ctypes import (byref, c_int, cast, c_void_p, c_float, c_char_p,
 
 from bb._wrap import _func, _register_funcs
 from .drawing import _dll
+from .color import Color
 
 
 SYS_FONTS = '/usr/fonts/font_repository/monotype'
@@ -61,6 +62,8 @@ class Font:
 
 
     def render(self, text, x, y, color, rotation=0):
+        if isinstance(color, Color):
+            color = color.tuple()
         text = text.encode('ascii', 'replace')
         # print('render', text, x, y, color)
         bbutil_render_text(self.font, text, x, y, -rotation, *color)
