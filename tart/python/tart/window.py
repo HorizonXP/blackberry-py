@@ -22,7 +22,7 @@ class NativeWindow:
         if s.screen_create_context(byref(self._ctx),
             s.SCREEN_APPLICATION_CONTEXT) < 0:
             raise WindowError('window context creation failed')
-        print('context', self._ctx)
+        # print('context', self._ctx)
 
         self.group = ascii_bytes(group)
         self.id = ascii_bytes(id)
@@ -66,7 +66,7 @@ class NativeWindow:
                 cast(byref(disp), POINTER(c_void_p)))
             if rc < 0:
                 raise WindowError('get property failed')
-            print('display', disp)
+            # print('display', disp)
 
             from .display import Display
             self._display = Display(disp)
@@ -82,7 +82,7 @@ class NativeWindow:
             s.SCREEN_CHILD_WINDOW)
         if rc < 0:
             raise WindowError('child window creation failed')
-        print('window', self.handle)
+        # print('window', self.handle)
 
         rc = s.screen_join_window_group(self.handle, self.group)
         if rc < 0:
@@ -104,7 +104,7 @@ class NativeWindow:
 
 
     def _set_property_iv(self, pnum, count, *values):
-        print('set prop_iv', pnum, count, *values)
+        # print('set prop_iv', pnum, count, *values)
         cints = (c_int * count)(*[int(x) for x in values])
         rc = s.screen_set_window_property_iv(self.handle, pnum,
             cast(cints, POINTER(c_int)))
@@ -119,7 +119,7 @@ class NativeWindow:
 
     @size.setter
     def size(self, value):
-        print('window: set size', size)
+        # print('window: set size', size)
         self._set_property_iv(s.SCREEN_PROPERTY_SIZE, 2, *value)
 
 
@@ -132,7 +132,7 @@ class NativeWindow:
         return (size[0], size[1])
 
     def _set_buffer_size(self, size):
-        print('window: set buffer_size', size)
+        # print('window: set buffer_size', size)
         self._set_property_iv(s.SCREEN_PROPERTY_BUFFER_SIZE, 2, *size)
         # TODO: figure out if we need to set source size too. A reading of
         # http://developer.blackberry.com/native/reference/bb10/screen_libref/topic/manual/cscreen_windows.html

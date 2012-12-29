@@ -32,7 +32,7 @@ class Font:
                 path = trypath
 
         self.font = bbutil_load_font(path.encode('ascii', 'ignore'), point_size, self.dpi)
-        print('font', _orig_path, point_size)
+        # print('font', _orig_path, point_size)
 
 
     def __del__(self):

@@ -121,7 +121,7 @@ class EglContext:
         self.ctx = eglCreateContext(self.disp, self.conf, EGL_NO_CONTEXT, attributes)
         if not self.ctx:
             raise EglError('eglCreateContext')
-        print('eglCreateContext', self.ctx)
+        # print('eglCreateContext', self.ctx)
 
         self.create_surface(native_win.handle)
 
@@ -130,7 +130,7 @@ class EglContext:
         self.surf = eglCreateWindowSurface(self.disp, self.conf, native_win, None)
         if not self.surf:
             raise EglError('eglCreateWindowSurface')
-        print('eglCreateWindowSurface', self.surf)
+        # print('eglCreateWindowSurface', self.surf)
 
         rc = eglMakeCurrent(self.disp, self.surf, self.surf, self.ctx)
         if rc != EGL_TRUE:

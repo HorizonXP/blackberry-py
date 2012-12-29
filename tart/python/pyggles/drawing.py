@@ -67,10 +67,10 @@ class Drawing:
         # FIXME: ultimately would want the Font.dpi to be set
         # on a per-font basis, or at least not just globally here.
         disp = self.window.display
-        print('disp', disp)
+        # print('DWG: disp', disp)
 
         dpi = disp.get_dpi()
-        print('dpi', dpi)
+        print('DWG: dpi', dpi)
 
         from .font import Font
         Font.dpi = dpi
@@ -200,7 +200,7 @@ class Drawing:
     #
     @external
     def set_size(self, w, h):
-        print('Drawing.set_size({},{})'.format(w, h))
+        print('DWG: set_size {},{}'.format(w, h))
         self.size = w, h
 
         oldsize = self.window.buffer_size
@@ -220,7 +220,7 @@ class Drawing:
     #-----------------------------------------------
     #
     def do_resize(self):
-        print('do_resize')
+        print('DWG: do_resize')
 
         for dw in self.items:
             if dw.valid:
@@ -256,7 +256,7 @@ class Drawing:
     #-----------------------------------------------
     #
     def do_redraw(self):
-        # print('do_redraw')
+        # print('DWG: do_redraw')
 
         self.paint_background()
 
@@ -273,6 +273,10 @@ class Drawing:
         try:
             self.egl.swap()
         except egl.EglError as ex:
+            # TODO: can probably just destroy/recreate surface in the
+            # size-changing function, since we know we'll need to then
+            # and don't have to wait for the error, and do redundant
+            # resize/draw cycle.
             if ex.error == egl.EGL_BAD_NATIVE_WINDOW:
                 try:
                     self.egl.get_surface_size()
