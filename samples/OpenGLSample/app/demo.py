@@ -13,7 +13,6 @@ from random import random
 
 from bb.gles import *
 from pyggles import shaders, drawable
-from pyggles.rect import Rect
 from pyggles.drawing import context, Drawing
 from pyggles.timer import Timer
 
