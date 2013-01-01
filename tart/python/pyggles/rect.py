@@ -2,7 +2,10 @@
 
 class Rect:
     '''Represent a position and size of a window/buffer rectangle
-    with 0,0 at lower left corner.'''
+    with 0,0 at lower left corner.  The width and height are
+    fixed once defined, and changes to either edge adjust the position
+    instead of the size.  For example, setting rect.right = 0 would
+    place the right edge at 0 and the left edge at -width.'''
     def __init__(self, x=0, y=0, width=0, height=0):
         self.x = x
         self.y = y
@@ -51,7 +54,7 @@ class Rect:
 
     @top.setter
     def top(self, v):
-        self.height = v - self.y
+        self.y = v - self.height
 
 
     @property
@@ -60,7 +63,7 @@ class Rect:
 
     @right.setter
     def right(self, v):
-        self.width = v - self.x
+        self.x = v - self.width
 
 
     # Aliases: I suggest not using these since I'm not convinced
