@@ -156,7 +156,7 @@ font_t * bbutil_load_font(const char * path, int point_size, int dpi) {
     // Fill font texture bitmap with individual bmp data and record appropriate size,
     // texture coordinates and offsets for every glyph
     for (c = 0; c < 128; c++) {
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+        if (FT_Load_Char(face, c < 127 ? c : 0x2113, FT_LOAD_RENDER)) {
             fprintf(stderr, "FT_Load_Char failed\n");
             free(font);
             return NULL;
