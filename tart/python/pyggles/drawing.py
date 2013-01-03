@@ -117,6 +117,13 @@ class Drawing:
 
     #-----------------------------------------------
     #
+    @external
+    def refresh(self):
+        self.redraw = True
+
+
+    #-----------------------------------------------
+    #
     def run(self):
         print('DWG: running')
 
@@ -297,6 +304,7 @@ class Drawing:
 
 
     def paint_background(self):
+        gles.glDisable(gles.GL_SCISSOR_TEST)
         gles.glClearColor(*self.bgcolor.tuple())
         gles.glClear(gles.GL_COLOR_BUFFER_BIT | gles.GL_DEPTH_BUFFER_BIT)
 
