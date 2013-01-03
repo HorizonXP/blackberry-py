@@ -139,10 +139,9 @@ class OglDemo(drawable.Drawable):
             ])
 
         #     Get the vertex position attribute location from the shader program
-        vertexPosAttribLocation = self.prog.attribute('vertexPosition')
         #     Specify the location and format of the vertex position attribute
         addr, size = self.vertices.buffer_info()
-        glVertexAttribPointer(vertexPosAttribLocation, 3, GL_FLOAT, GL_FALSE, 0, addr)
+        glVertexAttribPointer(self.vertexPosition, 3, GL_FLOAT, GL_FALSE, 0, addr)
         #     Get the location of the "modelViewMatrix" uniform variable from the
         #     shader program
         uModelViewMatrix = self.prog.uniform('modelViewMatrix')
