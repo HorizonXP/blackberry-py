@@ -11,4 +11,15 @@ def ascii_bytes(str_or_bytes, errors='ignore'):
         return str_or_bytes
 
 
+def clamp(value, min, max):
+    '''Return value or, if it's beyond the min/max limits,
+    return the closest limit.'''
+    if value < min:
+        return min
+    elif value > max:
+        return max
+    else:
+        return value
+
+
 # EOF
