@@ -159,10 +159,15 @@ bps_event_get_payload = _func(POINTER(bps_event_payload_t), POINTER(bps_event_t)
 LOCALE_INFO        = 0x01
 
 locale_request_events = _func(c_int, c_int)
+locale_stop_events = _func(c_int, c_int)
 locale_get_domain = _func(c_int)
+# warning: caller must free POINTER(c_char_p) buffers with bps_free()
+locale_get_locale = _func(c_int, POINTER(c_char_p))
 locale_get = _func(c_int, POINTER(c_char_p), POINTER(c_char_p))
 locale_event_get_language = _func(c_char_p, POINTER(bps_event_t))
 locale_event_get_country = _func(c_char_p, POINTER(bps_event_t))
+locale_event_get_locale = _func(c_char_p, POINTER(bps_event_t))
+locale_event_get_script = _func(c_char_p, POINTER(bps_event_t))
 
 
 #----------------------------
