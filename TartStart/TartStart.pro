@@ -7,11 +7,13 @@ INCLUDEPATH += ../src ../../Python-3.2.2/Include
 # DEPENDPATH += ../src ../../Python-3.2.2/Include
 
 device {
-	LIBS += -L../../libs/arm
+    LIBS += -L../../libs/arm
+    QMAKE_LFLAGS += -Wl,-rpath-link,../../libs/arm
 }
 
 simulator {
-	LIBS += -L../../libs/x86
+    LIBS += -L../../libs/x86
+    QMAKE_LFLAGS += -Wl,-rpath-link,../../libs/x86
 }
 
 # The Momentics "cheat" wizard suggested this but having it in makes it
