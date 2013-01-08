@@ -19,6 +19,7 @@
 #include <QFile>
 #include <QByteArray>
 #include <QCoreApplication>
+#include <QAbstractEventDispatcher>
 
 
 //---------------------------------------------------------
@@ -112,6 +113,21 @@ int TartThread::do_exec() {
 
 
 //---------------------------------------------------------
+// Retrieve pointer (as integer) to the global Tart instance.
+//
+static PyObject *
+tart_get_instance(PyObject *self, PyObject *args)
+{
+    PyObject * result;
+    if(!PyArg_ParseTuple(args, ":get_instance"))
+        return NULL;
+
+    result = PyLong_FromLong((long) Tart::instance());
+    return result;
+}
+
+
+//---------------------------------------------------------
 // Implement asynchronous sending of messages from the Python
 // side (any thread) to the main Application via the yieldMessage signal.
 // The message data is expected to be JSON-encoded, but that's
@@ -152,7 +168,7 @@ tart_event_loop(PyObject *self, PyObject *args)
     // http://docs.python.org/3.2/extending/extending.html#calling-python-functions-from-c
     PyObject * temp;
 
-    if(!PyArg_ParseTuple(args, "O:wait", &temp))
+    if(!PyArg_ParseTuple(args, "O:event_loop", &temp))
         return NULL;
 
     if (!PyCallable_Check(temp)) {
@@ -183,15 +199,127 @@ tart_event_loop(PyObject *self, PyObject *args)
 
 
 //---------------------------------------------------------
+// Install/uninstall a Qt event filter in the Tart thread.
+//
+static PyObject * event_hook_callback = NULL;
+
+static QAbstractEventDispatcher::EventFilter orig_eventFilter = NULL;
+
+void call_event_hook_callback(void * event)
+    {
+    // qDebug() << QThread::currentThreadId() << "call_event_hook_callback: begin";
+
+    // PyGILState_STATE gil_state = PyGILState_Ensure();
+    PyEval_RestoreThread(tart_pystate);
+
+    PyObject * arglist = Py_BuildValue("(i)", event);
+    // ran out of memory: fail!
+    if (arglist == NULL)
+        {
+        qDebug() << "Py_BuildValue() returned NULL!";
+        // should probably do something more significant here
+
+        // PyGILState_Release(gil_state);
+        tart_pystate = PyEval_SaveThread();
+        return;
+        }
+
+    // call the callback to send message to Python
+    PyObject * result = PyObject_CallObject(event_hook_callback, arglist);
+    Py_DECREF(arglist);
+
+    // TODO handle exceptions from the call, either by exiting the event
+    // loop (maybe only during development?) or by dumping a traceback,
+    // setting a flag, and continuing on.
+    bool is_SystemExit = false;
+
+    if (result == NULL)     // exception during call
+        {
+        // see http://computer-programming-forum.com/56-python/a81eae52ca74e6c1.htm
+        // Calling PyErr_Print() will actually terminate the process if
+        // SystemExit is the exception!
+        if (PyErr_ExceptionMatches(PyExc_SystemExit))
+            is_SystemExit = true;
+        else
+            PyErr_Print();
+        }
+    else
+        Py_DECREF(result);
+
+    // PyGILState_Release(gil_state);
+    tart_pystate = PyEval_SaveThread();
+
+    if (is_SystemExit)
+        {
+        qDebug() << "event_hook: SystemExit";
+        QThread::currentThread()->exit(3);
+        }
+
+    // qDebug() << QThread::currentThreadId() << "call_event_hook_callback: end";
+
+    return;
+    }
+
+
+bool Tart_eventFilter(void * event)
+    {
+    qDebug() << QThread::currentThreadId() << "Tart_eventFilter [[";
+    if (event_hook_callback)
+        call_event_hook_callback(event);
+
+    // Call replaced event filter so we deliever everything to Qt that runs in background
+    if (orig_eventFilter)
+        orig_eventFilter(event);
+
+    qDebug() << QThread::currentThreadId() << "Tart_eventFilter ]]";
+    return false;
+    }
+
+
+static PyObject *
+tart_hook_events(PyObject *self, PyObject *args)
+{
+    qDebug() << QThread::currentThreadId() << "_tart.hook_events()";
+
+    // code for callback based on
+    // http://docs.python.org/3.2/extending/extending.html#calling-python-functions-from-c
+    PyObject * temp;
+
+    if(!PyArg_ParseTuple(args, "O:hook_events", &temp))
+        return NULL;
+
+    // TODO: support None so we can unhook the filter.
+
+    if (!PyCallable_Check(temp)) {
+        PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+        return NULL;
+    }
+    Py_XINCREF(temp);               // Add a reference to new callback
+    event_hook_callback = temp;     // Remember new callback
+    // qDebug() << "event_loop: callback is" << event_callback;
+
+    orig_eventFilter = QAbstractEventDispatcher::instance()->setEventFilter(Tart_eventFilter);
+    qDebug() << "orig_eventFilter" << orig_eventFilter;
+
+    Py_RETURN_NONE;
+}
+
+
+//---------------------------------------------------------
 // Define callables for the "_tart" builtin module in Python.
 //
 static PyMethodDef TartMethods[] = {
+    {"get_instance",tart_get_instance,  METH_VARARGS,
+        PyDoc_STR("get_instance() -> int")},
     {"send",        tart_send,          METH_VARARGS,
-        "Send msg/results to QML."},
+        PyDoc_STR("Send msg/results to QML.")},
     {"event_loop",  tart_event_loop,    METH_VARARGS,
-        "Enter Tart event loop."},
+        PyDoc_STR("Enter Tart event loop.")},
+    {"hook_events", tart_hook_events,   METH_VARARGS,
+        PyDoc_STR("Install a Qt event filter.")},
     {NULL, NULL, 0, NULL}
 };
+
 
 //---------------------------------------------------------
 // Define the "_tart" builtin module for Python code to use.
@@ -215,6 +343,13 @@ PyInit_tart(void)
 // Singleton, so we can "find" Tart globally when required.
 //
 Tart * Tart::sm_instance;
+
+
+Q_DECL_EXPORT
+Tart * Tart::instance()
+    {
+    return sm_instance;
+    }
 
 
 //---------------------------------------------------------
@@ -361,7 +496,7 @@ void Tart::yieldMessage(QString msg) {
 // to tart_wait() to retrieve these messages.
 //
 void Tart::do_postMessage(QString msg) {
-    // qDebug() << QThread::currentThreadId() << "Tart do_postMessage(" << msg << ")";
+    // qDebug() << QThread::currentThreadId() << "Tart: do_postMessage(" << msg << ")";
 
     QByteArray bytes = msg.toUtf8();
 
@@ -414,6 +549,7 @@ void Tart::do_postMessage(QString msg) {
         m_thread->exit(3);
     }
 
+    // qDebug() << QThread::currentThreadId() << "Tart: do_postMessage done";
     return;
 }
 
