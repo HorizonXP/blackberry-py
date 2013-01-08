@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     Tart tart(argc, argv);
     tart.start();
 
-    if (tart.getThread()->isRunning()) {
+    if (tart.getThread()->ran_loop()) {
         // TODO: learn the final state of things with Gold SDK, where there are
         // major changes in how asset: and file: are handled with QML and
         // related stuff.  For now, leaving this as it is here: asset:///main.qml
