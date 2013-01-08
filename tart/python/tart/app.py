@@ -2,8 +2,10 @@
 
 import sys
 import pickle
+import json
 import traceback
 
+import _tart
 import tart
 
 
@@ -15,63 +17,63 @@ class Application:
         if self.debug:
             tart.log('tart: app starting')
 
-        super().__init__()
-
 
     def start(self):
         '''entry point to main loop'''
-        tart.send('backendReady')
+        if self.debug:
+            print('calling _tart.event_loop()')
 
-        self.loop()
+        # Call back into C++ so it can call QThread::exec() and process
+        # the Qt event loop, handling incoming signals and events and such.
+        # This should never return except via a SystemExit exception,
+        # which will be caught by blackberry_tart.py.
+        _tart.event_loop(self._handle_event)
+
+        if self.debug:
+            print('returned from _tart.event_loop() (should never see this)')
 
 
-    def loop(self):
-        '''main loop'''
-        while True:
-            # block indefinitely, or until SystemExit is raised as the
-            # Cascades Application is shutting down
-            msg = tart.wait()
+    def _handle_event(self, event=''):
+        '''called from event loop to handle'''
+        if self.debug:
+            tart.log('tart: event', event)
 
-            if self.debug:
-                tart.log('tart: msg', msg)
+        try:
+            msg = json.loads(event)
+        except ValueError:
+            msg = []
 
-            # extract message type and build handler name based on convention
-            # shared with and adopted from QML
+        # extract message type and build handler name based on convention
+        # shared with and adopted from QML
+        try:
+            msg_type = msg[0]
+            # apply Qt-style case normalization
+            name = 'on' + msg_type[0].upper() + msg_type[1:]
+        except IndexError:
+            tart.log('tart: ERROR, no type found in message')
+            return
+
+        else:
+            # find a matching handler routine, if there is one
             try:
-                msg_type = msg[0]
-                # apply Qt-style case normalization
-                name = 'on' + msg_type[0].upper() + msg_type[1:]
-            except IndexError:
-                tart.log('tart: ERROR, no type found in message')
-                continue
+                handler = getattr(self, name)
+            except AttributeError:
+                if msg_type.startswith('on'):
+                    tart.log('tart: WARNING, message starts with "on", maybe remove?')
 
-            else:
-                # find a matching handler routine, if there is one
-                try:
-                    handler = getattr(self, name)
-                except AttributeError:
-                    if msg_type.startswith('on'):
-                        tart.log('tart: WARNING, message starts with "on", maybe remove?')
+                self.missing_handler(msg)
+                return
 
-                    self.missing_handler(msg)
-                    continue
+        # tart.log('calling', handler)
+        try:
+            kwargs = msg[1] or {}
+        except KeyError:
+            kwargs = {}
 
-            try:
-                # tart.log('calling', handler)
-                try:
-                    kwargs = msg[1] or {}
-                except KeyError:
-                    kwargs = {}
-
-                # actually process the message in the handler: note that
-                # results are ignored for now
-                result = handler(**kwargs)
-
-            except SystemExit:  # never block this
-                raise
-
-            except:
-                traceback.print_exception(*sys.exc_info())
+        # Actually process the message in the handler: note that
+        # results are ignored for now, and any exceptions will
+        # result in a traceback from the calling code (in tart.cpp)
+        result = handler(**kwargs)
 
 
     def missing_handler(self, msg):
@@ -122,6 +124,7 @@ class Application:
         '''Sent when the app is exiting, so we can save state etc.
         Override in subclasses as required.'''
         tart.send('continueExit')
+        # sys.exit(1)
 
 
     #---------------------------------------------

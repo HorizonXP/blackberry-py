@@ -5,7 +5,7 @@ call blackberry-nativepackager -package ZombieSlayer.bar ^
     -configuration Device-Debug ^
     -devMode ^
     -target bar ^
-    -env PYTHONPATH=app/native:shared/misc/ZombieSlayer ^
+    -env PYTHONPATH=shared/misc/tart/python:shared/misc/ZombieSlayer ^
     -env PYTHONDONTWRITEBYTECODE=1 ^
     -arg -qml -arg shared/misc/ZombieSlayer/assets/main.qml ^
     -arg shared/misc/tart/python/blackberry_tart.py ^

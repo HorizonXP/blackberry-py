@@ -1,6 +1,6 @@
 '''BlackBerry-Tart support code.'''
 
-from .core import send, wait, log
+from .core import send, log
 from .app import Application
 
 

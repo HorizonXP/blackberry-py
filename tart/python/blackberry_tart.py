@@ -4,19 +4,6 @@ import os
 import sys
 from threading import current_thread, Lock
 
-# def _setup():
-#     parent = os.path.dirname(__file__)
-#     try:
-#         with open(os.path.join(parent, 'tart.cfg')) as f:
-#             for line in f:
-#                 key, _, value = line.strip().partition(':')
-#                 key = key.strip()
-#                 value = value.strip()
-#                 if key == 'sys.path' and value not in sys.path:
-#                     sys.path.append(value)
-#     except IOError:
-#         pass
-
 
 def _install_slogger2():
     from bb import slog2
@@ -70,7 +57,6 @@ def _install_slogger2():
 #
 if __name__ == '__main__':
     _install_slogger2()
-    # _setup()
 
     try:
         import app
@@ -78,20 +64,17 @@ if __name__ == '__main__':
         a.start()
         # we don't return until the app terminates or raises an exception
 
+    # The Python runtime will terminate the entire process if we allow
+    # SystemExit to rise from here, when it calls PyErr_Print().  It's
+    # possible to suppress that with Py_InspectFlag=1 but then we get
+    # a traceback even with a clean SystemExit.  For simplicity we just
+    # swallow it here to convert to a simple clean exit without killing
+    # the whole process.
     except SystemExit:
         pass
 
-    # TODO: rather than letting exceptions get all the way up here, it
-    # would be much better to catch them around the main loop, dump
-    # the traceback to stdout, and then continue processing,
-    # but this is how things stood at the end of the first experimental
-    # stage of Tart and nobody has improved it yet...
-    # Contributions are welcome! ;-)
-    except:
-        sys.stdout.flush()
-        import traceback
-        traceback.print_exc(file=sys.stderr)
-        sys.stderr.flush()
+    # other exceptions will result in a traceback from the cleanup in
+    # PyRun_SimpleFileExFlags() so we can ignore them here
 
 
 # EOF
