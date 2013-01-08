@@ -18,53 +18,16 @@
 #include <QDir>
 #include <QFile>
 #include <QByteArray>
-#include <QQueue>
-#include <QMutex>
+#include <QCoreApplication>
 
 
 //---------------------------------------------------------
-// Put a new message string (meant to be JSON-encoded data)
-// on a queue for the Tart event loop in Python to retrieve
-// using tart_wait().  This must be done in a threadsafe manner.
 //
-void TartQueue::push(QString msg) {
-	// qDebug() << QThread::currentThreadId() << "TartQueue push" << msg;
-	m_qmutex.lock();
-	m_queue.enqueue(msg);
-	m_qmutex.unlock();
-	// qDebug() << "queue size" << m_queue.size();
-	m_condition.wakeAll();
-	// qDebug() << "wakeAll";
-}
-
-
-//---------------------------------------------------------
-// Retrieve messages placed on the queue by push(), in a threadsafe
-// manner.  Called from tart_wait() in the Python main thread event loop.
-//
-QString TartQueue::get() {
-	// qDebug() << QThread::currentThreadId() << "TartQueue get" << m_queue.size();
-
-	while (!m_queue.size()) {
-		// qDebug() << QThread::currentThreadId() << "blocking";
-		m_mutex.lock();
-		m_condition.wait(&m_mutex);
-		m_mutex.unlock();
-		// qDebug() << QThread::currentThreadId() << "awake!";
-	}
-
-	// qDebug() << "mutex lock";
-	m_qmutex.lock();
-	// qDebug() << "mutex locked";
-	QString msg = m_queue.dequeue();
-	m_qmutex.unlock();
-	// qDebug() << "mutex unlocked";
-    // qDebug() << "dequeued" << msg;
-
-	return msg;
-}
-
-
+TartThread::TartThread(QSemaphore * sem)
+    : m_sem(sem)
+    , m_loop_ran(false)
+    {
+    }
 
 
 //---------------------------------------------------------
@@ -72,46 +35,79 @@ QString TartQueue::get() {
 // returns during app termination.  This routine is called in a
 // separate thread created by Tart::start().
 //
-// TODO: sort out the shutdown, as for some reason we don't always seem
-// to be returning properly from the PyRun_...() routine.
-// Maybe it catches and handles SystemExit or other exceptions, and kills
-// the whole process?  Investigation is needed.
+// Note that unhandled SystemExit will terminate the process unless
+// Py_InspectFlag is set, so we need to handle that in blackberry_tart.py.
 //
 void TartThread::run() {
-	qDebug() << QThread::currentThreadId() << "Tart thread running";
+    qDebug() << QThread::currentThreadId() << "TartThread: running";
 
-	int rc = -1;
+    // Make sure the GIL stuff is set up properly for when do_postMessage()
+    // is called.  This may be required in the case where the tart app
+    // doesn't actually create tertiary threads.
+    PyEval_InitThreads();
 
-	const char * path = Tart::instance()->getScriptPath();
+    const char * path = Tart::instance()->getScriptPath();
     qDebug() << "script path" << path;
-	if (path) {
-		FILE * mainfile = fopen(path, "r");
+    if (path) {
+        FILE * mainfile = fopen(path, "r");
 
-		if (mainfile) {
-			// We use the SimpleFileExFlags version so that we can pass closeit=1
-			// (second argument) and to set flags to non-NULL so that the
-			// code can specify "from __future__ import" if required.
-			PyCompilerFlags flags;
-			rc = PyRun_SimpleFileExFlags(mainfile, path, 1, &flags);
+        if (mainfile) {
+            // We use the SimpleFileExFlags version so that we can pass closeit=1
+            // (second argument) and to set flags to non-NULL so that the
+            // code can specify "from __future__ import" if required.
+            PyCompilerFlags flags;
 
-			qDebug() << "script finished with rc" << rc;
-			PyObject * error = PyErr_Occurred();
-			if (error && !PyErr_GivenExceptionMatches(error, PyExc_SystemExit)) {
-				qDebug() << "PyRun_SimpleFile() of blackberry_tart.py:" << rc;
-				PyErr_Print();
-			} else if (error) {
-				PyErr_Print();
-			}
+            // Exceptions result in PyErr_Print() being called, and it
+            // will terminate the process if Py_InspectFlag is not set.
+            // If we don't want that to happen, we could either swallow
+            // SystemExit exceptions in blackberry_tart.py, or set the
+            // flag.  If we set the flag, however, even clean SystemExits
+            // will result in a traceback being printed to sys.stderr.
+            // Py_InspectFlag = 1; // ensure we return...
+            int rc = PyRun_SimpleFileExFlags(mainfile, path, 1, &flags);
 
-			PyErr_Clear();
-		}
-		else {
-			qDebug() << path << "is missing!\n";
-		}
-	} else
-		qDebug() << "no Python script specified\n";
+            // Note: docs say there is no way to get the exception info if
+            // there is an error.
+            // See http://docs.python.org/3.2/c-api/veryhigh.html#PyRun_SimpleStringFlags
+            qDebug() << QThread::currentThreadId() << "PyRun returned" << rc;
+        }
+        else {
+            qDebug() << path << "is missing!\n";
+        }
+    } else
+        qDebug() << "no Python script specified\n";
 
-	qDebug("Tart thread terminating");
+    // will block until any non-daemon threads terminate
+    qDebug() << "Python finalizing";
+    Py_Finalize();
+
+    // If we never got as far as actually running the tart event loop,
+    // the main Qt thread will still be blocked on the semaphore
+    // waiting for us to start, so release it.
+    if (!ran_loop()) {
+        qDebug() << QThread::currentThreadId() << "TartThread: loop never ran!";
+        m_sem->release(1);
+    }
+
+    qDebug() << QThread::currentThreadId() << "TartThread: exiting";
+}
+
+
+//---------------------------------------------------------
+//
+int TartThread::do_exec() {
+    // flag that we got this far, which means the Python interpreter
+    // managed to get as far as calling _tart.event_loop() and we
+    // released the main Qt thread to carry on with startup
+    m_loop_ran = true;
+
+    // qDebug() << QThread::currentThreadId() << "do_exec() releasing sema";
+    m_sem->release(1);
+
+    int rc = exec();
+    // qDebug() << QThread::currentThreadId() << "do_exec() ->" << rc;
+
+    return rc;
 }
 
 
@@ -124,20 +120,17 @@ void TartThread::run() {
 static PyObject *
 tart_send(PyObject *self, PyObject *args)
 {
-	char * msg;
+    char * msg;
 
     if(!PyArg_ParseTuple(args, "s:send", &msg))
         return NULL;
 
     // qDebug() << QThread::currentThreadId() << "tart_send" << msg;
 
-    // TODO: sort out more carefully whether the QueuedConnection is required,
-    // or whether there are simpler/faster/whatever alternatives.
-    //    Tart::instance()->yieldMessage(msg);
-    QMetaObject::invokeMethod(Tart::instance(), "yieldMessage",
-        Qt::QueuedConnection, Q_ARG(QString, msg));
+    Tart::instance()->yieldMessage(QString(msg));
 
-    return PyLong_FromLong(0);
+    // qDebug() << QThread::currentThreadId() << "tart_send done";
+    Py_RETURN_NONE;
 }
 
 
@@ -145,55 +138,47 @@ tart_send(PyObject *self, PyObject *args)
 // Blocking call for the Python main thread's Tart event loop
 // where it should wait for incoming "events" from elsewhere
 // (generally from the QML side).
-// TODO: implement a timeout, and timer-support
+// TODO: implement a timeout (?), and timer-support
 //
+static PyThreadState * tart_pystate;
+static PyObject * event_callback = NULL;
+
 static PyObject *
-tart_wait(PyObject *self, PyObject *args)
+tart_event_loop(PyObject *self, PyObject *args)
 {
-    if(!PyArg_ParseTuple(args, ":wait"))
+    qDebug() << QThread::currentThreadId() << "_tart.event_loop()";
+
+    // code for callback based on
+    // http://docs.python.org/3.2/extending/extending.html#calling-python-functions-from-c
+    PyObject * temp;
+
+    if(!PyArg_ParseTuple(args, "O:wait", &temp))
         return NULL;
 
-    // qDebug() << QThread::currentThreadId() << "tart_wait";
+    if (!PyCallable_Check(temp)) {
+        PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+        return NULL;
+    }
+    Py_XINCREF(temp);               // Add a reference to new callback
+    event_callback = temp;          // Remember new callback
+    // qDebug() << "event_loop: callback is" << event_callback;
 
-    QString msg;
-
-    // may block indefinitely, so we have to release the interpreter
+    // exec() may block indefinitely, so we have to release the interpreter
     // to let other Python threads run until data arrives for us
-    Py_BEGIN_ALLOW_THREADS
-    msg = Tart::instance()->getQueue()->get();
-    Py_END_ALLOW_THREADS
+    tart_pystate = PyEval_SaveThread();
 
-    // The null msg is part of the our shutdown processing, where
-    // Tart::cleanup() will set the termination flag, and then "kick"
-    // us awake by sending a null message, in case we're not already
-    // processing other messages. To ensure prior messages are processed,
-    // we only check for the termination flag when we've got a null
-    // message, since otherwise termination would be "out of band" and
-    // we might exit unexpectedly early.
-    if (msg.isNull())
-        qDebug() << "msg is null";
+    int rc = Tart::instance()->getThread()->do_exec();
+    qDebug() << "event_loop: raising SystemExit(" << rc << ")";
 
-    if (Tart::instance()->isTerminating())
-        qDebug() << "Tart is terminating...";
+    PyEval_RestoreThread(tart_pystate);
 
-    // Flag indicates Python should terminate, but we check for the
-    // terminating flag only when we see the null string, so we
-    // will consume earlier messages before exiting.
-    if (msg.isNull() && Tart::instance()->isTerminating()) {
-        qDebug() << "raising SystemExit";
-    	PyErr_SetString(PyExc_SystemExit, "Tart exiting");
-    	return NULL;
-    }
-    else {
-        // qDebug() << "tart_wait got" << msg;
+    Py_XDECREF(event_callback);     // Dispose of callback
+    event_callback = NULL;          // Forget callback
+    qDebug() << "event_loop: callback cleared";
 
-        QByteArray bytes = msg.toUtf8();
-        // qDebug() << "tart_wait bytes" << bytes.size();
-        PyObject * result = Py_BuildValue("s#", bytes.constData(), bytes.size());
-        // qDebug() << "tart_wait built" << result;
-
-        return result;
-    }
+    PyObject * exit_code = PyLong_FromLong(rc);
+    PyErr_SetObject(PyExc_SystemExit, exit_code);
+    return NULL;
 }
 
 
@@ -201,8 +186,10 @@ tart_wait(PyObject *self, PyObject *args)
 // Define callables for the "_tart" builtin module in Python.
 //
 static PyMethodDef TartMethods[] = {
-    {"send", tart_send, METH_VARARGS, "Send msg/results to QML."},
-    {"wait", tart_wait, METH_VARARGS, "Wait for events from QML."},
+    {"send",        tart_send,          METH_VARARGS,
+        "Send msg/results to QML."},
+    {"event_loop",  tart_event_loop,    METH_VARARGS,
+        "Enter Tart event loop."},
     {NULL, NULL, 0, NULL}
 };
 
@@ -238,35 +225,86 @@ Tart * Tart::sm_instance;
 // For now we do nothing with the arguments, but may want to
 // extract useful info from them later.
 //
-Tart::Tart(int argc, char ** argv) {
-	if (sm_instance)
-		throw "Singleton already exists";
+Tart::Tart(int argc, char ** argv)
+    : m_thread(NULL)
+    , m_cleanup(false)
+    {
+    if (sm_instance)
+        throw "Singleton already exists";
 
-	sm_instance = this;
+    sm_instance = this;
 
     // We may want to do stuff with these later... used to pass it
     // to the Python interpreter when it was the primary thing, but
     // now the Cascades Application gets it and maybe we don't care.
-	m_argc = argc;
-	m_argv = argv;
+    m_argc = argc;
+    m_argv = argv;
 
-	m_queue = new TartQueue();
-	m_thread = NULL;
+    PyImport_AppendInittab(TartModule.m_name, &PyInit_tart);
 
-    m_terminating = false;
+    // only Py_SetProgramName and Py_SetPath may come before this
+    Py_Initialize();
 
-	PyImport_AppendInittab(TartModule.m_name, &PyInit_tart);
+    qDebug("Python initialized");
 
-	// only Py_SetProgramName and Py_SetPath may come before this
-	Py_Initialize();
+    //    m_wargv = args_to_wargv(args.size(), argv);
+    //    m_wargc = argc;
+    //    PySys_SetArgvEx(argc, m_wargv, 0);
 
-	qDebug("Python initialized");
+    qDebug() << QThread::currentThreadId() << "Tart: initialized";
+}
 
-	//    m_wargv = args_to_wargv(args.size(), argv);
-	//    m_wargc = argc;
-	//    PySys_SetArgvEx(argc, m_wargv, 0);
 
-	qDebug() << QThread::currentThreadId() << "Tart initialized";
+//---------------------------------------------------------
+// Launch the secondary thread in which the Python interpreter
+// is executed, since this call comes from the main Application thread.
+//
+void Tart::start() {
+    if (m_thread)
+        return;
+
+    QSemaphore sem(0);
+
+    // qDebug() << QThread::currentThreadId() << "Tart: starting TartThread";
+    m_thread = new TartThread(&sem);
+
+    this->moveToThread(m_thread);
+    m_thread->start();
+
+    connect(m_thread, SIGNAL(finished()),
+        this, SLOT(thread_finished()));
+
+    // being able to acquire this semaphore means the Python main thread
+    // has succesfully started, and
+    qDebug() << QThread::currentThreadId() << "Tart: wait for sema";
+    sem.acquire(1);
+    qDebug() << QThread::currentThreadId() << "Tart: got sema";
+
+    // Only make the connection here if the interpreter entered the event loop.
+    if (m_thread->ran_loop()) {
+        // force postMessage() to result in a QueuedConnection for now
+        // since the default doesn't appear to be picking the right method
+        // TODO: investigate if that's a sign of a problem
+        connect(this,
+            SIGNAL(postMessage(QString)),
+            this,
+            SLOT(do_postMessage(QString)),
+            Qt::QueuedConnection);
+    }
+}
+
+
+//---------------------------------------------------------
+//
+void Tart::thread_finished() {
+    // If we get here but haven't run the cleanup() routine,
+    // it's an abnormal end so at least log it.
+    // Also  terminate the entire process so we aren't left with
+    // a GUI but nothing for it to talk to.
+    if (!m_cleanup) {
+        qDebug() << QThread::currentThreadId() << "Tart: ABEND";
+        QCoreApplication::instance()->exit(1);
+    }
 }
 
 
@@ -277,54 +315,31 @@ Tart::Tart(int argc, char ** argv) {
 // Application::aboutToQuit() signal.
 //
 void Tart::cleanup() {
-	qDebug() << QThread::currentThreadId() << "Tart cleanup";
+    // qDebug() << QThread::currentThreadId() << "Tart: cleanup";
+    // qDebug() << "  m_thread" << m_thread << ", curThread" << QThread::currentThread();
 
-    // Flag indicates Python should terminate, but we need to send
-    // a message to unblock. The tart.wait() call checks for the
-    // terminating flag only when it sees the null string, so it
-    // will consume earlier messages before exiting.
-    m_terminating = true;
-	m_queue->push(QString());  // send null string to unblock
+    m_cleanup = true;
 
-	if (m_thread) {
-		qDebug() << "thread wait";
-		m_thread->wait();
-		qDebug() << "thread wait done";
-		m_thread = NULL;
-	}
+    if (m_thread) {
+        // qDebug() << "  thread quit";
+        m_thread->exit(2);
 
-	// will block until any non-daemon threads terminate
-    // TODO: sort out the shutdown sequence since for now this fails
-	// qDebug() << "Python finalizing";
-	// Py_Finalize();
-	// qDebug() << "Python finalized";
+        if (m_thread != QThread::currentThread()) {
+            // qDebug() << "  thread wait";
+            m_thread->wait();
+            // qDebug() << "  thread wait done";
+        }
 
-//	free_wargv(m_wargc, m_wargv);
+        delete m_thread;
+        m_thread = NULL;
+    }
 
-	delete m_queue;
-	m_queue = NULL;
+//  free_wargv(m_wargc, m_wargv);
 
-	sm_instance = NULL;
-	qDebug() << "Tart destroyed";
+    sm_instance = NULL;
+    qDebug() << QThread::currentThreadId() << "Tart: done cleanup";
 
-	return;
-}
-
-
-//---------------------------------------------------------
-// Launch the secondary thread in which the Python interpreter
-// is executed, since this call comes from the main Application thread.
-//
-void Tart::start() {
-	if (m_thread)
-		return;
-
-    qDebug() << "starting Tart in thread";
-    m_thread = new TartThread();
-
-    m_queue->moveToThread(m_thread);
-    m_thread->start();
-    qDebug() << "Tart thread started";
+    return;
 }
 
 
@@ -334,8 +349,9 @@ void Tart::start() {
 // tart.js JavaScript code that's used in the QML.
 //
 void Tart::yieldMessage(QString msg) {
-	// qDebug() << QThread::currentThreadId() << "Tart yieldMessage" << msg;
-	emit messageYielded(msg);
+    // qDebug() << QThread::currentThreadId() << "Tart: yieldMessage" << msg;
+    emit messageYielded(msg);
+    // qDebug() << QThread::currentThreadId() << "Tart: yieldMessage done";
 }
 
 
@@ -344,11 +360,61 @@ void Tart::yieldMessage(QString msg) {
 // which is expected to implement an event loop around calls
 // to tart_wait() to retrieve these messages.
 //
-void Tart::postMessage(QString msg) {
-	// qDebug() << QThread::currentThreadId() << "Tart postMessage" << msg;
-	m_queue->push(msg);
-	// qDebug() << "Tart postMessage done";
-//	QMetaObject::invokeMethod(m_queue, "push", Qt::QueuedConnection, Q_ARG(QString, msg));
+void Tart::do_postMessage(QString msg) {
+    // qDebug() << QThread::currentThreadId() << "Tart do_postMessage(" << msg << ")";
+
+    QByteArray bytes = msg.toUtf8();
+
+    // PyGILState_STATE gil_state = PyGILState_Ensure();
+    PyEval_RestoreThread(tart_pystate);
+
+    // qDebug() << "tart_wait bytes" << bytes.size();
+    PyObject * arglist = Py_BuildValue("(s#)", bytes.constData(), bytes.size());
+    // ran out of memory: fail!
+    if (arglist == NULL) {
+        qDebug() << "Py_BuildValue() returned NULL!";
+        // should probably do something more significant here
+        tart_pystate = PyEval_SaveThread();
+        // PyGILState_Release(gil_state);
+        return;
+    } else {
+        // qDebug() << "postMessage() built" << arglist;
+    }
+
+    // call the callback to send message to Python
+    PyObject * result = PyObject_CallObject(event_callback, arglist);
+    Py_DECREF(arglist);
+
+    // qDebug() << "callback returned" << result;
+
+    // TODO handle exceptions from the call, either by exiting the event
+    // loop (maybe only during development?) or by dumping a traceback,
+    // setting a flag, and continuing on.
+    bool is_SystemExit = false;
+
+    if (result == NULL) {   // exception during call
+        // qDebug() << "exception during event delivery";
+
+        // see http://computer-programming-forum.com/56-python/a81eae52ca74e6c1.htm
+        // Calling PyErr_Print() will actually terminate the process if
+        // SystemExit is the exception!
+        if (PyErr_ExceptionMatches(PyExc_SystemExit))
+            is_SystemExit = true;
+        else
+            PyErr_Print();
+    }
+    else
+        Py_DECREF(result);
+
+    // PyGILState_Release(gil_state);
+    tart_pystate = PyEval_SaveThread();
+
+    if (is_SystemExit) {
+        qDebug() << "do_post: SystemExit from delivery";
+        m_thread->exit(3);
+    }
+
+    return;
 }
 
 
@@ -361,17 +427,17 @@ void Tart::postMessage(QString msg) {
 //
 QString Tart::writeImage(const QString & name, const QString & data)
 {
-	// qDebug() << "writeImage" << name;
-	QString dataFolder = QDir::homePath();
-	QFile file(dataFolder + '/' + name);
-	// qDebug() << "path" << file.fileName();
-	if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		file.write(QByteArray::fromBase64(data.toAscii()));
-		file.close();
-		return file.fileName();
-	}
-	else
-		return QString();
+    // qDebug() << "writeImage" << name;
+    QString dataFolder = QDir::homePath();
+    QFile file(dataFolder + '/' + name);
+    // qDebug() << "path" << file.fileName();
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        file.write(QByteArray::fromBase64(data.toAscii()));
+        file.close();
+        return file.fileName();
+    }
+    else
+        return QString();
 }
 
 

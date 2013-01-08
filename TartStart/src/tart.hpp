@@ -9,37 +9,8 @@
 #define TART_HPP_
 
 #include <QObject>
-#include <QQueue>
-#include <QVariant>
 #include <QThread>
-#include <QWaitCondition>
-#include <QMutex>
-
-
-//---------------------------------------------------------
-// Thread-safe queue to hold messages sent from anywhere in
-// the Application to the Python interpreter, where they'll
-// be picked up via the tart.wait() call in the Tart event loop.
-//
-class TartQueue : public QObject
-{
-	Q_OBJECT
-
-public:
-	TartQueue() {}
-
-    QString get();
-
-public slots:
-    void push(QString msg);
-
-private:
-    QQueue<QString> m_queue;
-    QMutex			m_qmutex;
-
-    QWaitCondition 	m_condition;
-    QMutex			m_mutex;
-};
+#include <QSemaphore>
 
 
 //---------------------------------------------------------
@@ -49,8 +20,16 @@ private:
 class TartThread : public QThread
 {
     Q_OBJECT
+
 public:
-    void run();
+            TartThread(QSemaphore * sem);
+    void    run();
+    int     do_exec();
+    bool    ran_loop() { return m_loop_ran; }
+
+private:
+    QSemaphore    * m_sem;
+    bool            m_loop_ran;
 };
 
 
@@ -65,41 +44,44 @@ class Tart : public QObject
     Q_OBJECT
 
 private:
-	static Tart * sm_instance;
+    static Tart *   sm_instance;
 
 public:
-    static Tart * instance() { return sm_instance; }
+    static Tart *   instance() { return sm_instance; }
 
     Tart(int argc, char ** argv);
 //    ~Tart();
 
-    const char * getScriptPath() { return (m_argc && m_argv) ? m_argv[m_argc - 1] : NULL; }
+    const char *    getScriptPath() { return (m_argc && m_argv) ? m_argv[m_argc - 1] : NULL; }
 
-	void start();
-	TartThread * getThread() { return m_thread; }
-    TartQueue * getQueue() { return m_queue; }
-	bool isTerminating() { return m_terminating; }
+    void            start();
+    TartThread *    getThread() { return m_thread; }
 
     Q_INVOKABLE QString writeImage(const QString & name, const QString & data);
 
 public slots:
-	void postMessage(QString msg);
-	void yieldMessage(QString msg);
-	void cleanup();
+    void cleanup();
 
 signals:
+    void postMessage(QString msg);
     void messageYielded(QString msg);
-	void pythonTerminated(QString msg);
+    void pythonTerminated(QString msg);
+
+public:
+    void yieldMessage(QString msg);
+
+private slots:
+    void do_postMessage(QString msg);
+    void thread_finished();
 
 private:
     // storage for argument list converted from multibyte to Unicode
     //    wchar_t ** m_wargv;
     //    int m_wargc;
-	TartThread *    m_thread;
-	TartQueue *     m_queue;
-    bool            m_terminating;
-    int				m_argc;
-    char ** 		m_argv;
+    TartThread *    m_thread;
+    bool            m_cleanup;
+    int             m_argc;
+    char **         m_argv;
 };
 
 
