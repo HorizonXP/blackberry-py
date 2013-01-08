@@ -214,7 +214,7 @@
        y="-105.87282"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\HelloWorld\icon.png" />
+        />
     <g
        id="g3970"
        transform="translate(158.82232,46.127181)">
@@ -350,7 +350,7 @@
        style="color:#000000;fill:#ffe4e4;fill-opacity:1;stroke:#a500f7;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\HelloWorld\icon.png" />
+        />
   </g>
   <g
      inkscape:label="Base"
@@ -446,7 +446,7 @@
        transform="translate(0,-128)"
        rx="10.351562"
        ry="10.351562"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\HelloWorld\icon.png"
+
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <text
@@ -456,7 +456,7 @@
        y="-202.44893"
        id="text4724"
        sodipodi:linespacing="125%"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\HelloWorld\icon.png"
+
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
@@ -470,7 +470,7 @@
        y="-148.86046"
        id="text4728"
        sodipodi:linespacing="125%"
-       inkscape:export-filename="C:\svn\hg\prj272-bbx-python\samples\HelloWorld\icon.png"
+
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
