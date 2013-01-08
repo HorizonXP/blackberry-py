@@ -47,7 +47,7 @@ private:
     static Tart *   sm_instance;
 
 public:
-    static Tart *   instance() { return sm_instance; }
+    static Tart *   instance();
 
     Tart(int argc, char ** argv);
 //    ~Tart();
