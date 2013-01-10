@@ -263,7 +263,7 @@ void call_event_hook_callback(void * event)
 
 bool Tart_eventFilter(void * event)
     {
-    qDebug() << QThread::currentThreadId() << "Tart_eventFilter [[";
+    // qDebug() << QThread::currentThreadId() << "Tart_eventFilter [[";
     if (event_hook_callback)
         call_event_hook_callback(event);
 
@@ -271,7 +271,7 @@ bool Tart_eventFilter(void * event)
     if (orig_eventFilter)
         orig_eventFilter(event);
 
-    qDebug() << QThread::currentThreadId() << "Tart_eventFilter ]]";
+    // qDebug() << QThread::currentThreadId() << "Tart_eventFilter ]]";
     return false;
     }
 
