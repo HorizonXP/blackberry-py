@@ -213,6 +213,8 @@ NAVIGATOR_INVOKE_SET_FILTERS_RESULT   = 0x25
 NAVIGATOR_PEEK_STARTED                = 0x26
 NAVIGATOR_PEEK_STOPPED                = 0x27
 NAVIGATOR_CARD_READY_CHECK            = 0x28
+NAVIGATOR_POOLED                      = 0x29
+NAVIGATOR_ORIENTATION_SIZE            = 0x2A
 NAVIGATOR_OTHER                       = 0xff
 
 
@@ -251,6 +253,7 @@ navigator_done_orientation = _func(None, POINTER(bps_event_t))
 navigator_done_orientation_id = _func(c_int, c_char_p)
 navigator_close_window = _func(c_int)
 navigator_get_device_lock_state = _func(c_int)
+# TODO: add the latest new functions including get_orientation_size_width/height
 
 
 #----------------------------
