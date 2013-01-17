@@ -11,4 +11,4 @@ blackberry-nativepackager -package HelloWorld.bar \
     bar-descriptor.xml \
     icon.png \
     -C $TART/entry $TART/entry/TartStart \
-    -debugToken ../../debugTtken.bar
+    -debugToken ../../debugtoken.bar
