@@ -96,11 +96,12 @@ class Application:
         for key in data:
             try:
                 data[key] = saved[key]
-                # tart.log('{}: restored {} = {!r}'.format(
-                #     path,
-                #     key,
-                #     data[key],
-                #     ))
+                if self.debug:
+                    print('{}: restored {} = {!r}'.format(
+                        path,
+                        key,
+                        data[key],
+                        ))
             except KeyError:
                 pass
 
@@ -110,7 +111,8 @@ class Application:
         # we can get fancier later when we need
         data['version'] = 1
 
-        # tart.log('{}: persisting {!r}'.format(path, data))
+        if self.debug:
+            print('{}: persisting {!r}'.format(path, data))
         pickle.dump(data, open(path, 'wb'))
 
 
