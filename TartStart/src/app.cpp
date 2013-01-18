@@ -13,6 +13,7 @@
 #include <bb/cascades/pickers/FilePickerSortOrder>
 #include <bb/cascades/pickers/FileType>
 #include <bb/cascades/pickers/FilePickerViewMode>
+#include <bb/cascades/advertisement/Banner>
 
 #include <bb/cascades/SceneCover>
 #include <bb/cascades/AbstractCover>
@@ -59,12 +60,13 @@ App::App(bb::cascades::Application * app, Tart * tart, QString qmlpath)
     qmlRegisterType<QTimer>("bb.cascades", 1, 0, "QTimer");
     qmlRegisterType<ActiveTextHandler>("bb.cascades", 1, 0, "ActiveTextHandler");
 
-    qmlRegisterType<pickers::FilePicker>("bb.cascades.pickers", 1, 0, "FilePicker");
-    qmlRegisterUncreatableType<pickers::FilePickerMode>("bb.cascades.pickers", 1, 0, "FilePickerMode", "");
-    qmlRegisterUncreatableType<pickers::FilePickerSortFlag>("bb.cascades.pickers", 1, 0, "FilePickerSortFlag", "");
-    qmlRegisterUncreatableType<pickers::FilePickerSortOrder>("bb.cascades.pickers", 1, 0, "FilePickerSortOrder", "");
-    qmlRegisterUncreatableType<pickers::FileType>("bb.cascades.pickers", 1, 0, "FileType", "");
-    qmlRegisterUncreatableType<pickers::FilePickerViewMode>("bb.cascades.pickers", 1, 0, "FilePickerViewMode", "");
+    // qmlRegisterType<pickers::FilePicker>("bb.cascades.pickers", 1, 0, "FilePicker");
+    // qmlRegisterUncreatableType<pickers::FilePickerMode>("bb.cascades.pickers", 1, 0, "FilePickerMode", "");
+    // qmlRegisterUncreatableType<pickers::FilePickerSortFlag>("bb.cascades.pickers", 1, 0, "FilePickerSortFlag", "");
+    // qmlRegisterUncreatableType<pickers::FilePickerSortOrder>("bb.cascades.pickers", 1, 0, "FilePickerSortOrder", "");
+    // qmlRegisterUncreatableType<pickers::FileType>("bb.cascades.pickers", 1, 0, "FileType", "");
+    // qmlRegisterUncreatableType<pickers::FilePickerViewMode>("bb.cascades.pickers", 1, 0, "FilePickerViewMode", "");
+    qmlRegisterType<advertisement::Banner>("bb.cascades.advertisement", 1, 0, "Banner");
 
     // create scene document from main.qml asset
     // set parent to created document to ensure it exists for the whole application lifetime
