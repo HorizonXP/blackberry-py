@@ -62,19 +62,26 @@ var send = Tart.send = function(type, data) {
 //
 function register(namespace) {
     if (debug)
-        print('tart.register', typeof namespace, Object.getOwnPropertyNames(namespace));
+        print('tart.register', typeof namespace, Object.keys(namespace).length);
 
-    for (var name in namespace) {
-        if (/on[A-Z]/.test(name) && typeof namespace[name] == 'function') {
-            _handlers[name] = namespace[name];
-            if (debug)
-                print('registered handler', name);
-        }
-        else {
-            if (debug)
-                print('not registering', name, 'as handler', typeof namespace[name]);
-        }
-    }
+    // scan all candidate items to check for those with a handler "signature"
+    Object.keys(namespace).forEach(function (name) {
+        // although testing the type (next test) is probably faster, we
+        // do this one first to avoid spurious warnings that Cascades spits out
+        // like ""WARNING: preferredHeight is NOT set, returned value cannot be trusted""
+        // which occurs when we actually retrieve the property from the namespace
+        // but also because we'll find far more functions than we'll find
+        // non-functions with our handler naming convention.
+        if (!/^on[A-Z]/.test(name))
+            return;
+
+        if (typeof namespace[name] !== 'function')
+            return;
+
+        _handlers[name] = namespace[name];
+        if (debug)
+            print('registered handler', name);
+    });
 }
 
 
