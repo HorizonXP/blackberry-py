@@ -16,11 +16,20 @@
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="logo.svg"
-   inkscape:export-xdpi="22.5"
-   inkscape:export-ydpi="22.5"
+   inkscape:export-xdpi="84.379997"
+   inkscape:export-ydpi="84.379997"
    >
   <defs
-     id="defs4" />
+     id="defs4">
+    <filter
+       inkscape:collect="always"
+       id="filter3779">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="9.0352532"
+         id="feGaussianBlur3781" />
+    </filter>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#000000"
@@ -29,8 +38,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="-54.014869"
-     inkscape:cy="248.21908"
+     inkscape:cx="234.20539"
+     inkscape:cy="329.10605"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
      showgrid="false"
@@ -56,7 +65,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-540.36218)"
-     style="display:none">
+     style="display:inline">
     <image
        y="548.40381"
        x="21.708664"
@@ -68,10 +77,10 @@
   <g
      inkscape:groupmode="layer"
      id="layer3"
-     inkscape:label="Background"
+     inkscape:label="Frames"
      style="display:none">
     <rect
-       style="display:inline;fill:#05a4f3;fill-opacity:1;stroke:none"
+       style="fill:#05a4f3;fill-opacity:1;stroke:none;display:inline"
        id="rect3000"
        width="479.82248"
        height="478.81232"
@@ -79,6 +88,18 @@
        y="16.0151"
        inkscape:export-xdpi="22.5"
        inkscape:export-ydpi="22.5" />
+    <rect
+       inkscape:export-ydpi="75.889999"
+       inkscape:export-xdpi="75.889999"
+
+       ry="0"
+       rx="0"
+       y="-100.46243"
+       x="1.1264954"
+       height="73.350967"
+       width="284.63037"
+       id="rect3040"
+       style="display:inline;color:#000000;fill:#e93434;fill-opacity:0.30851063000000001;fill-rule:nonzero;stroke:none;stroke-width:1.37800002000000000;marker:none;visibility:visible;overflow:visible;enable-background:accumulate" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -90,10 +111,19 @@
        id="rect2997"
        width="568.71588"
        height="539.42145"
-       x="-599.19287"
-       y="-15.29963"
+       x="-634.37579"
+       y="-16.309782"
        rx="11.095578"
        ry="11.766773" />
+    <rect
+       style="fill:#f2f2f2;fill-opacity:0.80193242;fill-rule:evenodd;stroke:none;filter:url(#filter3779)"
+       id="rect3001"
+       width="489.92398"
+       height="485.88336"
+       x="10.101525"
+       y="11.974488"
+       rx="94.599281"
+       ry="94.599281" />
     <g
        id="g3003"
        transform="matrix(0.91968442,0,0,0.88253353,20.647837,22.694574)"
@@ -197,5 +227,31 @@
            id="tspan3804"
            sodipodi:role="line">BB-Py</tspan></text>
     </g>
+    <use
+       x="0"
+       y="0"
+       xlink:href="#g3003"
+       id="use3004"
+       transform="matrix(0.16369815,0,0,0.16369815,-2.0268741,-104.62246)"
+       width="512"
+       height="512" />
+    <text
+       xml:space="preserve"
+       style="font-size:26.27534294px;font-style:normal;font-weight:normal;line-height:112.99999952%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+       x="76.048843"
+       y="-69.786285"
+       id="text3879"
+       sodipodi:linespacing="113%"
+       transform="scale(0.98070801,1.0196715)"><tspan
+         sodipodi:role="line"
+         x="76.048843"
+         y="-69.786285"
+         id="tspan3883"
+         style="font-style:oblique;font-weight:bold;line-height:112.99999952%;-inkscape-font-specification:Sans Bold Oblique">@BBPyProject</tspan><tspan
+         sodipodi:role="line"
+         x="76.048843"
+         y="-40.095146"
+         style="font-style:oblique;font-weight:bold;line-height:112.99999952%;-inkscape-font-specification:Sans Bold Oblique"
+         id="tspan3022">Repo Updates</tspan></text>
   </g>
 </svg>
