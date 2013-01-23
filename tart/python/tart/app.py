@@ -130,6 +130,19 @@ class Application:
 
 
     #---------------------------------------------
+    # Transparently create BPS event dispatcher when it's requested,
+    # allowing us to hook into the event feed with a Qt event filter
+    @property
+    def bps_dispatcher(self):
+        try:
+            d = self._bps_dispatcher
+        except AttributeError:
+            from .bps_dispatcher import BpsEventDispatcher
+            d = self._bps_dispatcher = BpsEventDispatcher()
+        return d
+
+
+    #---------------------------------------------
     # Useful things with which to help JavaScript debugging.
     # These can be called from the command line interface via
     # telnet, or in some automated testing.  Not used but
