@@ -16,6 +16,14 @@ NavigationPane {
             layout: DockLayout {}
 
             Label {
+                id: kbmsg
+                visible: false
+                text: qsTr("Look out! It's the keyboard!!")
+                horizontalAlignment: HorizontalAlignment.Left
+                verticalAlignment: VerticalAlignment.Top
+            }
+
+            Label {
                 id: label
                 horizontalAlignment: HorizontalAlignment.Center
                 verticalAlignment: VerticalAlignment.Center
@@ -89,6 +97,12 @@ NavigationPane {
         root.push(helpPage);
         Application.menuEnabled = false;    // re-enable when popped
     }
+
+    // handle keyboard state events from BPS
+    function onKeyboardState(state) {
+        kbmsg.visible = state.visible;
+    }
+
 
     onSettingsChanged: {
         var data = {

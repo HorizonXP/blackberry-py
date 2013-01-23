@@ -1,6 +1,7 @@
 import os
 
 import tart
+from tart import vkb_handler
 
 
 class App(tart.Application):
@@ -23,6 +24,10 @@ class App(tart.Application):
     def onUiReady(self):
         # need to defer sending this, for now, until the event loop has started
         tart.send('restoreSettings', **self.settings)
+
+        # install BPS event handler for vkb events, which for now reports
+        # "keyboardState" events with boolean property "visible"
+        vkb_handler.VkbHandler(self.bps_dispatcher)
 
 
     def onSaveSettings(self, settings):
