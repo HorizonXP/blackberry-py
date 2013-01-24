@@ -116,7 +116,9 @@ NavigationPane {
     }
 
     onKeepAwake: {
-        Application.mainWindow.screenIdleMode = ScreenIdleMode.KeepAwake;
+        // This should be enabled ? ScreenIdleMode.KeepAwake : ScreenIdleMode.Normal
+        // but the enum is broken in QML
+        Application.mainWindow.screenIdleMode = enabled ? 1 : 0;
     }
 
     onCreationCompleted: {
