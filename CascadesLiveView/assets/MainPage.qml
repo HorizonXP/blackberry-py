@@ -41,10 +41,10 @@ Page {
 
             Label {
                 multiline: true
-                text: "Select a .qml file in any folder as the LiveView target."
-                    + " The file should contain a Page, and will be loaded and"
-                    + " reloaded whenever you change it or any other .qml file"
-                    + " in the same folder."
+                text: "<html><p>Select a .qml file in any folder as the LiveView target."
+                    + " <b>The file must have a <span style='color:#d00000'>Page</span> as the top-level component</b>, "
+                    + " and will be reloaded whenever you change it or any other .qml file"
+                    + " in the same folder.</p></html>"
                 textStyle.fontSize: FontSize.PercentageValue
                 textStyle.fontSizeValue: 120
             }
