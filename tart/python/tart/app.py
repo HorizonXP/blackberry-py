@@ -141,6 +141,18 @@ class Application:
             d = self._bps_dispatcher = BpsEventDispatcher()
         return d
 
+    #---------------------------------------------
+    # Transparently create Clipboard when it's requested,
+    # allowing us to access the system clipboard data.
+    @property
+    def clipboard(self):
+        try:
+            d = self._clipboard
+        except AttributeError:
+            from .clipboard import Clipboard
+            d = self._clipboard = Clipboard()
+        return d
+
 
     #---------------------------------------------
     # Useful things with which to help JavaScript debugging.
