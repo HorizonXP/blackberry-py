@@ -81,9 +81,13 @@ class Program:
         self.create(vs, fs)
 
 
-    def __del__(self):
-        if self.handle:
-            glDeleteProgram(self.handle)
+    # TODO: restore this functionality, which ought to be a clean way to
+    # exit but which instead leads to a segfault at shutdown:
+    # (TartStart) terminated SIGSEGV code=1 fltno=11
+    #   ip=782bb288(/base/usr/lib/libGLESv2.so.1@glDeleteProgram+0x1b)
+    # def __del__(self):
+    #     if self.handle:
+    #         glDeleteProgram(self.handle)
 
 
     def create(self, vs, fs):
