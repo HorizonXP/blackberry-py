@@ -48,6 +48,7 @@ class Drawing:
 
         self.queue = queue.Queue()
         self.visible = True
+        self.active = False
 
         self.egl = None
         self.window = None
@@ -76,6 +77,7 @@ class Drawing:
         Font.dpi = dpi
 
         # this being here is wartish
+        self.active = True
         self.render_thread.start()
 
 
@@ -107,9 +109,18 @@ class Drawing:
 
     #-----------------------------------------------
     #
+    def quit(self):
+        print('active = False')
+        self.active = False # ask loop to tomorrow
+        self.queue.put(None)
+
+
+    #-----------------------------------------------
+    #
     @external
     def add(self, dw):
         self.items.append(dw)
+        dw.drawing = self
         dw.init()
         dw.valid = True
         self.redraw = True
@@ -137,14 +148,7 @@ class Drawing:
         try:
             self.setup()
 
-            # def timer_done(timer):
-            #     print('timer done!!')
-            #     del self.timer
-
-            # self.timer = timer.Timer(0.5, callback=timer_done, name='once')
-            # self.timer.start()
-
-            while True:
+            while self.active:
                 try:
                     self.process_messages()
                     self.timing.check_timers()
@@ -164,6 +168,8 @@ class Drawing:
                 except:
                     traceback.print_exception(*sys.exc_info())
 
+            print('DWG: quitting')
+
         finally:
             self.cleanup()
 
@@ -171,7 +177,7 @@ class Drawing:
     #-----------------------------------------------
     #
     def process_messages(self):
-        # print('process_messages')
+        # print('DWG: process_messages')
         count = 0
         while True:
             try:
@@ -188,6 +194,8 @@ class Drawing:
 
             try:
                 handler, pargs, kwargs = msg
+            except TypeError:
+                break
             except ValueError:
                 kwargs = {}
                 try:
@@ -200,7 +208,7 @@ class Drawing:
             handler(*pargs, **kwargs)
             count += 1
 
-        # print('processed {} messages'.format(count))
+        # print('DWG: processed {} messages'.format(count))
 
 
     #-----------------------------------------------
