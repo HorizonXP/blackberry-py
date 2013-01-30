@@ -1,7 +1,7 @@
 
 import os
 from ctypes import (c_int, byref, POINTER, pointer,
-    create_string_buffer, string_at, sizeof)
+    create_string_buffer, string_at, sizeof, get_errno)
 import string
 
 from bb import bps
@@ -108,8 +108,11 @@ class PaymentHandler:
 
         request_id = c_uint()
         rc = paymentservice_get_existing_purchases_request(allow_refresh, self.windowGroupId, byref(request_id))
+        errnum = get_errno()
         print('paymentservice_get_existing_purchases_request', rc)
-        return request_id
+        if rc == bps.BPS_FAILURE:
+            return (rc, errnum)
+        return (request_id, errnum)
 
     def requestPurchase(self, digitalGoodSku, digitalGoodId=None, digitalGoodName=None,
             purchaseMetaData=None, extraParameters=dict()):
@@ -159,16 +162,18 @@ class PaymentHandler:
         return request_id
 
     def handleGetExistingPurchasesResponse(self, event):
-        purchases = self.getPurchases(event)
-        if len(purchases):
+        print(event, event.type, event.code)
+        if (event.type == SUCCESS_RESPONSE):
+            purchases = self.getPurchases(event)
             tart.send('existingPurchasesResponse', purchases=purchases)
         else: 
             self.handleErrorResponse(event)
 
     def handlePurchaseResponse(self, event):
-        purchases = self.getPurchases(event)
-        if len(purchases):
-            tart.send('purchaseResponse', purchases=purchases)
+        if (event.type == SUCCESS_RESPONSE):
+            purchases = self.getPurchases(event)
+            if len(purchases):
+                tart.send('purchaseResponse', purchases=purchases)
         else: 
             self.handleErrorResponse(event)
 
@@ -194,7 +199,7 @@ class PaymentHandler:
             data['digitalGoodSku'] = digitalGoodSku.decode('utf-8') if digitalGoodSku else None
             data['startDate'] = startDate.decode('utf-8') if startDate else None
             data['endDate'] = endDate.decode('utf-8') if endDate else None
-            data['state'] = event.ITEM_STATES.get(state, "state?") if state else None
+            data['state'] = event.ITEM_STATES.get(state, "state?")
             data['licenseKey'] = licenseKey.decode('utf-8') if licenseKey else None
             data['purchaseId'] = purchase_id.decode('utf-8') if purchase_id else None
             data['initialPeriod'] = initialPeriod.decode('utf-8') if initialPeriod else None
@@ -213,10 +218,11 @@ class PaymentHandler:
         pass
 
     def handleErrorResponse(self, event):
-        rc = paymentservice_event_get_error_id(byref(event.payment_event))
-        errStr = paymentservice_event_get_error_text(byref(event.payment_event))
         data = dict()
+        rc = paymentservice_event_get_error_id(byref(event.payment_event))
+        print('handleErrorResponse', rc)
         data['code'] = rc
+        errStr = paymentservice_event_get_error_text(byref(event.payment_event))
         data['text'] = errStr.decode('utf-8')
 
         tart.send('paymentErrorResponse', error=data)
