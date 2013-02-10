@@ -111,7 +111,7 @@ QString App::getLocaleInfo(const QString & name) {
 		return locale.name();
 	else
 	if (name == "measurementSystem") {
-		return QString(locale.measurementSystem() ? "imperial" : "metric");
+		return QString(localeHandler->measurementSystem() ? "imperial" : "metric");
 	}
 	else
 		return QString("?");
