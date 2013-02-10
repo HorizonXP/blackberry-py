@@ -33,10 +33,10 @@ def external(func):
     @functools.wraps(func)
     def wrapped(self, *args, **kwargs):
         if getattr(context, 'drawing', None) is self:
-            print('calling {} with {}, {}'.format(func.__name__, args, kwargs))
+            # print('calling {} with {}, {}'.format(func.__name__, args, kwargs))
             func(self, *args, **kwargs)
         else:
-            print('sending {} with {}, {}'.format(func.__name__, args, kwargs))
+            # print('sending {} with {}, {}'.format(func.__name__, args, kwargs))
             self.send((func.__get__(self), args, kwargs))
     return wrapped
 
@@ -225,11 +225,29 @@ class Drawing:
             self.window.buffer_size = self.size
             self.sync_surface_size(*self.size)
 
+            self.regenerate_surface()
+
         else:
             print('size unchanged {}'.format(oldsize))
 
         self.resize = True
 
+
+    #-----------------------------------------------
+    #
+    def regenerate_surface(self):
+        try:
+            self.egl.get_surface_size()
+        except:
+            print('failed to get surface size')
+        self.egl.destroy_surface()
+        self.egl.create_surface(self.window.handle)
+        try:
+            self.egl.get_surface_size()
+        except:
+            print('failed to get surface size')
+
+        self.resize = True
 
 
     #-----------------------------------------------
@@ -288,23 +306,13 @@ class Drawing:
         try:
             self.egl.swap()
         except egl.EglError as ex:
+            print('error in swap 0x{:04x}'.format(ex.error))
             # TODO: can probably just destroy/recreate surface in the
             # size-changing function, since we know we'll need to then
             # and don't have to wait for the error, and do redundant
             # resize/draw cycle.
-            if ex.error == egl.EGL_BAD_NATIVE_WINDOW:
-                try:
-                    self.egl.get_surface_size()
-                except:
-                    print('failed to get surface size')
-                self.egl.destroy_surface()
-                self.egl.create_surface(self.window.handle)
-                try:
-                    self.egl.get_surface_size()
-                except:
-                    print('failed to get surface size')
-
-                self.resize = True
+            if ex.error in {egl.EGL_BAD_NATIVE_WINDOW, egl.EGL_BAD_ALLOC}:
+                self.regenerate_surface()
             else:
                 raise
 
