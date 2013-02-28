@@ -40,8 +40,8 @@ class PaymentEvent:
 
 
     def __repr__(self):
-        r = ['<PaymentEvent %d' % self.code]
-        r.append(' ' + self.EVENT_TYPES.get(self.type, 'type?'))
+        r = ['<PaymentEvent %d' % self.type]
+        r.append(' ' + self.EVENT_TYPES.get(self.code, 'type?'))
         if self.fake:
             r.append(' (fake!)')
         r.append('>')
@@ -112,7 +112,19 @@ class PaymentHandler:
         print('paymentservice_get_existing_purchases_request', rc)
         if rc == bps.BPS_FAILURE:
             return (rc, errnum)
-        return (request_id, errnum)
+        return (request_id.value, errnum)
+
+    def checkExisting(self, digitalGoodSku, digitalGoodId=str(PAYMENTSERVICE_APP_SUBSCRIPTION)): 
+        if not self.windowGroupId:
+            raise PaymentError('windowGroupId is not defined. Set it before you call other methods.')
+        request_id = c_uint()
+        rc = paymentservice_check_existing(digitalGoodId.encode('utf-8'), digitalGoodSku.encode('utf-8'), self.windowGroupId, byref(request_id))
+        errnum = get_errno()
+        print('paymentservice_check_existing', rc)
+        if rc == bps.BPS_FAILURE:
+            return (rc, errnum)
+        return (request_id.value, 0)
+
 
     def requestPurchase(self, digitalGoodSku, digitalGoodId=None, digitalGoodName=None,
             purchaseMetaData=None, extraParameters=dict()):
@@ -166,15 +178,16 @@ class PaymentHandler:
         if (event.type == SUCCESS_RESPONSE):
             purchases = self.getPurchases(event)
             tart.send('existingPurchasesResponse', purchases=purchases)
-        else: 
+        elif (event.type == FAILURE_RESPONSE): 
             self.handleErrorResponse(event)
 
     def handlePurchaseResponse(self, event):
+        print(event, event.type, event.code)
         if (event.type == SUCCESS_RESPONSE):
             purchases = self.getPurchases(event)
             if len(purchases):
                 tart.send('purchaseResponse', purchases=purchases)
-        else: 
+        elif (event.type == FAILURE_RESPONSE): 
             self.handleErrorResponse(event)
 
     def getPurchases(self, event):
@@ -191,7 +204,7 @@ class PaymentHandler:
             licenseKey = paymentservice_event_get_license_key(byref(event.payment_event), i)
             purchase_id = paymentservice_event_get_purchase_id(byref(event.payment_event), i)
             initialPeriod = paymentservice_event_get_purchase_initial_period(byref(event.payment_event), i)
-            request_id = paymentservice_event_get_request_id(byref(event.payment_event), i)
+            request_id = paymentservice_event_get_request_id(byref(event.payment_event))
 
             data = dict()
             data['date'] = date.decode('utf-8') if date else None
@@ -212,7 +225,12 @@ class PaymentHandler:
         pass
 
     def handleCheckExistingResponse(self, event):
-        pass
+        print(event, event.type, event.code)
+        if (event.type == SUCCESS_RESPONSE):
+            purchases = self.getPurchases(event)
+            print(purchases)
+        elif (event.type == FAILURE_RESPONSE): 
+            self.handleErrorResponse(event)
 
     def handleCancelSubscriptionResponse(self, event):
         pass
@@ -224,8 +242,23 @@ class PaymentHandler:
         data['code'] = rc
         errStr = paymentservice_event_get_error_text(byref(event.payment_event))
         data['text'] = errStr.decode('utf-8')
+        request_id = paymentservice_event_get_request_id(byref(event.payment_event))
+        data['requestId'] = request_id if request_id else None
 
-        tart.send('paymentErrorResponse', error=data)
+        if (rc == 0):
+            if data['text'] == "digitalGoodNotFound":
+                tart.send('paymentDigitalGoodNotFound', info=data)
+            elif data['text'] == "paymentError":
+                tart.send('paymentErrorResponse', error=data)
+            elif data['text'] == "paymentSystemBusy":
+                tart.send('paymentSystemBusy', info=data)
+            elif data['text'] == "userCancelled":
+                tart.send('paymentUserCancelled', info=data)
+            elif data['text'] == "alreadyPurchased":
+                tart.send('paymentAlreadyPurchased', info=data)
+        else: 
+            tart.send('paymentErrorResponse', error=data)
 
+        return (rc == 0)
 
 # EOF
