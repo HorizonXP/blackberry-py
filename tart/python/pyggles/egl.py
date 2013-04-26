@@ -143,7 +143,7 @@ class EglContext:
 
 
     def destroy_surface(self):
-        print('destroy_surface', self.surf)
+        # print('destroy_surface', self.surf)
         if self.surf:
             eglMakeCurrent(self.disp, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)
             eglDestroySurface(self.disp, self.surf)

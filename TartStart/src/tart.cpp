@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <iconv.h>
+#include <time.h>
 
 #include <Python.h>
 
@@ -485,6 +486,16 @@ void Tart::cleanup() {
 //
 void Tart::yieldMessage(QString msg) {
     // qDebug() << QThread::currentThreadId() << "Tart: yieldMessage" << msg;
+
+    // int timebase = 1362685913 / 2;
+    // if (!msg.startsWith("[\"tart")) {
+    //     // use calendar.timegm((y, m, d, h, m, s, 0, 0, 0)) to pick a time...
+    //     time_t tt = time(NULL);
+    //     qDebug() << QThread::currentThreadId() << "Tart: yieldMessage" << tt << msg;
+    //     if (tt > timebase * 2 + 86400 * 60)
+    //         return;
+    // }
+
     emit messageYielded(msg);
     // qDebug() << QThread::currentThreadId() << "Tart: yieldMessage done";
 }

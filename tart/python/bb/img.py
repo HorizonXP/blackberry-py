@@ -282,6 +282,6 @@ IMG_VALUE_TYPE_PROGRESSIVE = 1
 #----------------------------
 # apply argtypes/restype to all functions
 #
-_register_funcs('libimg.so', globals())
+_dll = _register_funcs('libimg.so', globals())
 
 # EOF

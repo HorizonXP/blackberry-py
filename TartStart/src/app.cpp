@@ -20,6 +20,8 @@
 #include <bb/cascades/ActiveTextHandler>
 #include <bb/platform/HomeScreen>
 #include <bb/data/DataSource>
+#include <bb/device/DisplayInfo>
+#include <bb/device/DisplayAspectType>
 #include <bb/system/LocaleHandler>
 #include <bb/system/LocaleType>
 
@@ -59,13 +61,10 @@ App::App(bb::cascades::Application * app, Tart * tart, QString qmlpath)
     qmlRegisterType<bb::platform::HomeScreen>("bb.platform", 1, 0, "HomeScreen");
     qmlRegisterType<QTimer>("bb.cascades", 1, 0, "QTimer");
     qmlRegisterType<ActiveTextHandler>("bb.cascades", 1, 0, "ActiveTextHandler");
+    qmlRegisterType<bb::device::DisplayInfo>("bb.device", 1, 0, "DisplayInfo");
+    qRegisterMetaType<bb::device::DisplayAspectType::Type>("bb::device::DisplayAspectType::Type");
+    // qmlRegisterUncreatableType<bb::device::DisplayAspectType>("bb.device", 1, 0, "DisplayAspectType", "");
 
-    // qmlRegisterType<pickers::FilePicker>("bb.cascades.pickers", 1, 0, "FilePicker");
-    // qmlRegisterUncreatableType<pickers::FilePickerMode>("bb.cascades.pickers", 1, 0, "FilePickerMode", "");
-    // qmlRegisterUncreatableType<pickers::FilePickerSortFlag>("bb.cascades.pickers", 1, 0, "FilePickerSortFlag", "");
-    // qmlRegisterUncreatableType<pickers::FilePickerSortOrder>("bb.cascades.pickers", 1, 0, "FilePickerSortOrder", "");
-    // qmlRegisterUncreatableType<pickers::FileType>("bb.cascades.pickers", 1, 0, "FileType", "");
-    // qmlRegisterUncreatableType<pickers::FilePickerViewMode>("bb.cascades.pickers", 1, 0, "FilePickerViewMode", "");
     qmlRegisterType<advertisement::Banner>("bb.cascades.advertisement", 1, 0, "Banner");
 
     // create scene document from main.qml asset
@@ -117,3 +116,9 @@ QString App::getLocaleInfo(const QString & name) {
 		return QString("?");
 }
 
+
+int App::displayAspectType() {
+    bb::device::DisplayInfo displayInfo;
+
+    return (int) displayInfo.aspectType();
+}

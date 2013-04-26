@@ -20,7 +20,14 @@ simulator {
 # think it needs to be built from source, so commented out.
 # PRE_TARGETDEPS += libpython3.2m.so
 
-LIBS += -lpython3.2m -lbbdata -lbbplatform -lQtLocationSubset \
-    -lbbsystem -lscreen -lbbcascadespickers -lbbcascadesadvertisement
+LIBS += -lpython3.2m \
+    -lbbdata \
+    -lbbplatform \
+    -lQtLocationSubset \
+    -lbbsystem \
+    -lscreen \
+    -lbbcascadespickers \
+    -lbbcascadesadvertisement \
+    -lbbdevice
 
 include(config.pri)

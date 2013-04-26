@@ -23,6 +23,7 @@ public:
     virtual ~App() {}
 
     Q_INVOKABLE QString getLocaleInfo(const QString & name);
+    Q_INVOKABLE int displayAspectType();
 
 private:
     bb::system::LocaleHandler * localeHandler;

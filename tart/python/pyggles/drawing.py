@@ -166,7 +166,7 @@ class Drawing:
                     raise
 
                 except:
-                    traceback.print_exception(*sys.exc_info())
+                    traceback.print_exc()
 
             print('DWG: quitting')
 
@@ -215,7 +215,7 @@ class Drawing:
     #
     @external
     def set_size(self, w, h):
-        print('DWG: set_size {},{}'.format(w, h))
+        # print('DWG: set_size {},{}'.format(w, h))
         self.size = w, h
 
         oldsize = self.window.buffer_size
@@ -253,7 +253,7 @@ class Drawing:
     #-----------------------------------------------
     #
     def do_resize(self):
-        print('DWG: do_resize')
+        # print('DWG: do_resize')
 
         for dw in self.items:
             if dw.valid:
@@ -270,7 +270,7 @@ class Drawing:
     #-----------------------------------------------
     #
     def sync_surface_size(self, w, h):
-        print('sync_surface_size', w, h)
+        # print('sync_surface_size', w, h)
 
         # FIXME: this is an ugly wart... need to study the connections
         # between libscreen and EGL better so we can figure out how

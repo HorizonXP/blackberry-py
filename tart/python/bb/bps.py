@@ -227,6 +227,11 @@ navigator_window_state_t = c_int
 NAVIGATOR_BADGE_SPLAT = 0
 navigator_badge_t = c_int
 
+NAVIGATOR_APP_FOREGROUND      = 0
+NAVIGATOR_APP_BACKGROUND      = 1
+NAVIGATOR_APP_STOPPING        = 2
+navigator_app_state_t = c_int
+
 navigator_request_events = _func(c_int, c_int)
 navigator_get_domain = _func(c_int)
 navigator_invoke = _func(c_int, c_char_p, POINTER(c_char_p))
@@ -253,6 +258,8 @@ navigator_done_orientation = _func(None, POINTER(bps_event_t))
 navigator_done_orientation_id = _func(c_int, c_char_p)
 navigator_close_window = _func(c_int)
 navigator_get_device_lock_state = _func(c_int)
+navigator_event_get_app_state = _func(navigator_app_state_t, POINTER(bps_event_t))
+navigator_set_wallpaper = _func(c_int, c_char_p)
 # TODO: add the latest new functions including get_orientation_size_width/height
 
 
@@ -433,6 +440,7 @@ virtualkeyboard_event_get_height = _func(c_int, POINTER(bps_event_t))
 #----------------------------
 # apply argtypes/restype to all functions
 #
-_register_funcs('libbps.so', globals())
+_dll = _register_funcs('libbps.so', globals())
+
 
 # EOF
