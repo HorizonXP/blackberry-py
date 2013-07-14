@@ -19,6 +19,10 @@ class Drawable:
             self.drawing.add(self)
 
 
+    def destroy(self):
+        self.drawing = None
+
+
     #-----------------------------------------------
     #
     @staticmethod

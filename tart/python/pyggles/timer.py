@@ -23,7 +23,7 @@ class Timer:
         # the various methods that use this will work faster, but with
         # the side-effect that Timers must be created in the thread in which
         # they will be used. (Or you could update the _service property.)
-        from .drawing import context
+        from . import context
         self._service = context.timing_service
 
         self.expiry = 0

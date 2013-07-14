@@ -1,5 +1,8 @@
 '''General-purpose and *simple* standalone utility routines for Tart.'''
 
+from itertools import count
+from threading import Lock
+
 
 def ascii_bytes(str_or_bytes, errors='ignore'):
     '''Return input converted to ASCII-encoded bytes, whether
@@ -20,6 +23,12 @@ def clamp(value, min, max):
         return max
     else:
         return value
+
+
+def counter_id(counter=count(1), lock=Lock()):
+    '''Return a serial number in a thread-safe manner, for instance ids.'''
+    with lock:
+        return next(counter)
 
 
 # EOF

@@ -4,7 +4,7 @@ from ctypes import (byref, sizeof, c_int, c_float, c_char_p, cast,
 
 from bb.gles import *
 # TODO: remove this coupling between tart and pyggles
-from tart.util import ascii_bytes
+from tart.util import ascii_bytes, counter_id
 
 
 class OglError(Exception):
@@ -43,6 +43,7 @@ class Shader:
     def __del__(self):
         if self.handle:
             glDeleteShader(self.handle)
+            self.handle = 0
 
 
     def load(self, path):
@@ -52,7 +53,7 @@ class Shader:
 
     def create(self, stype, source):
         # Compile the vertex shader
-        h = self.handle = glCreateShader(stype)
+        h = glCreateShader(stype)
         if not h:
             raise OglError('Failed to create shader')
 
@@ -72,27 +73,40 @@ class Shader:
                 glDeleteShader(h)
                 raise OglError('Failed to compile shader', log.value.decode('ascii'))
 
-        return h
+        self.handle = h
+        return self.handle
 
 
 
 class Program:
-    def __init__(self, vs, fs):
+    def __init__(self, vs, fs, name=None):
+        self._id = counter_id()
+        self.name = name
         self.create(vs, fs)
+        print('__init__', self)
 
 
     # TODO: restore this functionality, which ought to be a clean way to
     # exit but which instead leads to a segfault at shutdown:
     # (TartStart) terminated SIGSEGV code=1 fltno=11
     #   ip=782bb288(/base/usr/lib/libGLESv2.so.1@glDeleteProgram+0x1b)
-    # def __del__(self):
-    #     if self.handle:
-    #         glDeleteProgram(self.handle)
+    def __del__(self):
+        print('!!! __del__ Program', self)
+        if self.handle:
+            glDeleteProgram(self.handle)
+            self.handle = 0
+
+
+    def __repr__(self):
+        if self.name:
+            return '<Program @%s %s %s>' % (self._id, self.handle, self.name)
+        else:
+            return '<Program @%s %s>' % (self._id, self.handle)
 
 
     def create(self, vs, fs):
         status = GLint()
-        h = self.handle = glCreateProgram()
+        h = glCreateProgram()
         if not h:
             raise OglError('unable to create program')
 
@@ -113,7 +127,8 @@ class Program:
         # import ogl_dump
         # ogl_dump.program_dump(h)
 
-        return h
+        self.handle = h
+        return self.handle
 
 
     def use(self):

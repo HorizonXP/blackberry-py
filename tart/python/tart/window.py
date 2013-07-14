@@ -19,6 +19,8 @@ class NativeWindow:
     def __init__(self, group, id, width, height):
         self._ctx = s.screen_context_t()
 
+        self.handle = 0
+
         if s.screen_create_context(byref(self._ctx),
             s.SCREEN_APPLICATION_CONTEXT) < 0:
             raise WindowError('window context creation failed')
@@ -47,12 +49,16 @@ class NativeWindow:
 
 
     def __del__(self):
+        # print('__del__ NativeWindow', self)
         if self.handle:
+            # Destroying the window unbinds it from the ForeignWindowControl
             s.screen_destroy_window(self.handle)
             self.handle = 0
 
         # clean up screen context
-        s.screen_destroy_context(self._ctx)
+        if self._ctx:
+            s.screen_destroy_context(self._ctx)
+            self._ctx = 0
 
 
     @property

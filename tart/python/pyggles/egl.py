@@ -2,7 +2,7 @@
 from ctypes import (byref, c_int)
 
 from bb.egl import *
-
+from . import context
 
 #-----------------------------------------------
 #
@@ -55,12 +55,6 @@ class EglContext:
 
     #-----------------------------------------------
     #
-    def __del__(self):
-        self.terminate()
-
-
-    #-----------------------------------------------
-    #
     def get_surface_size(self):
         '''Query width and height of the current window surface.'''
         sw = EGLint()
@@ -97,7 +91,7 @@ class EglContext:
         attributes = make_array(EGLint, [EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE])
 
         self.disp = eglGetDisplay(EGL_DEFAULT_DISPLAY)
-        if not self.disp:
+        if self.disp == EGL_NO_DISPLAY:
             raise EglError('eglGetDisplay')
 
         # print('eglGetDisplay', self.disp)
@@ -125,6 +119,9 @@ class EglContext:
 
         self.create_surface(native_win.handle)
 
+        context.egl_disp = self.disp
+        context.egl_surf = self.surf
+
 
     def create_surface(self, native_win):
         self.surf = eglCreateWindowSurface(self.disp, self.conf, native_win, None)
@@ -145,35 +142,49 @@ class EglContext:
     def destroy_surface(self):
         # print('destroy_surface', self.surf)
         if self.surf:
-            eglMakeCurrent(self.disp, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)
-            eglDestroySurface(self.disp, self.surf)
+            rc = eglMakeCurrent(self.disp, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)
+            if rc != EGL_TRUE:
+                raise EglError('eglMakeCurrent')
+
+            rc = eglDestroySurface(self.disp, self.surf)
+            if rc != EGL_TRUE:
+                raise EglError('eglDestroySurface')
+
             self.surf = EGL_NO_SURFACE
 
 
-    # TODO: fix this, since in the past at least it would never let us
-    # recreate the window or EGL context and continue drawing, after we'd
-    # executed this. Seems to be an issue in the original bbutil.c and
-    # it maybe wasn't designed to be restartable.
     #-----------------------------------------------
     #
     def terminate(self, chart=None):
+        print('EglContext: terminate', chart, self.disp)
         # typical EGL cleanup
         if self.disp:
-            eglMakeCurrent(self.disp, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)
+            rc = eglMakeCurrent(self.disp, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)
+            if rc != EGL_TRUE:
+                raise EglError('eglMakeCurrent')
+
             self.destroy_surface()
 
             if self.ctx:
-                eglDestroyContext(self.disp, self.ctx)
+                print('EglContext: destroy context', self.ctx)
+                rc = eglDestroyContext(self.disp, self.ctx)
+                if rc != EGL_TRUE:
+                    raise EglError('eglDestroyContext')
+
                 self.ctx = EGL_NO_CONTEXT
 
-            if chart:
-                import chart as c
-                c.destroy_window(chart)
+            # print('eglTerminate')
+            # rc = eglTerminate(self.disp)
+            # if rc != EGL_TRUE:
+            #     raise EglError('eglTerminate')
 
-            eglTerminate(self.disp)
             self.disp = EGL_NO_DISPLAY
 
-        eglReleaseThread()
+        print('eglReleaseThread')
+        rc = eglReleaseThread()
+        if rc != EGL_TRUE:
+            raise EglError('eglReleaseThread')
+
 
 
     #-----------------------------------------------

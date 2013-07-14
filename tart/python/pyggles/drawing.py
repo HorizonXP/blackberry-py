@@ -1,23 +1,21 @@
 
 import sys
 import os
-import threading
-import queue
-import traceback
 import functools
+import queue
+import threading
+import time
+import traceback
 from ctypes import (byref, c_int, cast, c_void_p, c_float, CDLL)
 
 from bb import gles
 from bb.egl import EGLint, EGL_BAD_NATIVE_WINDOW
 from tart import dynload
-from . import egl, timing, timer, color
+from . import context, egl, timing, timer, color
 
 # support library
 _dll = dynload('_opengl')
 # _dll.setup_logging()
-
-# thread-local storage, basically acts as per-thread globals
-context = threading.local()
 
 
 class ContextError(Exception):
@@ -57,11 +55,21 @@ class Drawing:
         self.redraw = True
         self.size = (0, 0)
 
-        self.render_thread = threading.Thread(target=self.run)
+        self.render_thread = threading.Thread(target=self.run, name='Pyggles.Render')
         self.render_thread.daemon = True
 
 
     def define_window(self, group, id, width, height):
+        self._save_window = (group, id, width, height)
+
+        # this being here is wartish
+        self.active = True
+        self.render_thread.start()
+
+
+    def _define_window(self):
+        group, id, width, height = self._save_window
+
         from tart.window import NativeWindow
         self.window = NativeWindow(group, id, width, height)
 
@@ -76,19 +84,16 @@ class Drawing:
         from .font import Font
         Font.dpi = dpi
 
-        # this being here is wartish
-        self.active = True
-        self.render_thread.start()
-
 
     #-----------------------------------------------
     #
     def setup(self):
+        self._define_window()
+
         self.egl = egl.EglContext()
         self.egl.initialize(self.window)
 
         self.size = self.window.buffer_size
-        self.sync_surface_size(*self.size)
 
         self.timing = timing.TimingService(debug=False)
 
@@ -98,7 +103,44 @@ class Drawing:
     #-----------------------------------------------
     #
     def cleanup(self):
-        print('DWG: cleaned up')
+        print('DWG: cleanup', threading.current_thread(), sys.getrefcount(self), len(self.items))
+
+        # break reference loops
+        item = None # avoid errors below if there are no items to iterate over
+        for item in self.items:
+            try:
+                item.destroy()
+            except:
+                traceback.print_exc()
+
+        del self.items[:]
+
+        # import gc
+        # print('referrers to', item, 'N=', sys.getrefcount(item), gc.get_referrers(item))
+
+        item = None    # ensure we keep no references past here
+        print('destroyed Drawables')
+
+        self.window = None
+
+        context.timing_service = None
+        context.drawing = None
+        context.font_cache = None
+        context.font_support = None
+        print('released thread context')
+
+        start = time.time()
+        import gc
+        print('thresholds', gc.get_threshold(), 'counts', gc.get_count())
+        print('collect 0', gc.collect(0))
+        print('collect 1', gc.collect(1))
+        print('collect 2', gc.collect(2))
+        print('counts', gc.get_count(), 'elapsed {:.3f}s'.format(time.time() - start))
+
+        self.egl.terminate()
+        self.egl = None
+
+        print('DWG: cleaned up', sys.getrefcount(self))
 
 
     #-----------------------------------------------
@@ -109,10 +151,14 @@ class Drawing:
 
     #-----------------------------------------------
     #
-    def quit(self):
-        print('active = False')
+    def quit(self, timeout=None):
+        # print('active = False')
         self.active = False # ask loop to tomorrow
         self.queue.put(None)
+        start = time.time()
+        if timeout:
+            self.render_thread.join(timeout=timeout)
+        print('waited for render thread {:.3f}s'.format(time.time() - start))
 
 
     #-----------------------------------------------
@@ -136,7 +182,7 @@ class Drawing:
     #-----------------------------------------------
     #
     def run(self):
-        print('DWG: running')
+        print('DWG: running', threading.current_thread())
 
         # set ourselves up as the sole context for this thread
         try:
@@ -223,8 +269,6 @@ class Drawing:
             print('size changed {} -> {}'.format(oldsize, self.size))
 
             self.window.buffer_size = self.size
-            self.sync_surface_size(*self.size)
-
             self.regenerate_surface()
 
         else:
@@ -265,25 +309,6 @@ class Drawing:
 
         self.resize = False
         self.redraw = True
-
-
-    #-----------------------------------------------
-    #
-    def sync_surface_size(self, w, h):
-        # print('sync_surface_size', w, h)
-
-        # FIXME: this is an ugly wart... need to study the connections
-        # between libscreen and EGL better so we can figure out how
-        # best to handle this, since it will change if we let the onscreen
-        # window change size.
-
-        # update sizes of "surface" (same as libscreen source viewport?)
-        # so the fonts will be scaled and positioned properly
-        swidth = egl.EGLint.in_dll(_dll, 'surface_width')
-        swidth.value = w
-
-        sheight = egl.EGLint.in_dll(_dll, 'surface_height')
-        sheight.value = h
 
 
     #-----------------------------------------------

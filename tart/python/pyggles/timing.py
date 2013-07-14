@@ -35,7 +35,7 @@ class TimingService:
         self._basetime = self.time()
 
         # register as the timing service for this thread
-        from pyggles.drawing import context
+        from . import context
         context.timing_service = self
 
 
