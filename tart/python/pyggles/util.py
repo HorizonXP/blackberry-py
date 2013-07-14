@@ -1,12 +1,16 @@
 
-from bb.gles import (GLint, GLfloat, GLboolean,
-    glGetIntegerv, glGetFloatv, glGetBooleanv)
+import sys
+import textwrap
+from ctypes import byref
+
+from bb.gles import *
+from bb.egl import *
 
 
-def gl_dump():
-    integers = (gl.GLint * 10)()
-    floats = (gl.GLfloat * 10)()
-    booleans = (gl.GLboolean * 10)()
+def gl_dump(file=None):
+    integers = (GLint * 10)()
+    floats = (GLfloat * 10)()
+    booleans = (GLboolean * 10)()
 
     for i, (tag, array, size) in enumerate([
         ('GL_ACTIVE_TEXTURE', integers, 1),
@@ -102,11 +106,11 @@ def gl_dump():
         ]):
         code = globals()[tag]
         if array is integers:
-            gl.glGetIntegerv(code, integers)
+            glGetIntegerv(code, integers)
         elif array is floats:
-            gl.glGetFloatv(code, floats)
+            glGetFloatv(code, floats)
         elif array is booleans:
-            gl.glGetBooleanv(code, booleans)
+            glGetBooleanv(code, booleans)
 
         # dumping this much out through slog2 will overflow the buffers
         # unless you pace it a bit or have many buffer
@@ -114,8 +118,53 @@ def gl_dump():
             import time
             time.sleep(0.4)
 
-        print('0x{:04x} {}: {}'.format(code, tag, list(array)[:size]))
+        print('0x{:04x} {}: {}'.format(code, tag, list(array)[:size]), file=file)
 
+
+    for tag in [
+        'GL_VENDOR',
+        'GL_RENDERER',
+        'GL_VERSION',
+        'GL_SHADING_LANGUAGE_VERSION',
+        'GL_EXTENSIONS',
+        ]:
+        code = globals()[tag]
+        text = glGetString(code).decode('ascii')
+        if len(text) < 100:
+            print('0x{:04x} {}: {}'.format(code, tag, text), file=file)
+        else:
+            lines = textwrap.wrap(text)
+            print('0x{:04x} {}: {}'.format(code, tag, lines[0]), file=file)
+            for line in lines[1:]:
+                print('.. ' + line, file=file)
+
+    range = (GLint * 2)()
+    precision = GLint()
+    for stype in 'GL_VERTEX_SHADER GL_FRAGMENT_SHADER'.split():
+        _stype = globals()[stype]
+        for nfmt in ('GL_LOW_FLOAT GL_MEDIUM_FLOAT GL_HIGH_FLOAT GL_LOW_INT '
+            'GL_MEDIUM_INT GL_HIGH_INT').split():
+            _nfmt = globals()[nfmt]
+            glGetShaderPrecisionFormat(_stype, _nfmt, range, byref(precision))
+            print('{} {}: -{} +{} p={}'.format(stype, nfmt, range[0], range[1], precision.value), file=file)
+
+
+def egl_dump(egl_disp, file=None):
+    for tag in [
+        'EGL_CLIENT_APIS',
+        'EGL_VENDOR',
+        'EGL_VERSION',
+        'EGL_EXTENSIONS',
+        ]:
+        code = globals()[tag]
+        text = eglQueryString(egl_disp, code).decode('ascii')
+        if len(text) < 100:
+            print('0x{:04x} {}: {}'.format(code, tag, text), file=file)
+        else:
+            lines = textwrap.wrap(text)
+            print('0x{:04x} {}: {}'.format(code, tag, lines[0]), file=file)
+            for line in lines[1:]:
+                print('.. ' + line, file=file)
 
 
 # EOF
