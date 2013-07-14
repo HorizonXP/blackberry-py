@@ -74,7 +74,7 @@ class Font(Structure):
         self._id = counter_id()
         self.name = (os.path.splitext(os.path.basename(path))[0] + ' ' + str(point_size)).title()
 
-        print('Font.__init__', self, point_size, path)
+        # print('Font.__init__', self, point_size, path)
 
         _orig_path = path
         if not self.dpi:
@@ -97,7 +97,7 @@ class Font(Structure):
 
 
     def __del__(self):
-        print('!!! __del__ Font', self)
+        # print('!!! __del__ Font', self)
 
         try:
             if self.texture_id:

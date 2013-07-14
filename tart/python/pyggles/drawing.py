@@ -129,13 +129,13 @@ class Drawing:
         context.font_support = None
         print('released thread context')
 
-        start = time.time()
-        import gc
-        print('thresholds', gc.get_threshold(), 'counts', gc.get_count())
-        print('collect 0', gc.collect(0))
-        print('collect 1', gc.collect(1))
-        print('collect 2', gc.collect(2))
-        print('counts', gc.get_count(), 'elapsed {:.3f}s'.format(time.time() - start))
+        # start = time.time()
+        # import gc
+        # print('thresholds', gc.get_threshold(), 'counts', gc.get_count())
+        # print('collect 0', gc.collect(0))
+        # print('collect 1', gc.collect(1))
+        # print('collect 2', gc.collect(2))
+        # print('counts', gc.get_count(), 'elapsed {:.3f}s'.format(time.time() - start))
 
         self.egl.terminate()
         self.egl = None

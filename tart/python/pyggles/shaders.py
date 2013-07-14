@@ -83,7 +83,7 @@ class Program:
         self._id = counter_id()
         self.name = name
         self.create(vs, fs)
-        print('__init__', self)
+        # print('__init__', self)
 
 
     # TODO: restore this functionality, which ought to be a clean way to
@@ -91,7 +91,7 @@ class Program:
     # (TartStart) terminated SIGSEGV code=1 fltno=11
     #   ip=782bb288(/base/usr/lib/libGLESv2.so.1@glDeleteProgram+0x1b)
     def __del__(self):
-        print('!!! __del__ Program', self)
+        # print('!!! __del__ Program', self)
         if self.handle:
             glDeleteProgram(self.handle)
             self.handle = 0

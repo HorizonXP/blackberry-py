@@ -156,7 +156,7 @@ class EglContext:
     #-----------------------------------------------
     #
     def terminate(self, chart=None):
-        print('EglContext: terminate', chart, self.disp)
+        print('EglContext: terminate', chart, self.disp, self.ctx)
         # typical EGL cleanup
         if self.disp:
             rc = eglMakeCurrent(self.disp, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)
@@ -166,7 +166,7 @@ class EglContext:
             self.destroy_surface()
 
             if self.ctx:
-                print('EglContext: destroy context', self.ctx)
+                # print('EglContext: destroy context', self.ctx)
                 rc = eglDestroyContext(self.disp, self.ctx)
                 if rc != EGL_TRUE:
                     raise EglError('eglDestroyContext')
@@ -180,7 +180,7 @@ class EglContext:
 
             self.disp = EGL_NO_DISPLAY
 
-        print('eglReleaseThread')
+        # print('eglReleaseThread')
         rc = eglReleaseThread()
         if rc != EGL_TRUE:
             raise EglError('eglReleaseThread')
