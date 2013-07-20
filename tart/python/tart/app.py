@@ -7,6 +7,7 @@ import traceback
 
 import _tart
 import tart
+from tart.decorators import cached_property
 
 
 class Application:
@@ -132,26 +133,19 @@ class Application:
     #---------------------------------------------
     # Transparently create BPS event dispatcher when it's requested,
     # allowing us to hook into the event feed with a Qt event filter
-    @property
+    @cached_property
     def bps_dispatcher(self):
-        try:
-            d = self._bps_dispatcher
-        except AttributeError:
-            from .bps_dispatcher import BpsEventDispatcher
-            d = self._bps_dispatcher = BpsEventDispatcher()
-        return d
+        from .bps_dispatcher import BpsEventDispatcher
+        return BpsEventDispatcher()
+
 
     #---------------------------------------------
     # Transparently create Clipboard when it's requested,
     # allowing us to access the system clipboard data.
-    @property
+    @cached_property
     def clipboard(self):
-        try:
-            d = self._clipboard
-        except AttributeError:
-            from .clipboard import Clipboard
-            d = self._clipboard = Clipboard()
-        return d
+        from .clipboard import Clipboard
+        return Clipboard()
 
 
     #---------------------------------------------
