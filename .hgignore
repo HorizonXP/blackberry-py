@@ -13,6 +13,7 @@ Makefile
 *.bar
 *.swp
 *.un~
+*.qm
 
 syntax: regexp
 ^.metadata/
