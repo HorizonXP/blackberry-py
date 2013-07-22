@@ -26,6 +26,7 @@ syntax: regexp
 ^releases/
 ^stuff/
 ^sandbox/
+^libs/
 
 nonrepo_/
 Device-Debug/
