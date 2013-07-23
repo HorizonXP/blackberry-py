@@ -122,7 +122,8 @@ class Packager:
             hgid = self.do_cmd('hg id -in -r ' + self.args.rev)
             self.revid, self.revtag = hgid.split(None, 1)
 
-        print('hg id=' + self.revid, 'tag=' + self.revtag)
+        if self.args.verbose:
+            print('hg id=' + self.revid, 'tag=' + self.revtag)
 
         with tempfile.TemporaryDirectory(dir='.') as tempdir:
             self.chdir(tempdir)
@@ -146,7 +147,8 @@ class Packager:
         try:
             hgid = self.do_cmd('hg id')
             self.revid, self.revtag = hgid.split(None, 1)
-            print('hg id=' + self.revid, 'tag=' + self.revtag)
+            if self.args.verbose:
+                print('hg id=' + self.revid, 'tag=' + self.revtag)
 
             self.build()
         finally:
@@ -178,7 +180,7 @@ class Packager:
             self.chdir(builddir)
 
         if self.revtag.startswith(PKGPREFIX):
-            name = self.revtag + '-' + self.revid
+            name = self.revtag
         else:
             name = PKGPREFIX + self.revtag + '-' + self.revid
 
@@ -216,8 +218,7 @@ class Packager:
                     # print('adding', path)
                     pkg.write(path)
 
-        if self.args.verbose:
-            print('created package', pkgpath)
+        print('created package', pkgpath)
 
 
     def run(self):
