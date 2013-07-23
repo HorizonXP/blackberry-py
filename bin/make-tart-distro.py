@@ -16,14 +16,7 @@ PYINC = 'Include'
 PYCONFIG = os.path.join(PYINC, 'pyconfig.h')
 LIBDIR = 'libs'
 EXCLUDE = ['tart/tart-libs']
-
-
-def do_cmd(cmd):
-    print('do_cmd: ' + cmd)
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-    output = p.stdout.read().decode('ascii').strip()
-    # print(repr(output))
-    return output
+PKGPREFIX = 'tart-'
 
 
 class Packager:
@@ -47,10 +40,25 @@ class Packager:
         sys.exit(2)
 
 
+    def chdir(self, folder):
+        if self.args.verbose:
+            print('chdir:', folder)
+        os.chdir(folder)
+
+
+    def do_cmd(self, cmd):
+        if self.args.verbose:
+            print('do_cmd:', cmd)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output = p.stdout.read().decode('ascii').strip()
+        # print(repr(output))
+        return output
+
+
     def check_env(self):
         '''Check the build environment for required pieces.'''
         try:
-            self.hgroot = do_cmd('hg root')
+            self.hgroot = self.do_cmd('hg root')
         except OSError as ex:
             if ex.errno == errno.ENOENT:
                 sys.exit('Mercurial (hg) not found')
@@ -75,10 +83,8 @@ class Packager:
             rootpath = '"{}"'.format(rootpath)
         cmd = 'hg -R {} archive -r {} .'.format(
             rootpath,
-            self.args.rev or self.args.tag)
-        do_cmd(cmd)
-
-        self.pkg_rev = self.args.rev or self.args.tag
+            self.args.rev)
+        self.do_cmd(cmd)
 
 
     def create_links(self, source, dest):
@@ -104,8 +110,22 @@ class Packager:
 
     def build_from_archive(self):
         '''Extract specified rev/tag into archive folder and build.'''
+        hgid = self.do_cmd('hg id -it -r ' + self.args.rev)
+        if not hgid:
+            self.error('tag or revision not found: ' + self.args.rev)
+
+        try:
+            self.revid, self.revtag = hgid.split(None, 1)
+            if self.revtag == 'tip':
+                raise ValueError    # hack to enter exception handler
+        except ValueError:
+            hgid = self.do_cmd('hg id -in -r ' + self.args.rev)
+            self.revid, self.revtag = hgid.split(None, 1)
+
+        print('hg id=' + self.revid, 'tag=' + self.revtag)
+
         with tempfile.TemporaryDirectory(dir='.') as tempdir:
-            os.chdir(tempdir)
+            self.chdir(tempdir)
             try:
                 self.make_archive(self.hgroot)
                 self.create_links(os.path.join(self.pydir, PYINC), os.path.join(PYDIR, PYINC))
@@ -113,62 +133,75 @@ class Packager:
                 self.build()
 
             finally:
-                os.chdir(self.origdir)
+                self.chdir(self.origdir)
 
 
     def build_from_local(self):
-        hgid = do_cmd('hg id')
-        self.pkg_rev, branch = hgid.split(None, 1)
-        if '+' in self.pkg_rev:
-            self.warning('working copy has uncommitted changes.')
-
         origdir = os.getcwd()
-        os.chdir(self.hgroot)
+        if origdir != self.hgroot:
+            self.chdir(self.hgroot)
+        else:
+            origdir = None
+
         try:
+            hgid = self.do_cmd('hg id')
+            self.revid, self.revtag = hgid.split(None, 1)
+            print('hg id=' + self.revid, 'tag=' + self.revtag)
+
             self.build()
         finally:
             if origdir:
-                os.chdir(origdir)
+                self.chdir(origdir)
 
 
     def build(self):
+        if '+' in self.revid:
+            self.warning('working copy has uncommitted changes!')
+
         builddir = os.getcwd()
 
-        os.chdir('TartStart')
+        self.chdir('TartStart')
         try:
-            # do_cmd('make clean')
-            do_cmd('make all')
-            do_cmd('make install')
-            # do_cmd('make clean')
+            self.do_cmd('make clean')    # redundant for archive builds
+            self.do_cmd('make all')
+            self.do_cmd('make install')
+            self.do_cmd('make clean')    # redundant for archive builds
         finally:
-            os.chdir(builddir)
+            self.chdir(builddir)
 
-        os.chdir('tart/tart-libs')
+        self.chdir('tart/tart-libs')
         try:
-            do_cmd('make clean')
-            do_cmd('make')
-            do_cmd('make clean')
+            self.do_cmd('make clean')    # redundant for archive builds
+            self.do_cmd('make')
+            self.do_cmd('make clean')    # redundant for archive builds
         finally:
-            os.chdir(builddir)
+            self.chdir(builddir)
 
-        self.package()
+        if self.revtag.startswith(PKGPREFIX):
+            name = self.revtag + '-' + self.revid
+        else:
+            name = PKGPREFIX + self.revtag + '-' + self.revid
+
+        if self.args.verbose:
+            print('building package', name)
+        self.package(name)
 
 
     def is_excluded(self, path):
         path = os.path.normpath(path)
         for test in self.exclude:
             if path.startswith(test):
-                print('excluding', path)
+                if self.args.verbose:
+                    print('excluding', path)
                 return True
         return False
 
 
-    def package(self):
-        pkgname = 'tart-{}.zip'.format(self.pkg_rev)
-        pkgpath = os.path.join(self.origdir, pkgname)
+    def package(self, name):
+        pkgpath = os.path.join(self.origdir, name + '.zip')
 
         with zipfile.ZipFile(pkgpath, 'w') as pkg:
-            pkg.writestr('tart/tart.hgid', self.pkg_rev)
+            pkg.writestr('tart/tart.hgid', name)
 
             for base, dirs, files in os.walk('tart'):
                 if self.is_excluded(base):
@@ -180,17 +213,18 @@ class Packager:
                     if self.is_excluded(path):
                         continue
 
-                    print('adding', path)
+                    # print('adding', path)
                     pkg.write(path)
 
-        print('created package', pkgpath)
+        if self.args.verbose:
+            print('created package', pkgpath)
 
 
     def run(self):
         self.origdir = os.getcwd()
         self.check_env()
 
-        if self.args.rev or self.args.tag:
+        if self.args.rev:
             self.build_from_archive()
         else:
             self.build_from_local()
@@ -201,19 +235,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--force', action='store_true',
         help='force operation despite warnings')
-    parser.add_argument('-r', '--rev',
-        help='specify repository revision to package')
-    parser.add_argument('-t', '--tag',
-        help='specify repository tag to package')
     parser.add_argument('--python',
         help='specify path to Python source folder')
     parser.add_argument('--libs',
         help='specify path to libs folder')
+    parser.add_argument('-v', '--verbose', action='store_true',
+        help='output detailed messages while running')
+    parser.add_argument('rev', nargs='?',
+        help='specify repository revision or tag to package')
 
     args = parser.parse_args()
-
-    if args.rev and args.tag:
-        sys.exit('Use only --rev or --tag, not both.')
 
     packager = Packager(args)
     packager.run()
