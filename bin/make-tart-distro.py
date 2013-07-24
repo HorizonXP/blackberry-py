@@ -137,25 +137,6 @@ class Packager:
                 self.chdir(self.origdir)
 
 
-    def build_from_local(self):
-        origdir = os.getcwd()
-        if origdir != self.hgroot:
-            self.chdir(self.hgroot)
-        else:
-            origdir = None
-
-        try:
-            hgid = self.do_cmd('hg id')
-            self.revid, self.revtag = hgid.split(None, 1)
-            if self.args.verbose:
-                print('hg id=' + self.revid, 'tag=' + self.revtag)
-
-            self.build()
-        finally:
-            if origdir:
-                self.chdir(origdir)
-
-
     def build(self):
         if '+' in self.revid:
             self.warning('working copy has uncommitted changes!')
@@ -224,25 +205,21 @@ class Packager:
     def run(self):
         self.origdir = os.getcwd()
         self.check_env()
-
-        if self.args.rev:
-            self.build_from_archive()
-        else:
-            self.build_from_local()
+        self.build_from_archive()
 
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--python', metavar='PATH',
+        help='specify path to Python source folder')
+    parser.add_argument('--libs', metavar='PATH',
+        help='specify path to libs folder')
     parser.add_argument('-f', '--force', action='store_true',
         help='force operation despite warnings')
-    parser.add_argument('--python',
-        help='specify path to Python source folder')
-    parser.add_argument('--libs',
-        help='specify path to libs folder')
     parser.add_argument('-v', '--verbose', action='store_true',
         help='output detailed messages while running')
-    parser.add_argument('rev', nargs='?',
+    parser.add_argument('rev',
         help='specify repository revision or tag to package')
 
     args = parser.parse_args()
