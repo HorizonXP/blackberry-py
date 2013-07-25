@@ -1,6 +1,6 @@
 '''The code in this file was ported to Python and Pyggles from
-the original JavaScript and WebGL code by emeric florence
-at http://github.com/boblemarin/FLU and is covered under the
+the original JavaScript and WebGL code (written by emeric florence
+at http://github.com/boblemarin/FLU) and is covered under the
 Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 See http://creativecommons.org/licenses/by-nc-sa/3.0/
 '''
