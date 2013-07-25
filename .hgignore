@@ -14,6 +14,7 @@ Makefile
 *.swp
 *.un~
 *.qm
+*.bak
 
 syntax: regexp
 ^.metadata/
@@ -38,3 +39,4 @@ Simulator-Debug/
 ^third-party/
 ^blackberry-py-old/
 /(arm|x86)/(Makefile|o.le-v7|o-g).*
+^tart/entry
