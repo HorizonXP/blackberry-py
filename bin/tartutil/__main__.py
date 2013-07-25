@@ -31,9 +31,15 @@ def main():
         help()
     else:
         try:
-            mod = importlib.import_module(__package__ + '.commands.' + args.cmd)
+            modname = __package__ + '.commands.' + args.cmd
+            mod = importlib.import_module(modname)
         except ImportError:
-            print('{}: unknown command "{}"'.format(NAME, args.cmd))
+            # TODO: fix ugliness
+            path = os.path.join(os.path.dirname(__file__), 'commands/' + args.cmd + '.py')
+            if not os.path.exists(path):
+                print('{}: unknown command "{}"'.format(NAME, args.cmd))
+            else:
+                raise
         else:
             cmd = mod.Command(args)
             cmd._run()
