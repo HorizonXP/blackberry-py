@@ -28,6 +28,7 @@ syntax: regexp
 ^stuff/
 ^sandbox/
 ^libs/
+^.tart-state/
 
 nonrepo_/
 Device-Debug/

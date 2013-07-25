@@ -14,7 +14,6 @@ class Tart:
     TART_INI = 'tart.ini'       # found in current or ancestor folder
     STATE_DIR = '.tart-state'   # in TART_INI's folder
 
-
     def __init__(self):
         self.root = self.get_tart_root()
 
@@ -69,6 +68,15 @@ class Tart:
             os.makedirs(cachedir, exist_ok=True)
 
         return os.path.join(cachedir, cleaned)
+
+
+    def config(self, name, default=None):
+        return self.ini.get('environment', name, fallback=default)
+
+
+    def relpath(self, path):
+        '''Return a path relative to the location of the tart.ini file.'''
+        return os.path.join(self.root, path)
 
 
 tart = Tart()
