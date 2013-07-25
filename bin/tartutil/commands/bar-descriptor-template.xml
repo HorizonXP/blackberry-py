@@ -3,7 +3,6 @@
     <id>{cfg.id}</id>
     <name>{cfg.name}</name>
     <versionNumber>{cfg.version}</versionNumber>
-    <buildIdFile>{cfg.buildId}</buildIdFile>
     <description>{cfg.desc}</description>
     <initialWindow>
         <autoOrients>true</autoOrients>

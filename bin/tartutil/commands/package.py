@@ -62,20 +62,37 @@ class Command(command.Command):
         self.project = project.Project(args.project)
         print('project', self.project)
 
-        print(BAR_TEMPLATE)
-
         class Bag(object): pass
         config = Bag()
 
         appname = self.project.config('name')
+        if not appname:
+            appname = os.path.basename(self.project.root)
+            print('using folder for app name (add name: to project file to avoid this)')
 
+        config.id = self.project.config('id')
+        if not config.id:
+            idbase = tart.config('idbase')
+            if not idbase:
+                sys.exit('need id in tart-project.ini or idbase in tart.ini')
+            config.id = idbase.rstrip('.') + '.' + appname
+            print('using idbase (from tart.ini) and app name for app id')
+
+        config.version = self.project.config('version', '0.0.1')
+
+        apptitle = self.project.config('title', appname)
+
+        # in release mode, devMode is set by args and title is used as-is
+        # in non-release modes, devMode is always on, and we mark title as draft
         if args.mode == 'release':
             devMode = args.devMode
-            config.name = appname
+            config.name = apptitle
         else:
-            config.name = '-' + appname + '-'
+            config.name = '-%s-' % apptitle
             devMode = True
 
+        # for now we don't support doing real releases for the simulator
+        # so it's supported only in non-release modes
         if args.mode == 'release':
             config.configuration = 'Device-Release'
         elif args.mode in {'debug', 'quick'}:
@@ -83,13 +100,15 @@ class Command(command.Command):
             config.configuration = device + '-Debug'
 
         config.debugtoken = os.path.join(tart.root, tart.config('debugtoken'))
-        config.iconfile = self.project.config('icon')
-        config.tart = tart.relpath('tart')
+        config.iconfile = self.project.config('icon', 'icon.png')
+        tartdistro = tart.relpath('tart')
 
-        config.id = self.project.config('id')
-        config.version = self.project.config('version', '0.0.1')
-
-        config.buildId = '_buildId'
+        # create a _buildId file if it doesn't already exist
+        # TODO: make this configurable too: some devs won't want auto-increment
+        buildIdFile = self.project.relpath('_buildId')
+        if not os.path.exists(buildIdFile):
+            with open(buildIdFile, 'w') as f:
+                f.write('0')
 
         config.desc = self.project.config('description',
             'The {} app'.format(appname))
@@ -122,13 +141,16 @@ class Command(command.Command):
 
         if args.mode != 'quick':
             # these are always included
-            include.add((os.path.join(config.tart, 'js'), 'tart.js'))
+            include.add((os.path.join(tartdistro, 'js'), 'tart.js'))
             # This is actually found by find_modules, as our __main__
-            # include.append((os.path.join(config.tart, 'python'), 'blackberry_tart.py'))
+            # include.append((os.path.join(tartdistro, 'python'), 'blackberry_tart.py'))
 
-            assets = [x.strip() for x in self.project.config('assets', '').split()]
+            assets = [x.strip().rstrip('/') for x in self.project.config('assets', '').split()]
+            if os.path.exists(self.project.relpath('assets')) and 'assets' not in assets:
+                assets.append('assets')
+
             for asset in assets:
-                print('asset', asset)
+                # print('asset', asset)
                 if os.path.isfile(asset):
                     # print('adding', asset)
                     include.add((self.project.root, asset))
@@ -160,8 +182,7 @@ class Command(command.Command):
                         relpath = os.path.relpath(path, self.project.root)
                         include.add((self.project.root, relpath))
 
-
-            include.update(self.find_modules(config.tart))
+            include.update(self.find_modules(tartdistro))
 
         # print('include')
         # print('\n'.join('%s  %s' % x for x in sorted(include)))
@@ -183,6 +204,8 @@ class Command(command.Command):
                 if devMode:
                     opt('-devMode')
 
+                opt('-buildIdFile', buildIdFile)
+
                 opt('-configuration', config.configuration)
 
                 opt('-env', 'PYTHONDONTWRITEBYTECODE=1')
@@ -202,11 +225,11 @@ class Command(command.Command):
                 optfile = 'optfile'
                 with open(optfile, 'w') as fopt:
                     def add(option):
-                        print('adding', option)
+                        # print('adding', option)
                         print(option, file=fopt)
 
                     def addlink(base, tail):
-                        print('addlink, base', base, 'tail', tail)
+                        # print('addlink, base', base, 'tail', tail)
                         dirs = os.path.dirname(tail)
                         if dirs and not os.path.exists(dirs):
                             os.makedirs(dirs, exist_ok=True)
@@ -217,7 +240,13 @@ class Command(command.Command):
                     add('bar-descriptor.xml')
 
                     if iconpath:
-                        addlink(os.path.dirname(iconpath), config.iconfile)
+                        if args.mode == 'release':
+                            addlink(os.path.dirname(iconpath), config.iconfile)
+                        else:
+                            from ..iconutil import draft_overlay
+                            image = draft_overlay(iconpath)
+                            image.save(config.iconfile)
+                            add(config.iconfile)
 
                     if config.configuration == 'Device-Release':
                         entry = 'TartStart.so'
@@ -226,7 +255,7 @@ class Command(command.Command):
                     else:
                         entry = 'TartStart-x86'
 
-                    addlink(os.path.join(config.tart, 'entry'), entry)
+                    addlink(os.path.join(tartdistro, 'entry'), entry)
 
                     # this is full of ugliness... we'll have to clean up
                     # the path stuff since the @optionfile approach has
@@ -242,8 +271,6 @@ class Command(command.Command):
 
                         else:
                             addlink(base, path)
-
-                    addlink(self.project.root, '_buildId')
 
                     with open('build.info', 'w') as fbuild:
                         print(dt.datetime.now(), file=fbuild)
