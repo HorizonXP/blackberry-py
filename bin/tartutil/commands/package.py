@@ -243,10 +243,15 @@ class Command(command.Command):
                         if args.mode == 'release':
                             addlink(os.path.dirname(iconpath), config.iconfile)
                         else:
-                            from ..iconutil import draft_overlay
-                            image = draft_overlay(iconpath)
-                            image.save(config.iconfile)
-                            add(config.iconfile)
+                            try:
+                                from ..iconutil import draft_overlay
+                            except ImportError:
+                                print('warning: PIL not found, not adding DRAFT overlay to icon')
+                                addlink(os.path.dirname(iconpath), config.iconfile)
+                            else:
+                                image = draft_overlay(iconpath)
+                                image.save(config.iconfile)
+                                add(config.iconfile)
 
                     if config.configuration == 'Device-Release':
                         entry = 'TartStart.so'
