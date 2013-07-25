@@ -26,6 +26,7 @@ import win32file
 import win32con
 
 from .. import command
+from ..core import tart
 
 
 DEBUG = True
@@ -58,92 +59,6 @@ FileEvent = namedtuple('FileEvent', ['timestamp', 'source', 'path'])
 
 def log(*args, **kwargs):
     print('{:.3f}s'.format(get_time()), *args, **kwargs)
-
-
-#------------------------------------------------
-#
-class Tart:
-    TART_INI = 'tart.ini'       # found in current or ancestor folder
-    STATE_DIR = '.tart-state'   # in TART_INI's folder
-
-
-    def __init__(self):
-        self.root = self.get_tart_root()
-
-
-    @property
-    def statedir(self):
-        '''Retrieve Tart state folder, creating if it doesn't exist.'''
-        try:
-            self._statedir
-        except AttributeError:
-            self._statedir = os.path.join(self.root, Tart.STATE_DIR)
-            if not os.path.exists(self._statedir):
-                ensure_dir(self._statedir)
-
-        return self._statedir
-
-
-    @property
-    def ini(self):
-        try:
-            self._ini
-        except AttributeError:
-            self._ini = self.get_tart_ini()
-
-        return self._ini
-
-
-    @staticmethod
-    def get_tart_root():
-        '''Search for a Tart configuration (ini) file.'''
-        folder = os.path.normpath(os.getcwd())
-        while folder != os.path.dirname(folder):
-            if os.path.isfile(os.path.join(folder, Tart.TART_INI)):
-                return folder
-
-            folder = os.path.dirname(folder)
-
-        raise ValueError('file not found: {}'.format(Tart.TART_INI))
-
-
-    @staticmethod
-    def get_tart_ini():
-        '''Read Tart configuration (ini) file.'''
-        root = Tart.get_tart_root()
-        ini = configparser.ConfigParser()
-        ini.read(os.path.join(root, Tart.TART_INI))
-        return ini
-
-
-    CLEANPAT = '[{}]+'.format(re.escape(r'/\\.:@'))
-
-    def get_cache_path(self, name, folder=''):
-        '''Retrieve a normalized cache file name, consisting
-        of the normalized path converted to strip many special chars but
-        in a way we don't think should lead to collisions.'''
-        name = os.path.normpath(name)
-        cleaned = re.sub(self.CLEANPAT, '_', name)
-
-        cachedir = os.path.join(self.statedir, folder)
-        if not os.path.exists(cachedir):
-            ensure_dir(cachedir)
-
-        return os.path.join(cachedir, cleaned)
-
-
-tart = Tart()
-
-
-#------------------------------------------------
-#
-def ensure_dir(path):
-    '''Ensure a folder exists.'''
-    try:
-        os.makedirs(path)
-    except OSError as ex:
-        if ex.errno != errno.EEXIST:
-            raise
 
 
 #------------------------------------------------
@@ -583,7 +498,7 @@ class QuickDeploy:
             if data:
                 digest = self.checksum(data)
 
-                ensure_dir(self.sanctuary)
+                os.makedirs(self.sanctuary, exist_ok=True)
                 fname = os.path.basename(destpath) + '-' + digest
                 copypath = os.path.join(self.sanctuary, fname)
                 if not os.path.exists(copypath):
