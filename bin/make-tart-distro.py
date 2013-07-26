@@ -15,7 +15,7 @@ PYDIR = 'Python-3.2.2'
 PYINC = 'Include'
 PYCONFIG = os.path.join(PYINC, 'pyconfig.h')
 LIBDIR = 'libs'
-EXCLUDE = ['tart/tart-libs']
+EXCLUDE = ['tart/tart-libs', 'bin/make-tart-distro.py', 'bin/getpythondev.py']
 PKGPREFIX = 'tart-'
 
 
@@ -187,6 +187,19 @@ class Packager:
             pkg.writestr('tart/tart.hgid', name)
 
             for base, dirs, files in os.walk('tart'):
+                if self.is_excluded(base):
+                    continue
+
+                for f in files:
+                    path = os.path.join(base, f)
+                    exclude = False
+                    if self.is_excluded(path):
+                        continue
+
+                    # print('adding', path)
+                    pkg.write(path)
+
+            for base, dirs, files in os.walk('bin'):
                 if self.is_excluded(base):
                     continue
 
