@@ -320,8 +320,12 @@ class Command(command.Command):
     def compile_py(self, base, path):
         fullpath = os.path.join(base, path)
         stat = os.stat(fullpath)
-        with open(fullpath) as f:
-            src = f.read()
+        with open(fullpath, encoding='utf-8') as f:
+            try:
+                src = f.read()
+            except:
+                print('error reading', fullpath)
+                raise
 
         bytecode = compile(src, path, stat.st_mtime)
         parent = os.path.dirname(path)
@@ -334,6 +338,9 @@ class Command(command.Command):
     def find_modules(self, tartdir):
         tartpydir = os.path.join(tartdir, 'python')
         searchpath = [tartpydir, self.project.root]
+        for path in sys.path:
+            if 'site-packages' in path:
+                searchpath.append(path)
         finder = modulefinder.ModuleFinder(path=searchpath)
 
         finder.run_script(os.path.join(tartpydir, 'blackberry_tart.py'))
