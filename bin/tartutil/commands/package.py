@@ -41,7 +41,7 @@ class Command(command.Command):
 
 
     def add_arguments(self, parser):
-        parser.add_argument('-m', '--mode', default='release', metavar='MODE',
+        parser.add_argument('-m', '--mode', default='debug', metavar='MODE',
             choices=['release', 'debug', 'quick'],
             help='%(choices)s (default: %(default)s)')
         parser.add_argument('--arch', default='arm', metavar='ARCH',
