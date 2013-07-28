@@ -61,10 +61,13 @@ if __name__ == '__main__':
     try:
         import app
         try:
-            app.main()
+            entry = app.main
         except AttributeError:
             a = app.App()
-            a.start()
+            entry = a.start
+
+        entry()
+
         # we don't return until the app terminates or raises an exception
 
     # The Python runtime will terminate the entire process if we allow
