@@ -27,7 +27,7 @@ import win32con
 
 from .. import command
 from ..core import tart
-
+from ..project import Project
 
 DEBUG = True
 
@@ -67,45 +67,6 @@ def get_time(basetime=time.time()):
     '''Return seconds since the app started. This is used for timestamps
     that are more readable than the 10-digit seconds-since-1970 variety.'''
     return time.time() - basetime
-
-
-
-#------------------------------------------------
-#
-class Project:
-    '''Class corresponding to a Tart project folder, which would generally
-    have a tart-project.ini file in the project root folder.'''
-
-    PROJECT_INI = 'tart-project.ini'    # found in project's base folder
-
-    def __init__(self, path):
-        self.path = fwdnormpath(path)    # root folder, contains tart-project.ini if present
-        # if not os.path.exists(os.path.join(path, Project.PROJECT_INI)):
-        #     raise TypeError('not a Tart project folder')
-
-
-    def __repr__(self):
-        return '<Project %s>' % os.path.basename(self.path)
-
-
-    @property
-    def ini(self):
-        try:
-            self._ini
-        except AttributeError:
-            self._ini = configparser.ConfigParser()
-            self._ini.read(os.path.join(self.path, Project.PROJECT_INI))
-        return self._ini
-
-
-    @property
-    def name(self):
-        try:
-            self._name
-        except AttributeError:
-            self._name = self.ini.get(CFGSECTION, 'destination',
-                fallback=os.path.basename(self.path))
-        return self._name
 
 
 
@@ -398,11 +359,11 @@ class Source(FileSet):
     def __init__(self, project, sink=None):
         self.project = project
 
-        filter = Filter(project.path)
+        filter = Filter(project.root)
         filter.add_rules(tart.ini)
         filter.add_rules(project.ini)
 
-        super().__init__(project.path, filter)
+        super().__init__(project.root, filter)
 
         self._monitor = SourceMonitor_win32(self, sink)
 

@@ -29,6 +29,16 @@ class Project:
         return ini
 
 
+    @cached_property
+    def name(self):
+        '''Discover name of project.'''
+        name = self.config('name')
+        if not name:
+            name = os.path.basename(self.root)
+            # print('using folder for app name (add name: to project file to avoid this)')
+        return name
+
+
     def get_root(self, startpath):
         '''Search for a Tart project (ini) file.'''
         folder = os.path.normpath(startpath)
@@ -49,4 +59,3 @@ class Project:
     def relpath(self, path):
         '''Return a path relative to the location of the project ini file.'''
         return os.path.join(self.root, path)
-
