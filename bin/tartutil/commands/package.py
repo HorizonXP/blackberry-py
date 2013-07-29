@@ -5,6 +5,7 @@ import os
 import configparser
 import datetime as dt
 import errno
+import hashlib
 import marshal
 import modulefinder
 import subprocess
@@ -37,7 +38,6 @@ def compile(codestring, filepath, timestamp, builtin_compile=compile):
 class Command(command.Command):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.verbose = True
 
 
     def add_arguments(self, parser):
@@ -49,26 +49,28 @@ class Command(command.Command):
             help='platform to target (default: %(default)s)')
         parser.add_argument('-d', '--devMode', action='store_true',
             help='force -devMode (in release mode)')
+        parser.add_argument('-v', '--verbose', action='store_true',
+            help='spew more details')
         parser.add_argument('project', default='.', nargs='?',
             help='path to project (default: current directory)')
 
 
     def run(self, args):
-        print('release', args)
+        self.args = args
+        if args.verbose:
+            print('package args', args)
 
         if args.mode == 'release' and args.arch == 'x86':
             sys.exit('release mode not currently supported on the simulator')
 
         self.project = project.Project(args.project)
-        print('project', self.project)
+        if self.args.verbose:
+            print('project', self.project)
 
         class Bag(object): pass
         config = Bag()
 
-        appname = self.project.config('name')
-        if not appname:
-            appname = os.path.basename(self.project.root)
-            print('using folder for app name (add name: to project file to avoid this)')
+        appname = self.project.name
 
         config.id = self.project.config('id')
         if not config.id:
@@ -116,19 +118,22 @@ class Command(command.Command):
         config.theme = self.project.config('theme', 'dark')
 
         splashes = [x.strip() for x in self.project.config('splash', '').split()]
-        print('splashes', splashes)
+        if self.args.verbose:
+            print('splashes', splashes)
         config.splashscreens = '\n'.join('<image>%s</image>' % x for x in splashes)
 
         perms = [x.strip() for x in self.project.config('permissions', '').split()]
         if args.mode == 'quick':
             perms.append('access_shared')    # it's okay to add this twice
-        print('permissions', perms)
+        if self.args.verbose:
+            print('permissions', perms)
         config.permissions = '\n'.join('<permission>%s</permission>' % x for x in perms)
 
         iconpath = self.project.relpath(config.iconfile)
 
         if not os.path.exists(iconpath):
-            print('override iconfile with default')
+            if self.args.verbose:
+                print('override iconfile with default')
             config.iconfile = 'blackberry-tablet-default-icon.png'
             iconpath = None
 
@@ -141,7 +146,7 @@ class Command(command.Command):
 
         if args.mode != 'quick':
             # these are always included
-            include.add((os.path.join(tartdistro, 'js'), 'tart.js'))
+            # include.add((os.path.join(tartdistro, 'js'), 'tart.js'))
             # This is actually found by find_modules, as our __main__
             # include.append((os.path.join(tartdistro, 'python'), 'blackberry_tart.py'))
 
@@ -275,7 +280,16 @@ class Command(command.Command):
                             add(path + 'c')
 
                         else:
+                            # TODO: remove this very special handling for assets/tart.js
+                            if os.path.normpath(path).endswith(os.path.normpath('assets/tart.js')):
+                                if not self.same_files(os.path.join(base, path), os.path.join(tartdistro, 'assets/tart.js')):
+                                    print('warning: ignoring modified local assets/tart.js')
+                                continue
                             addlink(base, path)
+
+                    # TODO: remove this very special handling for assets/tart.js
+                    if args.mode != 'quick':
+                        addlink(os.path.join(tartdistro), 'assets/tart.js')
 
                     with open('build.info', 'w') as fbuild:
                         print(dt.datetime.now(), file=fbuild)
@@ -283,13 +297,9 @@ class Command(command.Command):
 
                 opt('@' + optfile)
 
-                # print('---------optfile')
-                # os.system('type optfile')
                 # os.system('copy optfile ..')
                 # os.system('copy bar-descriptor.xml ..')
-                # print('---------')
-                # os.system('dir /s /a')
-                print(' '.join(command))
+                # print(' '.join(command))
                 res = self.do_cmd(command)
                 print(res)
 
@@ -307,14 +317,15 @@ class Command(command.Command):
             finally:
                 os.chdir('..')
 
-        # import zipfile
-        # import shutil
-        # if os.path.exists('packaged'):
-        #     shutil.rmtree('packaged')
-        # os.makedirs('packaged', exist_ok=True)
-        # with zipfile.ZipFile(pkgname) as fzip:
-        #     print('names', fzip.namelist())
-        #     fzip.extractall('packaged')
+
+    def same_files(self, path1, path2):
+        hashes = []
+        for p in [path1, path2]:
+            with open(p, 'rb') as f:
+                data = f.read()
+                hashes.append(hashlib.md5(data).hexdigest())
+
+        return hashes[0] == hashes[1]
 
 
     def compile_py(self, base, path):
@@ -372,7 +383,7 @@ class Command(command.Command):
 
 
     def do_cmd(self, cmd):
-        if self.verbose:
+        if self.args.verbose:
             print('do_cmd:', cmd)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         output = p.stdout.read().decode('ascii').strip()
