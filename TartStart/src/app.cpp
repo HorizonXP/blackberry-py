@@ -25,6 +25,11 @@
 #include <bb/system/LocaleHandler>
 #include <bb/system/LocaleType>
 
+#include <bb/platform/Notification>
+#include <bb/platform/NotificationDialog>
+#include <bb/platform/NotificationError>
+#include <bb/platform/NotificationResult>
+
 #include <QString>
 #include <QTimer>
 #include <QLocale>
@@ -66,6 +71,11 @@ App::App(bb::cascades::Application * app, Tart * tart, QString qmlpath)
     // qmlRegisterUncreatableType<bb::device::DisplayAspectType>("bb.device", 1, 0, "DisplayAspectType", "");
 
     qmlRegisterType<advertisement::Banner>("bb.cascades.advertisement", 1, 0, "Banner");
+
+    qmlRegisterType<bb::platform::Notification>("bb.platform", 1, 0, "Notification");
+    qmlRegisterType<bb::platform::NotificationDialog>("bb.platform", 1, 0, "NotificationDialog");
+    qmlRegisterUncreatableType<bb::platform::NotificationError>("bb.platform", 1, 0, "NotificationError", "");
+    qmlRegisterUncreatableType<bb::platform::NotificationResult>("bb.platform", 1, 0, "NotificationResult", "");
 
     // create scene document from main.qml asset
     // set parent to created document to ensure it exists for the whole application lifetime
