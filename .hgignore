@@ -19,14 +19,8 @@ Makefile
 syntax: regexp
 ^.metadata/
 ^blackberry-py/
-^docs
-^BB10-Samples/
-^NDK-Samples/
-^notes/
 ^Python-3.2.2/
-^Qt/
 ^releases/
-^stuff/
 ^sandbox/
 ^libs/
 ^.tart-state/
@@ -36,7 +30,5 @@ Device-Debug/
 Device-Release/
 Simulator/
 Simulator-Debug/
-^third-party/
-^blackberry-py-old/
 /(arm|x86)/(Makefile|o.le-v7|o-g).*
 ^tart/entry
