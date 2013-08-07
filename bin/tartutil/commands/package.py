@@ -127,7 +127,11 @@ class Command(command.Command):
             perms.append('access_shared')    # it's okay to add this twice
         if self.args.verbose:
             print('permissions', perms)
-        config.permissions = '\n'.join('<permission>%s</permission>' % x for x in perms)
+        _perms = []
+        for x in perms:
+            attr = 'system="true"' if x.startswith('_sys_') else ''
+            _perms.append('<permission %s>%s</permission>' % (attr, x))
+        config.permissions = '\n'.join(_perms)
 
         iconpath = self.project.relpath(config.iconfile)
 
@@ -138,6 +142,8 @@ class Command(command.Command):
             iconpath = None
 
         pkgname = appname.replace(' ', '') + '.bar'
+
+        config.extras = self.project.config('extras', '').format(cfg=config)
 
         with open(BAR_TEMPLATE) as ftemplate:
             bardesc = ftemplate.read().format(cfg=config)
