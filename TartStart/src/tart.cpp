@@ -24,6 +24,65 @@
 
 
 //---------------------------------------------------------
+// Convert one argument to Unicode, ignoring locale.
+//
+static wchar_t * char2wchar(const char * arg) {
+    wchar_t * res = NULL;
+    size_t count;
+    size_t argsize = strlen(arg);
+
+    if (argsize != (size_t) -1) {
+        res = (wchar_t *) malloc((argsize + 1) * sizeof(wchar_t));
+        if (res) {
+            count = mbstowcs(res, arg, argsize + 1);
+            if (count == (size_t)-1) {
+                free(res);
+                res = NULL;
+            }
+        }
+    }
+
+    return res;
+}
+
+
+//---------------------------------------------------------
+// Convert arguments in platform default encoding to Unicode,
+// non-locale-aware version.
+//
+static wchar_t ** args_to_wargv(int argc, char ** argv) {
+    int i;
+    wchar_t ** wargv = NULL;
+
+    wargv = (wchar_t **) malloc(argc * sizeof(wchar_t *));
+    if (!wargv)
+        return wargv;
+
+    for (i = 0; i < argc; i++) {
+        wargv[i] = char2wchar(argv[i]);
+    }
+
+    return wargv;
+}
+
+
+//---------------------------------------------------------
+// Release memory held by converted argument list.
+//
+static void free_wargv(int wargc, wchar_t ** wargv) {
+    int i = 0;
+    if (wargv) {
+        for (i = 0; i < wargc; i++)
+            free(wargv[i]);
+
+        free(wargv);
+    }
+
+    return;
+}
+
+
+//---------------------------------------------------------
 //
 TartThread::TartThread(QSemaphore * sem)
     : m_sem(sem)
@@ -159,6 +218,7 @@ tart_send(PyObject *self, PyObject *args)
 //
 static PyThreadState * tart_pystate;
 static PyObject * event_callback = NULL;
+static PyObject * push_callback = NULL;
 
 static PyObject *
 tart_event_loop(PyObject *self, PyObject *args)
@@ -297,10 +357,34 @@ tart_hook_events(PyObject *self, PyObject *args)
     }
     Py_XINCREF(temp);               // Add a reference to new callback
     event_hook_callback = temp;     // Remember new callback
-    // qDebug() << "event_loop: callback is" << event_callback;
 
     orig_eventFilter = QAbstractEventDispatcher::instance()->setEventFilter(Tart_eventFilter);
     qDebug() << "orig_eventFilter" << orig_eventFilter;
+
+    Py_RETURN_NONE;
+}
+
+
+static PyObject *
+tart_register_push_callback(PyObject *self, PyObject *args)
+{
+    qDebug() << QThread::currentThreadId() << "_tart.register_push_callback()";
+
+    // code for callback based on
+    // http://docs.python.org/3.2/extending/extending.html#calling-python-functions-from-c
+    PyObject * temp;
+
+    if(!PyArg_ParseTuple(args, "O:register_push_callback", &temp))
+        return NULL;
+
+    // TODO: support None so we can unhook the filter.
+
+    if (!PyCallable_Check(temp)) {
+        PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+        return NULL;
+    }
+    Py_XINCREF(temp);               // Add a reference to new callback
+    push_callback = temp;     // Remember new callback
 
     Py_RETURN_NONE;
 }
@@ -318,6 +402,8 @@ static PyMethodDef TartMethods[] = {
         PyDoc_STR("Enter Tart event loop.")},
     {"hook_events", tart_hook_events,   METH_VARARGS,
         PyDoc_STR("Install a Qt event filter.")},
+    {"register_push_callback",  tart_register_push_callback,    METH_VARARGS,
+        PyDoc_STR("Install callback to receive pushes.")},
     {NULL, NULL, 0, NULL}
 };
 
@@ -333,7 +419,7 @@ static PyModuleDef TartModule = {
 //---------------------------------------------------------
 // More boilerplate code to set up builtin module.
 //
-static PyObject*
+PyMODINIT_FUNC
 PyInit_tart(void)
 {
     return PyModule_Create(&TartModule);
@@ -378,16 +464,45 @@ Tart::Tart(int argc, char ** argv)
 
     PyImport_AppendInittab(TartModule.m_name, &PyInit_tart);
 
+    extern void init_push(void);
+    init_push();
+
     // only Py_SetProgramName and Py_SetPath may come before this
     Py_Initialize();
 
     qDebug("Python initialized");
 
-    //    m_wargv = args_to_wargv(args.size(), argv);
-    //    m_wargc = argc;
-    //    PySys_SetArgvEx(argc, m_wargv, 0);
+
+    m_wargv = args_to_wargv(argc, argv);
+    m_wargc = argc;
+    PySys_SetArgvEx(argc, m_wargv, 0);
 
     qDebug() << QThread::currentThreadId() << "Tart: initialized";
+}
+
+
+//---------------------------------------------------------
+//
+//
+const char * Tart::getScriptPath() {
+    int i = m_argc;
+
+    // We can't blindly take the last argument as being the script to run
+    // because when we're invoked (at least with bb.action.PUSH) we can
+    // sometimes see spurious arguments at the end of the command line, such
+    // as invoke://localhost or ORIENTS=auto. Until someone sorts that out
+    // or improves this code, this is a hack to just pick whatever argument
+    // ends with blackberry_tart.py[c]
+    if (m_argv) {
+        while (--i > 0) {
+            QString arg(m_argv[i]);
+            if (arg.endsWith("blackberry_tart.py") || arg.endsWith("blackberry_tart.pyc")) {
+                return m_argv[i];
+            }
+        }
+    }
+
+    return NULL;
 }
 
 
@@ -470,7 +585,7 @@ void Tart::cleanup() {
         m_thread = NULL;
     }
 
-//  free_wargv(m_wargc, m_wargv);
+    free_wargv(m_wargc, m_wargv);
 
     sm_instance = NULL;
     qDebug() << QThread::currentThreadId() << "Tart: done cleanup";
@@ -561,6 +676,66 @@ void Tart::do_postMessage(QString msg) {
     }
 
     // qDebug() << QThread::currentThreadId() << "Tart: do_postMessage done";
+    return;
+}
+
+
+//---------------------------------------------------------
+// Pass push messages into the Python interpreter main thread,
+// if it has implemented an onPushReceived() method.
+//
+void Tart::pushReceived(const QString & id, const QByteArray & bytes, bool wantsAck) {
+    qDebug() << QThread::currentThreadId() << "Tart: pushReceived" << id << wantsAck << bytes.size();
+
+    // FIXME: this should probably be checked inside the tart_pystate context
+    // where the GIL is held, not outside.
+    // Ignore data if no callback has been registered.
+    if (!push_callback)
+        return;
+
+    PyEval_RestoreThread(tart_pystate);
+
+    PyObject * arglist = Py_BuildValue("(sy#i)",
+        id.toUtf8().constData(),
+        bytes.constData(), bytes.size(),
+        wantsAck
+        );
+    // ran out of memory: fail!
+    if (arglist == NULL) {
+        qDebug() << "Py_BuildValue() returned NULL!";
+        // should probably do something more significant here
+        tart_pystate = PyEval_SaveThread();
+        return;
+    }
+
+    // call the callback to send message to Python
+    PyObject * result = PyObject_CallObject(push_callback, arglist);
+    Py_DECREF(arglist);
+
+    // TODO handle exceptions from the call, either by exiting the event
+    // loop (maybe only during development?) or by dumping a traceback,
+    // setting a flag, and continuing on.
+    bool is_SystemExit = false;
+
+    if (result == NULL) {   // exception during call
+        // see http://computer-programming-forum.com/56-python/a81eae52ca74e6c1.htm
+        // Calling PyErr_Print() will actually terminate the process if
+        // SystemExit is the exception!
+        if (PyErr_ExceptionMatches(PyExc_SystemExit))
+            is_SystemExit = true;
+        else
+            PyErr_Print();
+    }
+    else
+        Py_DECREF(result);
+
+    tart_pystate = PyEval_SaveThread();
+
+    if (is_SystemExit) {
+        qDebug() << "do_post: SystemExit from delivery";
+        m_thread->exit(3);
+    }
+
     return;
 }
 

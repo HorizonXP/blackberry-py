@@ -52,7 +52,8 @@ int main(int argc, char **argv)
         // unexplained reason they changed the template so it's heap-allocated
         // now, which begs the question... how does the cleanup work, what
         // was wrong with it before, and is there anything wrong with it now?
-        new App(&app, &tart, qmlpath);
+        App * mainApp = new App(&app, &tart, qmlpath);
+        Q_UNUSED(mainApp);
 
         //-- we complete the transaction started in the app constructor and start
         // the client event loop here

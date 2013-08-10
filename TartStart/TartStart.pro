@@ -21,6 +21,7 @@ simulator {
 # PRE_TARGETDEPS += libpython3.2m.so
 
 LIBS += -lpython3.2m \
+    -lbb \
     -lbbdata \
     -lbbplatform \
     -lQtLocationSubset \
@@ -28,6 +29,7 @@ LIBS += -lpython3.2m \
     -lscreen \
     -lbbcascadespickers \
     -lbbcascadesadvertisement \
-    -lbbdevice
+    -lbbdevice \
+    -lbbnetwork
 
 include(config.pri)

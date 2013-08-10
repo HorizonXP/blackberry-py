@@ -22,7 +22,6 @@
 #include <bb/data/DataSource>
 #include <bb/device/DisplayInfo>
 #include <bb/device/DisplayAspectType>
-#include <bb/system/LocaleHandler>
 #include <bb/system/LocaleType>
 
 #include <bb/platform/Notification>
@@ -30,9 +29,17 @@
 #include <bb/platform/NotificationError>
 #include <bb/platform/NotificationResult>
 
+#include <bb/system/ApplicationStartupMode>
+
+#include <bb/network/PushPayload>
+
+#include <bb/system/InvokeManager>
+#include <bb/system/InvokeRequest>
+
 #include <QString>
 #include <QTimer>
 #include <QLocale>
+#include <QDebug>
 
 using namespace bb::cascades;
 
@@ -51,10 +58,30 @@ using namespace bb::cascades;
 // routines that Tart makes available as separate packages,
 // with the advantage that it wouldn't be so monolithic either.
 //
-App::App(bb::cascades::Application * app, Tart * tart, QString qmlpath)
+App::App(Application * app, Tart * tart, QString qmlpath)
 : QObject(app)
+, localeHandler(NULL)
+, m_invokeManager(new bb::system::InvokeManager(this))
 {
-	localeHandler = NULL;
+    bool ok;
+    Q_UNUSED(ok);
+
+    ok = connect(m_invokeManager, SIGNAL(invoked(const bb::system::InvokeRequest&)),
+        this, SLOT(onInvoked(const bb::system::InvokeRequest&)));
+    Q_ASSERT(ok);
+
+    bb::system::ApplicationStartupMode::Type mode = m_invokeManager->startupMode();
+    // LaunchApplication = 0
+    // InvokeApplication = 1
+    // InvokeCard = 3
+    qDebug() << "startupMode" << mode;
+
+    ok = connect(this,
+        SIGNAL(pushReceived(const QString &, const QByteArray &, bool)),
+        tart,
+        SLOT(pushReceived(const QString &, const QByteArray &, bool))
+        );
+    Q_ASSERT(ok);
 
     // Register the DataSource class as a QML type so that it's accessible in QML
     bb::data::DataSource::registerQmlTypes();
@@ -76,6 +103,8 @@ App::App(bb::cascades::Application * app, Tart * tart, QString qmlpath)
     qmlRegisterType<bb::platform::NotificationDialog>("bb.platform", 1, 0, "NotificationDialog");
     qmlRegisterUncreatableType<bb::platform::NotificationError>("bb.platform", 1, 0, "NotificationError", "");
     qmlRegisterUncreatableType<bb::platform::NotificationResult>("bb.platform", 1, 0, "NotificationResult", "");
+
+    qmlRegisterType<bb::cascades::InvokeQuery>("bb.cascades", 1, 0, "InvokeQuery");
 
     // create scene document from main.qml asset
     // set parent to created document to ensure it exists for the whole application lifetime
@@ -131,4 +160,76 @@ int App::displayAspectType() {
     bb::device::DisplayInfo displayInfo;
 
     return (int) displayInfo.aspectType();
+}
+
+
+//---------------------------------------------------------
+// Another provisional routine. This one allows creating an
+// InvokeQuery in QML, populating it with the required properties,
+// and sending via app.composeEmail(queryId) to have the Composer
+// brought up with prepopulated fields including attachments.
+// See SendEmail sample.
+//
+void App::composeEmail(bb::cascades::InvokeQuery * query) {
+    bb::system::InvokeRequest request;
+    request.setAction(query->invokeActionId());
+    request.setMimeType(query->mimeType());
+
+    // See http://supportforums.blackberry.com/t5/Cascades-Development/Invoke-Email-with-Attachment/m-p/2251453#M17589
+    // for the source of this particular magic, and note that even the trailing
+    // newline is required or this won't work.
+    request.setData("data:json:" + query->data() + "\n");
+    // qDebug() << "PPS data" << request.data();
+
+    m_invokeManager->invoke(request);
+}
+
+
+//---------------------------------------------------------
+// This one for now handles just invocation via bb.action.PUSH, and
+// dispatches the payload to Python via Tart's pushReceived() slot.
+//
+void App::onInvoked(const bb::system::InvokeRequest &request)
+{
+    // qDebug() << "request" << request.action();
+    // qDebug() << "metadata" << request.metadata();
+    // qDebug() << "mimeType" << request.mimeType();
+    // qDebug() << "fileTransferMode" << request.fileTransferMode();
+    // // qDebug() << "listId" << request.listId(); 10.2 only
+    // qDebug() << "perimeter" << request.perimeter();
+    // qDebug() << "target" << request.target();
+    // qDebug() << "source" << request.source().groupId() << request.source().installId();
+    // qDebug() << "targetTypes" << (int) request.targetTypes();
+    // qDebug() << "uri" << request.uri();
+    // qDebug() << "data" << request.data();
+    // request "bb.action.PUSH"
+    // metadata QMap()
+    // mimeType "application/vnd.push"
+    // fileTransferMode 0
+    // perimeter 2
+    // target "com.whatever.YourApp"
+    // source 361 "sys.service.internal.361"
+    // targetTypes 0
+    // uri  QUrl( "" )
+    // data "pushData:json:{"pushId":"<app id here>","pushDataLen":22,
+    //      "appLevelAck":0,"httpHeaders":{"OST / HTTP/1.1":"POST / HTTP/1.1",
+    //          "Content-Type":"text/plain","Connection":"close",
+    //          "X-RIM-PUSH-SERVICE-ID":"<app id here>",
+    //          "x-rim-deviceid":"<PIN here>","Content-Length":"22"}}
+
+    if (request.action().compare(BB_PUSH_INVOCATION_ACTION) == 0) {
+        // Received an incoming push
+        // Extract it from the invoke request and then process it
+        bb::network::PushPayload payload(request);
+        if (payload.isValid()) {
+            qDebug() << "payload:" << payload.id() << "headers:" << payload.headers();
+            // qDebug() << "data:" << payload.data();
+            emit pushReceived(payload.id(), payload.data(), payload.isAckRequired());
+        } else {
+            // Should we be checking isAckRequired() here, and rejectPush()?
+            // Not sure the docs are clear on how isValid() relates to those.
+            // Could also pass isValid() down to Python to take into account.
+            qDebug() << "invalid payload!";
+        }
+    }
 }

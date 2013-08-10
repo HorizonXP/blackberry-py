@@ -52,7 +52,7 @@ public:
     Tart(int argc, char ** argv);
 //    ~Tart();
 
-    const char *    getScriptPath() { return (m_argc && m_argv) ? m_argv[m_argc - 1] : NULL; }
+    const char *    getScriptPath();
 
     void            start();
     TartThread *    getThread() { return m_thread; }
@@ -61,6 +61,7 @@ public:
 
 public slots:
     void cleanup();
+    void pushReceived(const QString & id, const QByteArray & bytes, bool wantsAck);
 
 signals:
     void postMessage(QString msg);
@@ -76,8 +77,9 @@ private slots:
 
 private:
     // storage for argument list converted from multibyte to Unicode
-    //    wchar_t ** m_wargv;
-    //    int m_wargc;
+    wchar_t **      m_wargv;
+    int             m_wargc;
+
     TartThread *    m_thread;
     bool            m_cleanup;
     int             m_argc;

@@ -9,11 +9,13 @@ INCLUDEPATH +=  \
 SOURCES +=  \
     $$BASEDIR/src/app.cpp \
     $$BASEDIR/src/main.cpp \
-    $$BASEDIR/src/tart.cpp
+    $$BASEDIR/src/tart.cpp \
+    $$BASEDIR/src/push.cpp
 
 HEADERS +=  \
     $$BASEDIR/src/app.hpp \
-    $$BASEDIR/src/tart.hpp
+    $$BASEDIR/src/tart.hpp \
+    $$BASEDIR/src/push.hpp
 
 CONFIG += precompile_header
 PRECOMPILED_HEADER = $$BASEDIR/precompiled.h
