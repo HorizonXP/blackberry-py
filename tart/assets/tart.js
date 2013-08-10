@@ -146,18 +146,15 @@ Tart.onContinueExit = function() {
 }
 
 
-//-------------------------------------
-// Optional... backend code does tart.send('backendReady')
-// when the event loop starts up, though a subclass of
-// the Python tart.Application() could override that and
-// not bother. Here we do nothing special with it, but code
-// in one of the QML objects could implement this and do something useful.
-//
-Tart.onBackendReady = function() {
-    if (debug)
-        console.log('backend is ready, duh');
+Tart.onWindowStateChanged = function(data) {
+    // if (debug)
+    //     console.log('window state', data.state);
 }
 
+Tart.onAppStateChanged = function(data) {
+    // if (debug)
+    //     console.log('app state', data.state);
+}
 
 //-------------------------------------
 // By default, we do nothing about this in the UI code but
